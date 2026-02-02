@@ -3,21 +3,55 @@
 <head>
   <meta charset="UTF-8" />
   <title>TTRL Multi-Season Stats</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    body { font-family: system-ui, sans-serif; margin: 0; padding: 0; background:#050608; color:#f5f5f5; }
+    body { font-family: system-ui, sans-serif; margin:0; padding:0; background:#050608; color:#f5f5f5; }
+
+    /* HEADER */
 
     header {
-      background:linear-gradient(to bottom,#000000 0,#050608 55%);
-      padding:14px 24px 12px;
+      background:linear-gradient(to bottom,#000000 0,#050608 70%);
+      padding:16px 24px 14px;
       border-bottom:3px solid #ff0000;
     }
+    .header-top {
+      display:flex;
+      align-items:stretch;
+      justify-content:space-between;
+      gap:18px;
+    }
 
-    header h1 { margin:0; font-size:22px; }
-    header p { margin:4px 0; color:#c5c6c7; }
+    .logo-wrap {
+      display:flex;
+      align-items:center;
+      gap:14px;
+    }
+    .logo-img {
+      height:60px;
+      width:auto;
+      display:block;
+      filter:drop-shadow(0 0 8px rgba(0,0,0,0.8));
+      transition:transform 0.25s ease-out;
+    }
 
-    .header-top { display:flex; align-items:stretch; justify-content:space-between; gap:16px; }
-    .logo-wrap { display:flex; align-items:center; gap:16px; }
-    .logo-wrap img { height:52px; }
+    .header-left-text h1 {
+      margin:0;
+      font-size:22px;
+    }
+    .header-left-text p {
+      margin:4px 0;
+      color:#c5c6c7;
+      font-size:13px;
+    }
+
+    #fileSelect {
+      padding:3px 6px;
+      font-size:13px;
+      border-radius:4px;
+      border:1px solid #3b4252;
+      background:#050608;
+      color:#f5f5f5;
+    }
 
     .header-centre {
       flex:1 1 auto;
@@ -25,34 +59,51 @@
       flex-direction:column;
       align-items:center;
       justify-content:center;
-      padding:4px 12px;
-      border-radius:10px;
-      background:linear-gradient(90deg,#b91c1c,#facc15,#2563eb);
-      color:#f9fafb;
+      padding:6px 14px;
+      border-radius:12px;
+      background:#050608;
+      box-shadow:0 0 18px rgba(0,0,0,0.7);
+      border:2px solid rgba(107,114,128,0.7);
+      min-height:70px;
+    }
+
+    .header-title-row {
+      display:flex;
+      gap:6px;
+      align-items:baseline;
+      justify-content:center;
       text-transform:uppercase;
-      letter-spacing:0.18em;
-      font-weight:700;
-      box-shadow:0 0 18px rgba(0,0,0,0.6);
-      min-height:64px;
+      letter-spacing:0.16em;
+      font-weight:800;
+      font-size:18px;
+      white-space:nowrap;
     }
-    .header-centre-main {
-      font-size:15px;
-    }
-    .header-centre-sub {
+    .header-title-red { color:#ff1a1a; }
+    .header-title-blue { color:#1d4ed8; }
+    .header-title-yellow { color:#facc15; }
+
+    .header-subline {
+      margin-top:3px;
       font-size:11px;
-      opacity:0.95;
-      margin-top:2px;
+      letter-spacing:0.14em;
+      text-transform:uppercase;
+      color:#e5e7eb;
+      opacity:0.9;
+      text-align:center;
+      white-space:nowrap;
     }
 
     .header-meta {
       font-size:12px;
       text-align:right;
       color:#9ca3af;
-      min-width:190px;
+      min-width:195px;
       display:flex;
       flex-direction:column;
       justify-content:center;
     }
+
+    /* LAYOUT */
 
     main { padding:20px 24px 40px; max-width:1200px; margin:0 auto; }
 
@@ -78,10 +129,6 @@
     }
     #driversTable th:nth-child(1),
     #driversTable td:nth-child(1) { width:160px; }
-    #driversTable th:nth-child(2),
-    #driversTable td:nth-child(2) { width:95px; }
-    #driversTable th:nth-child(3),
-    #driversTable td:nth-child(3) { width:70px; }
 
     .badge { display:inline-block; padding:2px 6px; border-radius:10px; font-size:11px; }
     .badge-complete { background:#2ecc71; color:#000; }
@@ -119,6 +166,7 @@
     }
     .tab-btn.active { background:#007bff; border-color:#007bff; }
     .tab-btn.disabled { opacity:0.4; cursor:not-allowed; }
+
     section[data-view] { display:none; }
     section[data-view].active { display:block; }
 
@@ -136,10 +184,11 @@
       width:100%;
       table-layout:fixed;
     }
-    .scroll-body thead { width:100%; }
 
     .driver-layout { display:flex; gap:16px; margin-top:10px; }
     .driver-layout-main { flex:1 1 auto; min-width:0; }
+
+    /* DRIVER CARD */
 
     .driver-card {
       position:relative;
@@ -224,14 +273,6 @@
       font-size:13px;
       padding:4px 6px;
     }
-    .driver-seasons-table thead th {
-      background:rgba(15,23,42,0.9);
-      font-weight:600;
-      border-bottom:1px solid #374151;
-      position:sticky;
-      top:0;
-      z-index:1;
-    }
     .driver-seasons-table tbody td {
       border-bottom:1px solid rgba(55,65,81,0.7);
     }
@@ -283,15 +324,61 @@
       cursor:pointer;
       box-shadow:0 0 10px rgba(0,0,0,0.6);
     }
-    .driver-modal-close:hover { background:#1f2937; }
 
     .muted { color:#9ca3af; font-size:13px; }
 
+    /* DRIVER CTA STRIP */
+
+    .driver-cta {
+      margin-top:6px;
+      padding:6px 10px;
+      border-radius:6px;
+      background:linear-gradient(90deg,#ff1a1a,#1d4ed8,#facc15);
+      color:#000;
+      font-size:12px;
+      font-weight:600;
+      letter-spacing:0.09em;
+      text-transform:uppercase;
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+    }
+    .driver-cta-icon {
+      width:14px;
+      height:14px;
+      border-radius:3px;
+      background:#000;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      color:#facc15;
+      font-size:10px;
+    }
+
+    .driver-layout-main .scroll-body { margin-top:6px; }
+
     @media (max-width:900px) {
       .header-top { flex-direction:column; align-items:flex-start; }
-      .header-centre { align-items:flex-start; }
-      .header-meta { text-align:left; }
+      .header-centre {
+        width:100%;
+        align-items:flex-start;
+        padding:8px 10px;
+      }
+      .header-title-row { font-size:16px; white-space:normal; }
+      .header-subline { white-space:normal; }
+      .header-meta { text-align:left; margin-top:6px; }
+      .logo-wrap { gap:10px; }
+      .logo-img {
+        height:54px;
+        /* Uncomment for a slight rotation on mobile:
+        transform:rotate(-5deg);
+        */
+      }
       .driver-layout { flex-direction:column; }
+    }
+
+    @media (max-width:600px) {
+      .header-title-row { font-size:15px; }
     }
   </style>
 </head>
@@ -301,12 +388,12 @@
 <header>
   <div class="header-top">
     <div class="logo-wrap">
-      <img src="ttrl-logo.png" alt="TTRL logo">
-      <div>
+      <img src="ttrl-logo.png" alt="TTRL logo" class="logo-img">
+      <div class="header-left-text">
         <h1 id="leagueTitle">TTRL Multi-Season Statistics</h1>
         <p id="raceDayLine">Choose race day to view:</p>
         <div>
-          <select id="fileSelect" style="margin-top:2px;">
+          <select id="fileSelect">
             <option value="">Select race day…</option>
             <option value="sunday_races.json">Sunday races</option>
             <option value="wed_races.json">Wednesday races</option>
@@ -316,8 +403,12 @@
     </div>
 
     <div class="header-centre">
-      <div class="header-centre-main">TTRL MULTI‑SEASON INSIGHTS</div>
-      <div class="header-centre-sub">CROSS‑ERA DRIVER & TRACK STATS</div>
+      <div class="header-title-row">
+        <span class="header-title-red">TTRL</span>
+        <span class="header-title-blue">MULTI‑SEASON</span>
+        <span class="header-title-yellow">INSIGHTS</span>
+      </div>
+      <div class="header-subline">CROSS‑ERA DRIVER & TRACK STATS</div>
     </div>
 
     <div class="header-meta">
@@ -338,7 +429,7 @@
   </section>
 
   <section id="viewSelector">
-    <div class="filters" style="margin-top:0; justify-content:flex-start; align-items:center;">
+    <div class="filters" style="margin-top:0;">
       <label style="margin-right:8px;">View:</label>
       <button class="tab-btn" data-view="seasons">Seasons</button>
       <button class="tab-btn" data-view="drivers">Drivers</button>
@@ -384,8 +475,12 @@
     <h2>Drivers</h2>
     <p class="section-description">
       Stats are filtered to the currently selected season (or all seasons when "All seasons" is chosen).
-      Click a driver row to open their profile card.
     </p>
+
+    <div class="driver-cta">
+      <span class="driver-cta-icon">ⓘ</span>
+      <span>Click a driver row to open their profile card.</span>
+    </div>
 
     <div class="filters">
       <label>
@@ -685,7 +780,8 @@ function buildPage(data) {
     if (addOpt) seasonSelect.appendChild(addOpt);
   }
 
-  // ==== Drivers and season filtering ====
+  // DRIVERS
+
   const driversTable = document.querySelector('#driversTable tbody');
   const dcName = document.getElementById('dcName');
   const dcMeta = document.getElementById('dcMeta');
@@ -716,7 +812,7 @@ function buildPage(data) {
 
   function deriveDriverRow(d) {
     const infoD = d.driverInfo || {};
-    const points = d.points || {};
+       const points = d.points || {};
     const racePositions = d.racePositions || {};
     const standings = d.standings || {};
     const discipline = d.discipline || {};
@@ -951,7 +1047,8 @@ function buildPage(data) {
     });
   }
 
-  // Tracks with season filtering; fastest race lap = race record
+  // TRACKS
+
   const trackSelect = document.getElementById('trackSelect');
   const trackTableBody = document.querySelector('#trackTable tbody');
 
