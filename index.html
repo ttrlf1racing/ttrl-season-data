@@ -5,8 +5,9 @@
   <title>TTRL Multi-Season Stats</title>
   <style>
     body { font-family: system-ui, sans-serif; margin: 0; padding: 0; background:#050608; color:#f5f5f5; }
-    header { background:#000000; padding:16px 24px 10px; border-bottom:3px solid #ff0000; }
-    header h1 { margin:0; font-size:24px; }
+    header { background:#000000; padding:12px 24px 10px; border-bottom:3px solid #ff0000; }
+
+    header h1 { margin:0; font-size:22px; }
     header p { margin:4px 0; color:#c5c6c7; }
 
     .header-top { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; }
@@ -14,14 +15,14 @@
     .logo-wrap img { height:50px; }
 
     .header-centre {
-      text-align:center;
       flex:1 1 auto;
-      font-size:13px;
-      color:#e5e7eb;
-      font-weight:600;
-      letter-spacing:0.12em;
+      text-align:center;
+      font-size:18px;
+      font-weight:700;
+      letter-spacing:0.18em;
       text-transform:uppercase;
-      padding-top:6px;
+      color:#f9fafb;
+      padding-top:4px;
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
@@ -31,7 +32,7 @@
       font-size:12px;
       text-align:right;
       color:#9ca3af;
-      min-width:160px;
+      min-width:185px;
     }
 
     main { padding:20px 24px 40px; max-width:1200px; margin:0 auto; }
@@ -929,7 +930,7 @@ function buildPage(data) {
     });
   }
 
-  // Tracks with season filtering, and race-based track record
+  // Tracks with season filtering; fastest race lap = race record
   const trackSelect = document.getElementById('trackSelect');
   const trackTableBody = document.querySelector('#trackTable tbody');
 
@@ -940,9 +941,9 @@ function buildPage(data) {
     const gen = t.generalStats || {};
 
     const raceStats = t.raceStats || {};
-    const raceRecord =
-      raceStats.trackRecordRaceLap ||    // explicit race record if present
-      raceStats.fastestRaceLap || {};    // fallback to fastest race lap
+    const raceBest =
+      raceStats.trackRecordRaceLap ||  // preferred race record
+      raceStats.fastestRaceLap || {};  // fallback
 
     const qualStats = t.qualStats || t.qualificationStats || {};
     const qual = qualStats.fastestQualLap || qualStats.fastestQualifyingLap || {};
@@ -967,13 +968,8 @@ function buildPage(data) {
       });
     }
 
-    // Track record = best race lap
-    pushLap(raceRecord, 'Track record');
-
-    // Fastest race lap (same as record if exporter doesn’t distinguish)
-    pushLap(raceStats.fastestRaceLap || raceRecord, 'Fastest race lap');
-
-    // Qualifying best
+    // Only two types: race record and qual record
+    pushLap(raceBest, 'Fastest race lap');    // this IS the track record
     pushLap(qual, 'Fastest qual lap');
   });
 
