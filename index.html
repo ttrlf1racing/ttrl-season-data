@@ -698,6 +698,14 @@ function buildPage(data) {
   const seasonsTable = document.querySelector('#seasonsTable tbody');
   const seasonOverviewCards = document.getElementById('seasonOverviewCards');
 
+  function getSeasonKey(s) {
+    return String(s.id != null ? s.id : (s.name || ''));
+  }
+
+  function getSeasonResultKey(sr) {
+    return String(sr.seasonId != null ? sr.seasonId : (sr.seasonName || ''));
+  }
+
   function renderSeasonOverview(selectedSeasonId) {
     if (!seasonOverviewCards) return;
     seasonOverviewCards.innerHTML = '';
@@ -705,7 +713,7 @@ function buildPage(data) {
     if (!selectedSeasonId || selectedSeasonId === 'all') return;
 
     const s = seasonsSorted.find(
-      x => String(x.name || x.id) === selectedSeasonId
+      x => getSeasonKey(x) === selectedSeasonId
     );
     if (!s) return;
 
@@ -740,7 +748,7 @@ function buildPage(data) {
 
     const toRender = activeId === 'all'
       ? seasonsSorted
-      : seasonsSorted.filter(s => String(s.name || s.id) === activeId);
+      : seasonsSorted.filter(s => getSeasonKey(s) === activeId);
 
     toRender.forEach(s => {
       let statusKey = 'planned';
@@ -774,7 +782,7 @@ function buildPage(data) {
     seasonSelect.innerHTML = '<option value="all">All seasons</option>';
     seasonsSorted.forEach(s => {
       const opt = document.createElement('option');
-      const id = String(s.name || s.id || '');
+      const id = getSeasonKey(s);
       opt.value = id;
       opt.textContent =
         (s.startDate ? s.startDate + ' – ' : '') +
@@ -863,7 +871,7 @@ function buildPage(data) {
     const stand = d.source.standings || {};
     const list = stand.seasonResults || [];
     return list.some(sr =>
-      String(sr.seasonName || sr.seasonId) === seasonId
+      getSeasonResultKey(sr) === seasonId
     );
   }
 
@@ -966,7 +974,7 @@ function buildPage(data) {
     let seasonsResults = (standings.seasonResults || []).slice();
     if (currentSeasonId !== 'all') {
       seasonsResults = seasonsResults.filter(
-        sr => String(sr.seasonName || sr.seasonId) === currentSeasonId
+        sr => getSeasonResultKey(sr) === currentSeasonId
       );
     }
     seasonsResults.sort((a, b) =>
@@ -981,7 +989,6 @@ function buildPage(data) {
       (participation.seasonsParticipated ?
         ' • ' + participation.seasonsParticipated + ' seasons' : '');
 
-    // avatar with fallback
     if (driverAvatar) {
       const avatarSrc = getDriverAvatarSrc(row.name);
       driverAvatar.onerror = function () {
@@ -1084,7 +1091,7 @@ function buildPage(data) {
 
     function pushLap(src, label) {
       if (!src || !src.time) return;
-      const seasonKey = src.seasonName || src.seasonId || '';
+      const seasonKey = src.seasonId != null ? src.seasonId : (src.seasonName || '');
       trackRowsAll.push({
         circuit,
         country,
@@ -1097,7 +1104,7 @@ function buildPage(data) {
         driver: src.driverName || '',
         team: src.teamName || '',
         season: src.seasonName || '',
-        seasonKey,
+        seasonKey: String(seasonKey),
         sessionType: src.sessionType || ''
       });
     }
@@ -1126,7 +1133,7 @@ function buildPage(data) {
     const seasonId = currentSeasonId;
     if (seasonId === 'all') return trackRowsAll;
     return trackRowsAll.filter(
-      r => String(r.seasonKey || r.season) === seasonId
+      r => r.seasonKey === String(seasonId)
     );
   }
 
