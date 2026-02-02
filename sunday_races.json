@@ -2,14 +2,14 @@
   "metadata": {
     "formatVersion": 1,
     "exportType": "MultiSeason",
-    "exportedAt": "2026-02-02T14:31:13Z",
+    "exportedAt": "2026-02-02T15:28:09Z",
     "sourceApplication": "Racing League Tools",
     "leagueName": "TTRL "
   },
   "multiSeasonStatistics": {
     "multiSeasonInfo": {
       "name": "Sunday Races ",
-      "seasonsCount": 16,
+      "seasonsCount": 14,
       "completedSeasonsCount": 10,
       "isClassSpecific": false,
       "totalDrivers": 316,
@@ -26,14 +26,6 @@
         "isStarted": true,
         "startDate": "2025-01-19",
         "endDate": "2025-03-16"
-      },
-      {
-        "name": "Obi Div (S3) Reservs",
-        "championshipName": "F1 2024 (Full q)",
-        "totalRounds": 0,
-        "completedRounds": 0,
-        "isCompleted": false,
-        "isStarted": false
       },
       {
         "name": "TTRL F124 - T1 Season 4",
@@ -84,14 +76,6 @@
         "isStarted": true,
         "startDate": "2025-01-19",
         "endDate": "2025-03-16"
-      },
-      {
-        "name": "Tonights Race Line Up T2",
-        "championshipName": "F1 2024 (Full q)",
-        "totalRounds": 0,
-        "completedRounds": 0,
-        "isCompleted": false,
-        "isStarted": false
       },
       {
         "name": "TTRL F125 T2  - Season 1",
@@ -27089,7 +27073,7 @@
         "position": 1,
         "totalPoints": "3020.5",
         "participation": {
-          "seasonsParticipated": 16,
+          "seasonsParticipated": 14,
           "totalEntries": 295,
           "totalRaces": 293,
           "totalRacesFinished": 214
@@ -27118,7 +27102,7 @@
         "position": 2,
         "totalPoints": "2955.5",
         "participation": {
-          "seasonsParticipated": 16,
+          "seasonsParticipated": 14,
           "totalEntries": 308,
           "totalRaces": 304,
           "totalRacesFinished": 212
@@ -27147,7 +27131,7 @@
         "position": 3,
         "totalPoints": "2891",
         "participation": {
-          "seasonsParticipated": 16,
+          "seasonsParticipated": 14,
           "totalEntries": 308,
           "totalRaces": 308,
           "totalRacesFinished": 223
@@ -27176,7 +27160,7 @@
         "position": 4,
         "totalPoints": "2870.5",
         "participation": {
-          "seasonsParticipated": 16,
+          "seasonsParticipated": 14,
           "totalEntries": 295,
           "totalRaces": 292,
           "totalRacesFinished": 214
@@ -27205,7 +27189,7 @@
         "position": 5,
         "totalPoints": "2693.5",
         "participation": {
-          "seasonsParticipated": 16,
+          "seasonsParticipated": 14,
           "totalEntries": 303,
           "totalRaces": 299,
           "totalRacesFinished": 230
@@ -27234,7 +27218,7 @@
         "position": 6,
         "totalPoints": "2603",
         "participation": {
-          "seasonsParticipated": 16,
+          "seasonsParticipated": 14,
           "totalEntries": 297,
           "totalRaces": 291,
           "totalRacesFinished": 208
@@ -27263,7 +27247,7 @@
         "position": 7,
         "totalPoints": "2518.5",
         "participation": {
-          "seasonsParticipated": 16,
+          "seasonsParticipated": 14,
           "totalEntries": 300,
           "totalRaces": 296,
           "totalRacesFinished": 203
@@ -27292,7 +27276,7 @@
         "position": 8,
         "totalPoints": "2446",
         "participation": {
-          "seasonsParticipated": 16,
+          "seasonsParticipated": 14,
           "totalEntries": 303,
           "totalRaces": 298,
           "totalRacesFinished": 208
@@ -27321,7 +27305,7 @@
         "position": 9,
         "totalPoints": "2396.5",
         "participation": {
-          "seasonsParticipated": 16,
+          "seasonsParticipated": 14,
           "totalEntries": 302,
           "totalRaces": 300,
           "totalRacesFinished": 204
@@ -27350,7 +27334,7 @@
         "position": 10,
         "totalPoints": "2375.5",
         "participation": {
-          "seasonsParticipated": 16,
+          "seasonsParticipated": 14,
           "totalEntries": 302,
           "totalRaces": 299,
           "totalRacesFinished": 205
