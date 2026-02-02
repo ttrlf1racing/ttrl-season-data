@@ -5,9 +5,33 @@
   <title>TTRL Multi-Season Stats</title>
   <style>
     body { font-family: system-ui, sans-serif; margin: 0; padding: 0; background:#050608; color:#f5f5f5; }
-    header { background:#000000; padding:16px 24px; border-bottom:3px solid #ff0000; }
+    header { background:#000000; padding:16px 24px 10px; border-bottom:3px solid #ff0000; }
     header h1 { margin:0; font-size:24px; }
-    header p { margin:4px 0 0; color:#c5c6c7; }
+    header p { margin:4px 0; color:#c5c6c7; }
+
+    .header-top { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; }
+    .logo-wrap { display:flex; align-items:center; gap:16px; }
+    .logo-wrap img { height:50px; }
+
+    .header-centre {
+      text-align:center;
+      flex:1 1 auto;
+      font-size:13px;
+      color:#c5c6c7;
+    }
+    .header-centre-title {
+      font-weight:600;
+      letter-spacing:0.06em;
+      text-transform:uppercase;
+      color:#e5e7eb;
+    }
+
+    .header-meta {
+      font-size:12px;
+      text-align:right;
+      color:#9ca3af;
+    }
+
     main { padding:20px 24px 40px; max-width:1200px; margin:0 auto; }
 
     .cards { display:flex; flex-wrap:wrap; gap:12px; margin-bottom:24px; }
@@ -30,7 +54,6 @@
       overflow:visible;
       text-overflow:clip;
     }
-
     #driversTable th:nth-child(1),
     #driversTable td:nth-child(1) { width:160px; }
     #driversTable th:nth-child(2),
@@ -44,13 +67,24 @@
     .badge-planned { background:#7f8c8d; color:#fff; }
 
     .filters { display:flex; flex-wrap:wrap; gap:8px; margin:12px 0 6px; align-items:center; }
-    .filters input, .filters select { padding:4px 6px; font-size:13px; border-radius:4px; border:1px solid:#3b4252; background:#050608; color:#f5f5f5; }
+    .filters input, .filters select, .filters button {
+      padding:4px 6px;
+      font-size:13px;
+      border-radius:4px;
+      border:1px solid #3b4252;
+      background:#050608;
+      color:#f5f5f5;
+    }
+    .filters button {
+      cursor:pointer;
+      background:#11151f;
+    }
+    .filters button:hover {
+      background:#1d2535;
+    }
     .filters label { font-size:13px; color:#c5c6c7; }
 
     .section-description { font-size:13px; color:#c5c6c7; margin-top:4px; }
-
-    .logo-wrap { display:flex; align-items:center; gap:16px; }
-    .logo-wrap img { height:50px; }
 
     .tab-btn {
       background:#11151f;
@@ -61,14 +95,8 @@
       cursor:pointer;
       font-size:13px;
     }
-    .tab-btn.active {
-      background:#007bff;
-      border-color:#007bff;
-    }
-    .tab-btn.disabled {
-      opacity:0.4;
-      cursor:not-allowed;
-    }
+    .tab-btn.active { background:#007bff; border-color:#007bff; }
+    .tab-btn.disabled { opacity:0.4; cursor:not-allowed; }
     section[data-view] { display:none; }
     section[data-view].active { display:block; }
 
@@ -88,11 +116,7 @@
     }
     .scroll-body thead { width:100%; }
 
-    .driver-layout {
-      display:flex;
-      gap:16px;
-      margin-top:10px;
-    }
+    .driver-layout { display:flex; gap:16px; margin-top:10px; }
     .driver-layout-main { flex:1 1 auto; min-width:0; }
 
     .driver-card {
@@ -239,31 +263,43 @@
     }
     .driver-modal-close:hover { background:#1f2937; }
 
-    .muted {
-      color:#9ca3af;
-      font-size:13px;
-    }
+    .muted { color:#9ca3af; font-size:13px; }
 
     @media (max-width:900px) {
+      .header-top { flex-direction:column; align-items:flex-start; }
+      .header-centre { text-align:left; }
+      .header-meta { text-align:left; }
       .driver-layout { flex-direction:column; }
     }
   </style>
 </head>
 <body>
-<!-- Hidden input for adding extra season exports -->
 <input id="addSeasonFileInput" type="file" accept=".json,application/json" style="display:none;">
 
 <header>
-  <div class="logo-wrap">
-    <img src="ttrl-logo.png" alt="TTRL logo">
-    <div>
-      <h1 id="leagueTitle">TTRL Multi-Season Statistics</h1>
-      <p id="fileHint" style="margin:8px 0 4px; color:#c5c6c7;">Choose race day to view:</p>
-      <select id="fileSelect" style="margin-top:2px;">
-        <option value="">Select race day…</option>
-        <option value="sunday_races.json">Sunday races</option>
-        <option value="wed_races.json">Wednesday races</option>
-      </select>
+  <div class="header-top">
+    <div class="logo-wrap">
+      <img src="ttrl-logo.png" alt="TTRL logo">
+      <div>
+        <h1 id="leagueTitle">TTRL Multi-Season Statistics</h1>
+        <p id="raceDayLine">Choose race day to view:</p>
+        <div>
+          <select id="fileSelect" style="margin-top:2px;">
+            <option value="">Select race day…</option>
+            <option value="sunday_races.json">Sunday races</option>
+            <option value="wed_races.json">Wednesday races</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-centre">
+      <div class="header-centre-title">TTRL Multi‑Season Insights</div>
+      <div>Aggregated seasons view with driver, team and track statistics.</div>
+    </div>
+
+    <div class="header-meta">
+      <div id="fileMeta">No file loaded yet</div>
     </div>
   </div>
 </header>
@@ -274,13 +310,11 @@
     <div class="cards" id="overviewCards"></div>
   </section>
 
-  <!-- Season-specific overview -->
   <section id="seasonOverviewSection">
     <h2>Season overview</h2>
     <div class="cards" id="seasonOverviewCards"></div>
   </section>
 
-  <!-- View tabs -->
   <section id="viewSelector">
     <div class="filters" style="margin-top:0; justify-content:flex-start; align-items:center;">
       <label style="margin-right:8px;">View:</label>
@@ -294,7 +328,9 @@
   <!-- Seasons -->
   <section id="seasonsSection" data-view="seasons">
     <h2>Seasons</h2>
-    <p class="section-description">List of all exported seasons ordered by latest start date.</p>
+    <p class="section-description">
+      All exported seasons ordered by latest start date. Use the selector to focus on a single season.
+    </p>
     <div class="filters">
       <label>
         Season:
@@ -303,6 +339,7 @@
           <option value="__add__">+ Add another season export…</option>
         </select>
       </label>
+      <button id="addSeasonBtn" type="button">+ Add another season export…</button>
     </div>
     <table id="seasonsTable">
       <thead>
@@ -324,7 +361,7 @@
   <section id="driversSection" data-view="drivers">
     <h2>Drivers</h2>
     <p class="section-description">
-      Select a driver in the table to open their profile card with season‑by‑season details.
+      Stats are filtered to the currently selected season (or all seasons when "All seasons" is chosen).
     </p>
 
     <div class="filters">
@@ -436,7 +473,7 @@
   <section id="trackSection" data-view="tracks">
     <h2>Tracks</h2>
     <p class="section-description">
-      For the selected circuit, shows all summary laps (record, fastest race, fastest qual) ordered from fastest to slowest.
+      For the selected circuit, shows summary laps for the currently selected season (or all seasons when "All seasons" is chosen).
     </p>
     <div class="filters">
       <label>
@@ -468,17 +505,34 @@
     </div>
   </section>
 
-  <!-- Driver Times (locked out) -->
+  <!-- Driver Times (locked) -->
   <section id="driverTimesSection" data-view="driverTimes">
     <h2>Driver Times</h2>
     <p class="muted">
-      This section is temporarily disabled while the underlying data is finalised.
+      This section is temporarily disabled while lap time data is finalised.
     </p>
   </section>
 </main>
 
 <script>
 let globalBaseData = null;
+let currentSeasonId = 'all';
+
+function formatLoadedMeta(meta) {
+  const fileMetaEl = document.getElementById('fileMeta');
+  if (!fileMetaEl) return;
+  const exportedAt = meta && meta.exportedAt ? meta.exportedAt : null;
+  if (!exportedAt) {
+    fileMetaEl.textContent = 'Last loaded: unknown export time';
+    return;
+  }
+  try {
+    const d = new Date(exportedAt);
+    fileMetaEl.textContent = 'Last loaded export: ' + d.toLocaleString();
+  } catch {
+    fileMetaEl.textContent = 'Last loaded export: ' + exportedAt;
+  }
+}
 
 function buildPage(data) {
   const meta = data.metadata || {};
@@ -488,11 +542,12 @@ function buildPage(data) {
   const driversSrc = multi.drivers || multi.driverStatistics || data.drivers || [];
   const tracks = multi.tracks || multi.trackStatistics || data.tracks || [];
 
+  formatLoadedMeta(meta);
+
   const leagueName = (meta.leagueName || '').trim() || 'TTRL';
   const msName = info.name || 'All Seasons';
   document.getElementById('leagueTitle').textContent = leagueName + ' – ' + msName;
 
-  // Overview cards (all seasons)
   const cardsEl = document.getElementById('overviewCards');
   cardsEl.innerHTML = '';
   [
@@ -593,7 +648,7 @@ function buildPage(data) {
 
   function populateSeasonSelect() {
     if (!seasonSelect) return;
-    const addOption = seasonSelect.querySelector('option[value="__add__"]');
+    const addOpt = seasonSelect.querySelector('option[value="__add__"]');
     seasonSelect.innerHTML = '<option value="all">All seasons</option>';
     seasonsSorted.forEach(s => {
       const opt = document.createElement('option');
@@ -604,10 +659,10 @@ function buildPage(data) {
         (s.name || 'Unnamed season');
       seasonSelect.appendChild(opt);
     });
-    if (addOption) seasonSelect.appendChild(addOption);
+    if (addOpt) seasonSelect.appendChild(addOpt);
   }
 
-  // ==== Drivers ====
+  // ==== Drivers and filtering by season ====
   const driversTable = document.querySelector('#driversTable tbody');
   const dcName = document.getElementById('dcName');
   const dcMeta = document.getElementById('dcMeta');
@@ -677,14 +732,29 @@ function buildPage(data) {
     };
   }
 
-  const driverRows = driversSrc.map(deriveDriverRow);
+  const driverRowsAll = driversSrc.map(deriveDriverRow);
+
+  function driverBelongsToSeason(d, seasonId) {
+    if (!seasonId || seasonId === 'all') return true;
+    const stand = d.source.standings || {};
+    const list = stand.seasonResults || [];
+    return list.some(sr => String(sr.seasonId || sr.seasonName) === seasonId);
+  }
+
+  function getFilteredDriverRows() {
+    const seasonId = currentSeasonId;
+    if (seasonId === 'all') return driverRowsAll;
+    return driverRowsAll.filter(dr => driverBelongsToSeason(dr, seasonId));
+  }
 
   function renderDrivers() {
     const search = document.getElementById('driverSearch').value.toLowerCase();
     const minSeasons = Number(document.getElementById('minSeasons').value || 1);
     const sortKey = document.getElementById('driverSort').value;
 
-    const filtered = driverRows.filter(dr => {
+    const rows = getFilteredDriverRows();
+
+    const filtered = rows.filter(dr => {
       if (dr.seasons < minSeasons) return false;
       const text = (dr.name + ' ' + dr.nationality + ' ' + dr.raceNumber).toLowerCase();
       if (search && !text.includes(search)) return false;
@@ -753,7 +823,8 @@ function buildPage(data) {
   }
 
   function renderDriverCard(driverName) {
-    const row = driverRows.find(d => d.name === driverName);
+    const rows = getFilteredDriverRows();
+    const row = rows.find(d => d.name === driverName);
     if (!row) return;
 
     selectedDriverName = row.name;
@@ -766,7 +837,13 @@ function buildPage(data) {
     const infoD = src.driverInfo || {};
     const participation = src.participation || {};
     const standings = src.standings || {};
-    const seasonsResults = (standings.seasonResults || []).slice().sort((a, b) =>
+    let seasonsResults = (standings.seasonResults || []).slice();
+    if (currentSeasonId !== 'all') {
+      seasonsResults = seasonsResults.filter(
+        sr => String(sr.seasonId || sr.seasonName) === currentSeasonId
+      );
+    }
+    seasonsResults.sort((a, b) =>
       String(a.seasonName || '').localeCompare(String(b.seasonName || ''))
     );
     const cats = getDriverCategories(row.name);
@@ -849,13 +926,11 @@ function buildPage(data) {
     });
   }
 
-  // Tracks
+  // Tracks filtered by season
   const trackSelect = document.getElementById('trackSelect');
   const trackTableBody = document.querySelector('#trackTable tbody');
-  const dtTrackSelect = document.getElementById('dtTrackSelect');
-  const dtPerTrackBody = document.querySelector('#dtPerTrackTable tbody');
 
-  const trackRows = [];
+  const trackRowsAll = [];
   tracks.forEach(t => {
     const circuit = t.circuitName || t.trackName || '';
     const country = t.country || '';
@@ -867,7 +942,8 @@ function buildPage(data) {
 
     function pushLap(src, label) {
       if (!src || !src.time) return;
-      trackRows.push({
+      const seasonId = src.seasonId || src.seasonName || '';
+      trackRowsAll.push({
         circuit,
         country,
         totalSeasons: gen.totalSeasons || '',
@@ -879,6 +955,7 @@ function buildPage(data) {
         driver: src.driverName || '',
         team: src.teamName || '',
         season: src.seasonName || '',
+        seasonId,
         sessionType: src.sessionType || ''
       });
     }
@@ -888,13 +965,11 @@ function buildPage(data) {
     pushLap(qual, 'Fastest qual lap');
   });
 
-  const trackNames = Array.from(new Set(trackRows.map(r => r.circuit))).sort();
+  const trackNames = Array.from(new Set(trackRowsAll.map(r => r.circuit))).sort();
 
-  function populateTrackSelect(sel, includeAll) {
+  function populateTrackSelect(sel) {
     if (!sel) return;
-    sel.innerHTML = includeAll ?
-      '<option value="">All tracks</option>' :
-      '<option value="">Select track</option>';
+    sel.innerHTML = '<option value="">All tracks</option>';
     trackNames.forEach(name => {
       if (!name) return;
       const opt = document.createElement('option');
@@ -904,13 +979,19 @@ function buildPage(data) {
     });
   }
 
-  populateTrackSelect(trackSelect, true);
-  if (dtTrackSelect) populateTrackSelect(dtTrackSelect, false);
+  populateTrackSelect(trackSelect);
+
+  function getFilteredTrackRows() {
+    const seasonId = currentSeasonId;
+    if (seasonId === 'all') return trackRowsAll;
+    return trackRowsAll.filter(r => String(r.seasonId || r.season) === seasonId);
+  }
 
   function renderTracks() {
     const selectedTrack = trackSelect ? trackSelect.value : '';
+    const rows = getFilteredTrackRows();
     trackTableBody.innerHTML = '';
-    trackRows
+    rows
       .filter(r => !selectedTrack || r.circuit === selectedTrack)
       .sort((a, b) => a.timeMs - b.timeMs || a.time.localeCompare(b.time))
       .forEach(r => {
@@ -930,8 +1011,6 @@ function buildPage(data) {
         trackTableBody.appendChild(tr);
       });
   }
-
-  // (Driver Times rendering intentionally omitted / disabled)
 
   const tabButtons = Array.from(document.querySelectorAll('.tab-btn'));
   const viewSections = Array.from(document.querySelectorAll('section[data-view]'));
@@ -987,20 +1066,26 @@ function buildPage(data) {
 
   populateSeasonSelect();
   if (seasonSelect) {
+    if (!seasonSelect.value) seasonSelect.value = 'all';
+    currentSeasonId = seasonSelect.value;
     seasonSelect.addEventListener('change', () => {
       const val = seasonSelect.value;
       if (val === '__add__') {
         promptAddSeasonFile();
-        seasonSelect.value = 'all';
+        seasonSelect.value = currentSeasonId || 'all';
         return;
       }
-      renderSeasons(val);
-      renderSeasonOverview(val);
+      currentSeasonId = val || 'all';
+      renderSeasons(currentSeasonId);
+      renderSeasonOverview(currentSeasonId);
+      driverCurrentPage = 1;
+      renderDrivers();
+      renderTracks();
     });
   }
 
-  renderSeasons('all');
-  renderSeasonOverview('all');
+  renderSeasons(currentSeasonId);
+  renderSeasonOverview(currentSeasonId);
   renderDrivers();
   renderTracks();
 }
@@ -1058,6 +1143,7 @@ function promptAddSeasonFile() {
 window.addEventListener('DOMContentLoaded', function () {
   const select = document.getElementById('fileSelect');
   const addInp = document.getElementById('addSeasonFileInput');
+  const addSeasonBtn = document.getElementById('addSeasonBtn');
 
   if (select) {
     select.addEventListener('change', function () {
@@ -1070,6 +1156,12 @@ window.addEventListener('DOMContentLoaded', function () {
       select.value = 'sunday_races.json';
       loadJsonFromUrl(select.value, false);
     }
+  }
+
+  if (addSeasonBtn) {
+    addSeasonBtn.addEventListener('click', () => {
+      promptAddSeasonFile();
+    });
   }
 
   if (addInp) {
