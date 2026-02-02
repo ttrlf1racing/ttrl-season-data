@@ -274,7 +274,12 @@
       <h1 id="leagueTitle">TTRL Multi-Season Statistics</h1>
       <p id="leagueSubtitle"></p>
       <p id="fileHint" style="margin:8px 0 4px; color:#c5c6c7;">Choose a JSON export file to view:</p>
-      <input id="fileInput" type="file" accept=".json,application/json" style="margin-top:2px;">
+      <!-- Dropdown instead of file input -->
+      <select id="fileSelect" style="margin-top:2px;">
+        <option value="">Select file…</option>
+        <option value="sunday_races.json">Sunday races</option>
+        <option value="wed_races.json">Wednesday races</option>
+      </select>
     </div>
   </div>
 </header>
@@ -660,7 +665,7 @@ function buildPage(data) {
     const wins = Number(racePositions.wins || 0);
     const podiums = Number(racePositions.podiums || 0);
     const bestChampPos = standings.bestPosition || '';
-       const cleanPct = discipline.cleanRacePercent != null ? discipline.cleanRacePercent : '';
+    const cleanPct = discipline.cleanRacePercent != null ? discipline.cleanRacePercent : '';
     const reliabPct = discipline.reliabilityPercent != null ? discipline.reliabilityPercent : '';
     const seasonsPart = participation.seasonsParticipated || 0;
     const totalRaces = participation.totalRaces || participation.totalMajorRaces || 0;
@@ -1081,24 +1086,33 @@ function buildPage(data) {
   renderPace();
 }
 
-function handleFileSelect(evt) {
-  const file = evt.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = function (e) {
-    try {
-      const data = JSON.parse(e.target.result);
+// Fetch JSON from the same repo (GitHub Pages)
+function loadJsonFromUrl(url) {
+  fetch(url)
+    .then(r => {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    })
+    .then(data => {
       buildPage(data);
-    } catch (err) {
-      alert('Could not parse JSON file.');
+    })
+    .catch(err => {
+      alert('Could not load JSON file: ' + err.message);
       console.error(err);
-    }
-  };
-  reader.readAsText(file);
+    });
 }
 
 window.addEventListener('DOMContentLoaded', function () {
-  document.getElementById('fileInput').addEventListener('change', handleFileSelect);
+  const select = document.getElementById('fileSelect');
+  if (!select) return;
+
+  select.addEventListener('change', function () {
+    const file = this.value;
+    if (!file) return;
+    // Files must be in the same folder as index.html,
+    // e.g. https://USERNAME.github.io/ttrl-season-data/sunday_races.json
+    loadJsonFromUrl(file);
+  });
 });
 </script>
 </body>
