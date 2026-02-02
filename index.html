@@ -225,7 +225,6 @@
       object-fit:cover;
       box-shadow:0 0 8px rgba(0,0,0,0.8);
     }
-
     .driver-card h3 { position:relative; margin:0 0 4px; font-size:20px; }
     .driver-handle {
       position:relative;
@@ -557,7 +556,8 @@
       <button id="driverModalClose" class="driver-modal-close">&times;</button>
       <div id="driverCard" class="driver-card">
         <div class="driver-card-header">
-          <img src="ttrl-logo.png" alt="TTRL" class="driver-card-logo">
+          <!-- src will be updated in JS -->
+          <img id="driverAvatar" src="Drivers Avatars/default.png" alt="Driver avatar" class="driver-card-logo">
           <div>
             <div class="driver-handle">TTRL DRIVER PROFILE</div>
             <h3 id="dcName"></h3>
@@ -635,6 +635,14 @@
 <script>
 let globalBaseData = null;
 let currentSeasonId = 'all';
+
+// folder for avatar images
+const DRIVER_AVATAR_FOLDER = 'Drivers Avatars';
+
+function getDriverAvatarSrc(driverName) {
+  const expectedFile = driverName + '.png';
+  return DRIVER_AVATAR_FOLDER + '/' + expectedFile;
+}
 
 function formatLoadedMeta(meta) {
   const fileMetaEl = document.getElementById('fileMeta');
@@ -791,6 +799,7 @@ function buildPage(data) {
   const dcSeasonsTable = document.querySelector('#dcSeasonsTable tbody');
   const driverModal = document.getElementById('driverModal');
   const driverModalClose = document.getElementById('driverModalClose');
+  const driverAvatar = document.getElementById('driverAvatar');
 
   function getDriverCategories(driverName) {
     const d = driversSrc.find(
@@ -812,7 +821,7 @@ function buildPage(data) {
 
   function deriveDriverRow(d) {
     const infoD = d.driverInfo || {};
-       const points = d.points || {};
+    const points = d.points || {};
     const racePositions = d.racePositions || {};
     const standings = d.standings || {};
     const discipline = d.discipline || {};
@@ -975,6 +984,17 @@ function buildPage(data) {
       (infoD.raceNumber ? ' • #' + infoD.raceNumber : '') +
       (participation.seasonsParticipated ?
         ' • ' + participation.seasonsParticipated + ' seasons' : '');
+
+    // avatar: try specific image, fall back to default.png if missing
+    if (driverAvatar) {
+      const avatarSrc = getDriverAvatarSrc(row.name);
+      driverAvatar.onerror = function () {
+        this.onerror = null;
+        this.src = DRIVER_AVATAR_FOLDER + '/default.png';
+      };
+      driverAvatar.src = avatarSrc;
+      driverAvatar.alt = row.name;
+    }
 
     dcCats.innerHTML = '';
     if (cats.length) {
