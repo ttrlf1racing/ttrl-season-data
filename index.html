@@ -272,11 +272,9 @@
     <img src="ttrl-logo.png" alt="TTRL logo">
     <div>
       <h1 id="leagueTitle">TTRL Multi-Season Statistics</h1>
-      <p id="leagueSubtitle"></p>
-      <p id="fileHint" style="margin:8px 0 4px; color:#c5c6c7;">Choose a JSON export file to view:</p>
-      <!-- Dropdown instead of file input -->
+      <p id="fileHint" style="margin:8px 0 4px; color:#c5c6c7;">Choose race day to view:</p>
       <select id="fileSelect" style="margin-top:2px;">
-        <option value="">Select file…</option>
+        <option value="">Select race day…</option>
         <option value="sunday_races.json">Sunday races</option>
         <option value="wed_races.json">Wednesday races</option>
       </select>
@@ -561,8 +559,6 @@ function buildPage(data) {
   const leagueName = (meta.leagueName || '').trim() || 'TTRL';
   const msName = info.name || 'All Seasons';
   document.getElementById('leagueTitle').textContent = leagueName + ' – ' + msName;
-  document.getElementById('leagueSubtitle').textContent =
-    'Loaded from file, exported on ' + (meta.exportedAt || 'unknown date');
 
   // Overview cards
   const cardsEl = document.getElementById('overviewCards');
@@ -649,7 +645,6 @@ function buildPage(data) {
   let selectedDriverName = null;
   let driverCurrentPage = 1;
   let driverPageSize = 25;
-  let lastFilteredDrivers = [];
 
   function deriveDriverRow(d) {
     const infoD = d.driverInfo || {};
@@ -716,8 +711,6 @@ function buildPage(data) {
       clean: (a, b) => (b.cleanPct || 0) - (a.cleanPct || 0)
     };
     filtered.sort(sorters[sortKey] || sorters.points);
-
-    lastFilteredDrivers = filtered;
 
     const total = filtered.length;
     const totalPages = Math.max(1, Math.ceil(total / driverPageSize));
@@ -801,7 +794,6 @@ function buildPage(data) {
       ' • Championships won: ' + (standings.championshipsWon || 0) +
       ' • Total points: ' + (row.totalPoints || 0);
 
-    // Accent for champs
     const cardEl = document.getElementById('driverCard');
     if (cardEl) {
       cardEl.classList.remove('primary-champ');
@@ -810,7 +802,6 @@ function buildPage(data) {
       }
     }
 
-    // Stat pills
     dcPills.innerHTML = '';
     const makePill = (label, value) => {
       const span = document.createElement('span');
@@ -845,14 +836,12 @@ function buildPage(data) {
     }
   }
 
-  // Click handler for driver rows
   document.querySelector('#driversTable').addEventListener('click', function (e) {
     const tr = e.target.closest('tr');
     if (!tr || !tr.dataset.driverName) return;
     renderDriverCard(tr.dataset.driverName);
   });
 
-  // Modal close behaviour
   if (driverModal && driverModalClose) {
     driverModalClose.addEventListener('click', () => {
       driverModal.classList.remove('open');
@@ -945,7 +934,6 @@ function buildPage(data) {
       });
   }
 
-  // ==== Driver Times: per-track list ====
   function renderDriverTimesPerTrack() {
     const selectedTrack = dtTrackSelect.value;
     dtPerTrackBody.innerHTML = '';
@@ -967,9 +955,8 @@ function buildPage(data) {
       });
   }
 
-  // ==== Overall driver lap pace ====
   const paceTableBody = document.querySelector('#paceTable tbody');
-  const paceMap = new Map(); // driver -> [timesMs]
+  const paceMap = new Map();
 
   trackRows.forEach(r => {
     if (!r.driver || !r.timeMs) return;
@@ -1023,7 +1010,6 @@ function buildPage(data) {
     });
   }
 
-  // ==== Tabs ====
   const tabButtons = Array.from(document.querySelectorAll('.tab-btn'));
   const viewSections = Array.from(document.querySelectorAll('section[data-view]'));
 
@@ -1043,7 +1029,6 @@ function buildPage(data) {
   });
   setView('seasons');
 
-  // ==== Wire filters & pagination ====
   document.getElementById('seasonSearch').oninput = renderSeasons;
   document.getElementById('seasonStatusFilter').onchange = renderSeasons;
 
@@ -1078,7 +1063,6 @@ function buildPage(data) {
   dtTrackSelect.onchange = renderDriverTimesPerTrack;
   document.getElementById('paceOrder').addEventListener('change', renderPace);
 
-  // initial render
   renderSeasons();
   renderDrivers();
   renderTracks();
@@ -1086,7 +1070,6 @@ function buildPage(data) {
   renderPace();
 }
 
-// Fetch JSON from the same repo (GitHub Pages)
 function loadJsonFromUrl(url) {
   fetch(url)
     .then(r => {
@@ -1109,10 +1092,14 @@ window.addEventListener('DOMContentLoaded', function () {
   select.addEventListener('change', function () {
     const file = this.value;
     if (!file) return;
-    // Files must be in the same folder as index.html,
-    // e.g. https://USERNAME.github.io/ttrl-season-data/sunday_races.json
     loadJsonFromUrl(file);
   });
+
+  // Auto-load Sunday races on first load
+  if (select.value === '') {
+    select.value = 'sunday_races.json';
+    loadJsonFromUrl(select.value);
+  }
 });
 </script>
 </body>
