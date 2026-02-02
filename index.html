@@ -194,7 +194,7 @@
       position:relative;
       background:radial-gradient(circle at top left,#1f2937 0,#050608 55%);
       border-radius:10px;
-      padding:14px 16px 12px;
+      padding:18px 20px 14px;
       border:1px solid #3b82f6;
       border-left:4px solid #ef4444;
       box-shadow:0 0 18px rgba(59,130,246,0.45);
@@ -214,18 +214,20 @@
       position:relative;
       display:flex;
       align-items:center;
-      gap:10px;
-      margin-bottom:6px;
+      gap:14px;
+      margin-bottom:8px;
     }
     .driver-card-logo {
       position:relative;
-      width:32px;
-      height:32px;
-      border-radius:8px;
+      width:72px;
+      height:72px;
+      border-radius:999px;
       object-fit:cover;
-      box-shadow:0 0 8px rgba(0,0,0,0.8);
+      box-shadow:0 0 12px rgba(0,0,0,0.9);
+      flex-shrink:0;
     }
-    .driver-card h3 { position:relative; margin:0 0 4px; font-size:20px; }
+
+    .driver-card h3 { position:relative; margin:0 0 4px; font-size:22px; }
     .driver-handle {
       position:relative;
       font-size:12px;
@@ -414,12 +416,920 @@
 </header>
 
 <main>
-  <!-- (all the HTML and script from the file:2 excerpt continues exactly as in your original) -->
-  <!-- For brevity: paste everything from <main> ... </script></body></html> in file:2 unchanged. -->
+  <section id="overviewSection">
+    <h2>Overview</h2>
+    <div class="cards" id="overviewCards"></div>
+  </section>
+
+  <section id="seasonOverviewSection">
+    <h2>Season overview</h2>
+    <div class="cards" id="seasonOverviewCards"></div>
+  </section>
+
+  <section id="viewSelector">
+    <div class="filters" style="margin-top:0;">
+      <label style="margin-right:8px;">View:</label>
+      <button class="tab-btn" data-view="seasons">Seasons</button>
+      <button class="tab-btn" data-view="drivers">Drivers</button>
+      <button class="tab-btn" data-view="tracks">Tracks</button>
+      <button class="tab-btn disabled" data-view="driverTimes" aria-disabled="true">Driver Times (coming soon)</button>
+    </div>
+  </section>
+
+  <!-- Seasons -->
+  <section id="seasonsSection" data-view="seasons">
+    <h2>Seasons</h2>
+    <p class="section-description">
+      All exported seasons ordered by latest start date. Use the selector to focus on a single season.
+    </p>
+    <div class="filters">
+      <label>
+        Season:
+        <select id="seasonSelect">
+          <option value="all">All seasons</option>
+          <option value="__add__">+ Add another season export…</option>
+        </select>
+      </label>
+      <button id="addSeasonBtn" type="button">+ Add another season export…</button>
+    </div>
+    <table id="seasonsTable">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Championship</th>
+          <th>Rounds</th>
+          <th>Completed</th>
+          <th>Status</th>
+          <th>Start</th>
+          <th>End</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <!-- Drivers -->
+  <section id="driversSection" data-view="drivers">
+    <h2>Drivers</h2>
+    <p class="section-description">
+      Stats are filtered to the currently selected season (or all seasons when "All seasons" is chosen).
+    </p>
+
+    <div class="driver-cta">
+      <span class="driver-cta-icon">ⓘ</span>
+      <span>Click a driver row to open their profile card.</span>
+    </div>
+
+    <div class="filters">
+      <label>
+        Search:
+        <input type="text" id="driverSearch" placeholder="Name, nationality, race num">
+      </label>
+      <label>
+        Min seasons:
+        <input type="number" id="minSeasons" min="1" value="1" style="width:70px;">
+      </label>
+      <label>
+        Sort by:
+        <select id="driverSort">
+          <option value="points">Total points</option>
+          <option value="avgPoints">Avg pts</option>
+          <option value="wins">Wins</option>
+          <option value="podiums">Podiums</option>
+          <option value="fastRace">Fast race laps</option>
+          <option value="fastPole">Fast pole laps</option>
+          <option value="clean">Clean race %</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="driver-layout">
+      <div class="driver-layout-main">
+        <div class="scroll-body">
+          <table id="driversTable">
+            <thead>
+              <tr>
+                <th>Driver</th>
+                <th>Nat.</th>
+                <th>Car number</th>
+                <th>Seasons</th>
+                <th>Races</th>
+                <th>Total pts</th>
+                <th>Avg pts</th>
+                <th>Wins</th>
+                <th>Podiums</th>
+                <th>Fast race laps</th>
+                <th>Fast pole laps</th>
+                <th>Best champ pos</th>
+                <th>Clean %</th>
+                <th>Reliab. %</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+
+        <div id="driverPager" class="filters" style="justify-content:space-between; margin-top:6px;">
+          <div>
+            <span id="driverPageInfo">Page 1 of 1</span>
+          </div>
+          <div>
+            <button id="driverPrevPage" class="tab-btn" type="button">&lt; Prev</button>
+            <button id="driverNextPage" class="tab-btn" type="button">Next &gt;</button>
+            <select id="driverPageSize" style="margin-left:8px;">
+              <option value="10">10 / page</option>
+              <option value="25" selected>25 / page</option>
+              <option value="50">50 / page</option>
+              <option value="100">100 / page</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Driver card modal -->
+  <div id="driverModal" class="driver-modal">
+    <div class="driver-modal-backdrop"></div>
+    <div class="driver-modal-card">
+      <button id="driverModalClose" class="driver-modal-close">&times;</button>
+      <div id="driverCard" class="driver-card">
+        <div class="driver-card-header">
+          <img id="driverAvatar" src="Drivers Avatars/default.png" alt="Driver avatar" class="driver-card-logo">
+          <div>
+            <div class="driver-handle">TTRL DRIVER PROFILE</div>
+            <h3 id="dcName"></h3>
+          </div>
+        </div>
+        <div class="driver-meta" id="dcMeta"></div>
+        <div id="dcCats" style="margin-bottom:6px;"></div>
+        <div class="driver-statline" id="dcSummary"></div>
+        <div id="dcPills" style="margin-bottom:8px;"></div>
+        <h4 style="margin:4px 0 4px; font-size:14px;">Season results</h4>
+        <div style="max-height:320px; overflow-y:auto;">
+          <table class="driver-seasons-table" id="dcSeasonsTable">
+            <thead>
+              <tr>
+                <th>Season</th>
+                <th>Pos</th>
+                <th>Pts</th>
+                <th>Races</th>
+                <th>Wins</th>
+                <th>Podiums</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tracks -->
+  <section id="trackSection" data-view="tracks">
+    <h2>Tracks</h2>
+    <p class="section-description">
+      For the selected circuit, shows summary laps for the currently selected season (or all seasons when "All seasons" is chosen).
+    </p>
+    <div class="filters">
+      <label>
+        Track:
+        <select id="trackSelect">
+          <option value="">All tracks</option>
+        </select>
+      </label>
+    </div>
+    <div class="scroll-body">
+      <table id="trackTable">
+        <thead>
+          <tr>
+            <th>Track</th>
+            <th>Country</th>
+            <th>Seasons</th>
+            <th>Events</th>
+            <th>Races</th>
+            <th>Type</th>
+            <th>Lap time</th>
+            <th>Driver</th>
+            <th>Team</th>
+            <th>Season</th>
+            <th>Session</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Driver Times (locked) -->
+  <section id="driverTimesSection" data-view="driverTimes">
+    <h2>Driver Times</h2>
+    <p class="muted">
+      This section is temporarily disabled while lap time data is finalised.
+    </p>
+  </section>
 </main>
 
 <script>
-/* all existing JS from your working file here */
+let globalBaseData = null;
+let currentSeasonId = 'all';
+
+const DRIVER_AVATAR_FOLDER = 'Drivers Avatars';
+
+function getDriverAvatarSrc(driverName) {
+  return DRIVER_AVATAR_FOLDER + '/' + driverName + '.png';
+}
+
+function formatLoadedMeta(meta) {
+  const fileMetaEl = document.getElementById('fileMeta');
+  if (!fileMetaEl) return;
+  const exportedAt = meta && meta.exportedAt ? meta.exportedAt : null;
+  if (!exportedAt) {
+    fileMetaEl.textContent = 'Last loaded: unknown export time';
+    return;
+  }
+  try {
+    const d = new Date(exportedAt);
+    fileMetaEl.textContent = 'Last loaded export: ' + d.toLocaleString();
+  } catch {
+    fileMetaEl.textContent = 'Last loaded export: ' + exportedAt;
+  }
+}
+
+function buildPage(data) {
+  const meta = data.metadata || {};
+  const multi = data.multiSeasonStatistics || {};
+  const info = multi.multiSeasonInfo || {};
+  const seasons = multi.seasons || [];
+  const driversSrc = multi.drivers || multi.driverStatistics || data.drivers || [];
+  const tracks = multi.tracks || multi.trackStatistics || data.tracks || [];
+
+  formatLoadedMeta(meta);
+
+  const leagueName = (meta.leagueName || '').trim() || 'TTRL';
+  const msName = info.name || 'All Seasons';
+  document.getElementById('leagueTitle').textContent = leagueName + ' – ' + msName;
+
+  const cardsEl = document.getElementById('overviewCards');
+  cardsEl.innerHTML = '';
+  [
+    { title: 'Seasons', value: info.seasonsCount },
+    { title: 'Completed seasons', value: info.completedSeasonsCount },
+    { title: 'Total drivers', value: info.totalDrivers },
+    { title: 'Total teams', value: info.totalTeams },
+    { title: 'Tracks', value: info.totalTracks }
+  ].forEach(c => {
+    if (c.value == null) return;
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.innerHTML =
+      '<div class="card-title">' + c.title + '</div>' +
+      '<div class="card-value">' + c.value + '</div>';
+    cardsEl.appendChild(div);
+  });
+
+  const seasonsSorted = seasons.slice().sort((a, b) => {
+    const da = new Date(a.startDate || '1970-01-01').getTime();
+    const db = new Date(b.startDate || '1970-01-01').getTime();
+    return db - da;
+  });
+
+  const seasonSelect = document.getElementById('seasonSelect');
+  const seasonsTable = document.querySelector('#seasonsTable tbody');
+  const seasonOverviewCards = document.getElementById('seasonOverviewCards');
+
+  function renderSeasonOverview(selectedSeasonId) {
+    if (!seasonOverviewCards) return;
+    seasonOverviewCards.innerHTML = '';
+
+    if (!selectedSeasonId || selectedSeasonId === 'all') return;
+
+    const s = seasonsSorted.find(
+      x => String(x.name || x.id) === selectedSeasonId
+    );
+    if (!s) return;
+
+    const statusText = s.isCompleted
+      ? 'Completed'
+      : (s.isStarted ? 'In progress' : 'Not started');
+
+    const items = [
+      { title: 'Season', value: s.name },
+      { title: 'Championship', value: s.championshipName },
+      { title: 'Rounds', value: (s.completedRounds || 0) + '/' + (s.totalRounds || 0) },
+      { title: 'Start date', value: s.startDate || '' },
+      { title: 'End date', value: s.endDate || '' },
+      { title: 'Status', value: statusText }
+    ];
+
+    items.forEach(c => {
+      if (!c.value && c.value !== 0) return;
+      const div = document.createElement('div');
+      div.className = 'card';
+      div.innerHTML =
+        '<div class="card-title">' + c.title + '</div>' +
+        '<div class="card-value">' + c.value + '</div>';
+      seasonOverviewCards.appendChild(div);
+    });
+  }
+
+  function renderSeasons(selectedSeasonId) {
+    seasonsTable.innerHTML = '';
+
+    const activeId = selectedSeasonId || 'all';
+
+    const toRender = activeId === 'all'
+      ? seasonsSorted
+      : seasonsSorted.filter(s => String(s.name || s.id) === activeId);
+
+    toRender.forEach(s => {
+      let statusKey = 'planned';
+      if (s.isCompleted) statusKey = 'completed';
+      else if (s.isStarted) statusKey = 'active';
+
+      const rounds = (s.completedRounds || 0) + '/' + (s.totalRounds || 0);
+      const statusMap = {
+        completed: { label: 'Completed', cls: 'badge-complete' },
+        active: { label: 'In progress', cls: 'badge-active' },
+        planned: { label: 'Not started', cls: 'badge-planned' }
+      };
+      const sm = statusMap[statusKey];
+
+      const tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td>' + (s.name || '') + '</td>' +
+        '<td>' + (s.championshipName || '') + '</td>' +
+        '<td>' + rounds + '</td>' +
+        '<td>' + (s.completedRounds || 0) + '</td>' +
+        '<td><span class="badge ' + sm.cls + '">' + sm.label + '</span></td>' +
+        '<td>' + (s.startDate || '') + '</td>' +
+        '<td>' + (s.endDate || '') + '</td>';
+      seasonsTable.appendChild(tr);
+    });
+  }
+
+  function populateSeasonSelect() {
+    if (!seasonSelect) return;
+    const addOpt = seasonSelect.querySelector('option[value="__add__"]');
+    seasonSelect.innerHTML = '<option value="all">All seasons</option>';
+    seasonsSorted.forEach(s => {
+      const opt = document.createElement('option');
+      const id = String(s.name || s.id || '');
+      opt.value = id;
+      opt.textContent =
+        (s.startDate ? s.startDate + ' – ' : '') +
+        (s.name || 'Unnamed season');
+      seasonSelect.appendChild(opt);
+    });
+    if (addOpt) seasonSelect.appendChild(addOpt);
+  }
+
+  // DRIVERS
+
+  const driversTable = document.querySelector('#driversTable tbody');
+  const dcName = document.getElementById('dcName');
+  const dcMeta = document.getElementById('dcMeta');
+  const dcCats = document.getElementById('dcCats');
+  const dcSummary = document.getElementById('dcSummary');
+  const dcPills = document.getElementById('dcPills');
+  const dcSeasonsTable = document.querySelector('#dcSeasonsTable tbody');
+  const driverModal = document.getElementById('driverModal');
+  const driverModalClose = document.getElementById('driverModalClose');
+  const driverAvatar = document.getElementById('driverAvatar');
+
+  function getDriverCategories(driverName) {
+    const d = driversSrc.find(
+      dr => (dr.driverName || '').toLowerCase() === String(driverName || '').toLowerCase()
+    );
+    if (!d || !d.categories) return [];
+    if (Array.isArray(d.categories)) {
+      return d.categories.map(c => String(c).trim()).filter(Boolean);
+    }
+    return String(d.categories)
+      .split(',')
+      .map(c => c.trim())
+      .filter(Boolean);
+  }
+
+  let selectedDriverName = null;
+  let driverCurrentPage = 1;
+  let driverPageSize = 25;
+
+  function deriveDriverRow(d) {
+    const infoD = d.driverInfo || {};
+    const points = d.points || {};
+    const racePositions = d.racePositions || {};
+    const standings = d.standings || {};
+    const discipline = d.discipline || {};
+    const participation = d.participation || {};
+    const fastest = d.fastestLaps || d.fastest || {};
+
+    const totalPoints = Number(points.totalPoints || 0);
+    const avgPerMajor = Number(points.averagePerMajorRace || points.averagePerEvent || 0);
+    const wins = Number(racePositions.wins || 0);
+    const podiums = Number(racePositions.podiums || 0);
+    const bestChampPos = standings.bestPosition || '';
+    const cleanPct = discipline.cleanRacePercent != null ? discipline.cleanRacePercent : '';
+    const reliabPct = discipline.reliabilityPercent != null ? discipline.reliabilityPercent : '';
+    const seasonsPart = participation.seasonsParticipated || 0;
+    const totalRaces = participation.totalRaces || participation.totalMajorRaces || 0;
+
+    const fastRaceLaps = Number(fastest.totalFastestRaceLaps || fastest.race || 0);
+    const fastPoleLaps = Number(fastest.totalFastestQualLaps || fastest.qual || 0);
+
+    return {
+      source: d,
+      name: d.driverName || infoD.realName || '',
+      nationality: infoD.nationality || '',
+      raceNumber: infoD.raceNumber || '',
+      seasons: seasonsPart,
+      races: totalRaces,
+      totalPoints,
+      avgPerMajor,
+      wins,
+      podiums,
+      fastRaceLaps,
+      fastPoleLaps,
+      bestChampPos,
+      cleanPct,
+      reliabPct
+    };
+  }
+
+  const driverRowsAll = driversSrc.map(deriveDriverRow);
+
+  function driverBelongsToSeason(d, seasonId) {
+    if (!seasonId || seasonId === 'all') return true;
+    const stand = d.source.standings || {};
+    const list = stand.seasonResults || [];
+    return list.some(sr =>
+      String(sr.seasonName || sr.seasonId) === seasonId
+    );
+  }
+
+  function getFilteredDriverRows() {
+    const seasonId = currentSeasonId;
+    if (seasonId === 'all') return driverRowsAll;
+    return driverRowsAll.filter(dr => driverBelongsToSeason(dr, seasonId));
+  }
+
+  function renderDrivers() {
+    const search = document.getElementById('driverSearch').value.toLowerCase();
+    const minSeasons = Number(document.getElementById('minSeasons').value || 1);
+    const sortKey = document.getElementById('driverSort').value;
+
+    const rows = getFilteredDriverRows();
+
+    const filtered = rows.filter(dr => {
+      if (dr.seasons < minSeasons) return false;
+      const text = (dr.name + ' ' + dr.nationality + ' ' + dr.raceNumber).toLowerCase();
+      if (search && !text.includes(search)) return false;
+      return true;
+    });
+
+    const sorters = {
+      points: (a, b) => b.totalPoints - a.totalPoints,
+      avgPoints: (a, b) => b.avgPerMajor - a.avgPerMajor,
+      wins: (a, b) => b.wins - a.wins,
+      podiums: (a, b) => b.podiums - a.podiums,
+      fastRace: (a, b) => b.fastRaceLaps - a.fastRaceLaps,
+      fastPole: (a, b) => b.fastPoleLaps - a.fastPoleLaps,
+      clean: (a, b) => (b.cleanPct || 0) - (a.cleanPct || 0)
+    };
+    filtered.sort(sorters[sortKey] || sorters.points);
+
+    const total = filtered.length;
+    const totalPages = Math.max(1, Math.ceil(total / driverPageSize));
+    if (driverCurrentPage > totalPages) driverCurrentPage = totalPages;
+    if (driverCurrentPage < 1) driverCurrentPage = 1;
+
+    const start = (driverCurrentPage - 1) * driverPageSize;
+    const pageRows = filtered.slice(start, start + driverPageSize);
+
+    driversTable.innerHTML = '';
+    pageRows.forEach(dr => {
+      const tr = document.createElement('tr');
+      tr.dataset.driverName = dr.name;
+      if (dr.name === selectedDriverName) tr.classList.add('driver-row-selected');
+      tr.innerHTML =
+        '<td>' + dr.name + '</td>' +
+        '<td>' + dr.nationality + '</td>' +
+        '<td>' + dr.raceNumber + '</td>' +
+        '<td>' + dr.seasons + '</td>' +
+        '<td>' + dr.races + '</td>' +
+        '<td>' + dr.totalPoints + '</td>' +
+        '<td>' +
+          (dr.avgPerMajor.toFixed ? dr.avgPerMajor.toFixed(1) : dr.avgPerMajor) +
+        '</td>' +
+        '<td>' + dr.wins + '</td>' +
+        '<td>' + dr.podiums + '</td>' +
+        '<td>' + dr.fastRaceLaps + '</td>' +
+        '<td>' + dr.fastPoleLaps + '</td>' +
+        '<td>' + dr.bestChampPos + '</td>' +
+        '<td>' +
+          (dr.cleanPct !== '' ?
+            (dr.cleanPct.toFixed ? dr.cleanPct.toFixed(1) : dr.cleanPct) : '') +
+        '</td>' +
+        '<td>' +
+          (dr.reliabPct !== '' ?
+            (dr.reliabPct.toFixed ? dr.reliabPct.toFixed(1) : dr.reliabPct) : '') +
+        '</td>';
+      driversTable.appendChild(tr);
+    });
+
+    const infoEl = document.getElementById('driverPageInfo');
+    if (infoEl) {
+      infoEl.textContent =
+        'Page ' + driverCurrentPage + ' of ' + totalPages + ' • ' + total + ' drivers';
+    }
+    const prevBtn = document.getElementById('driverPrevPage');
+    const nextBtn = document.getElementById('driverNextPage');
+    if (prevBtn) prevBtn.disabled = driverCurrentPage <= 1;
+    if (nextBtn) nextBtn.disabled = driverCurrentPage >= totalPages;
+  }
+
+  function renderDriverCard(driverName) {
+    const rows = getFilteredDriverRows();
+    const row = rows.find(d => d.name === driverName);
+    if (!row) return;
+
+    selectedDriverName = row.name;
+
+    Array.from(driversTable.querySelectorAll('tr')).forEach(tr => {
+      tr.classList.toggle('driver-row-selected', tr.dataset.driverName === selectedDriverName);
+    });
+
+    const src = row.source;
+    const infoD = src.driverInfo || {};
+    const participation = src.participation || {};
+    const standings = src.standings || {};
+    let seasonsResults = (standings.seasonResults || []).slice();
+    if (currentSeasonId !== 'all') {
+      seasonsResults = seasonsResults.filter(
+        sr => String(sr.seasonName || sr.seasonId) === currentSeasonId
+      );
+    }
+    seasonsResults.sort((a, b) =>
+      String(a.seasonName || '').localeCompare(String(b.seasonName || ''))
+    );
+    const cats = getDriverCategories(row.name);
+
+    dcName.textContent = row.name;
+    dcMeta.textContent =
+      (infoD.nationality || 'Nationality unknown') +
+      (infoD.raceNumber ? ' • #' + infoD.raceNumber : '') +
+      (participation.seasonsParticipated ?
+        ' • ' + participation.seasonsParticipated + ' seasons' : '');
+
+    // avatar with fallback
+    if (driverAvatar) {
+      const avatarSrc = getDriverAvatarSrc(row.name);
+      driverAvatar.onerror = function () {
+        this.onerror = null;
+        this.src = DRIVER_AVATAR_FOLDER + '/default.png';
+      };
+      driverAvatar.src = avatarSrc;
+      driverAvatar.alt = row.name;
+    }
+
+    dcCats.innerHTML = '';
+    if (cats.length) {
+      cats.forEach((c, idx) => {
+        const span = document.createElement('span');
+        span.className = 'driver-chip' + (idx === 0 ? ' primary' : '');
+        span.textContent = c;
+        dcCats.appendChild(span);
+      });
+    }
+
+    dcSummary.textContent =
+      'Best championship position: ' + (standings.bestPosition || '–') +
+      ' • Championships won: ' + (standings.championshipsWon || 0) +
+      ' • Total points: ' + (row.totalPoints || 0);
+
+    const cardEl = document.getElementById('driverCard');
+    if (cardEl) {
+      cardEl.classList.remove('primary-champ');
+      if ((standings.championshipsWon || 0) > 0) {
+        cardEl.classList.add('primary-champ');
+      }
+    }
+
+    dcPills.innerHTML = '';
+    const makePill = (label, value) => {
+      const span = document.createElement('span');
+      span.className = 'driver-stat-pill';
+      span.textContent = label + ': ' + value;
+      dcPills.appendChild(span);
+    };
+    makePill('Wins', row.wins || 0);
+    makePill('Podiums', row.podiums || 0);
+    const avgPtsPerRace = row.races ? (row.totalPoints / row.races).toFixed(1) : '–';
+    makePill('Pts / race', avgPtsPerRace);
+    makePill(
+      'Clean %',
+      row.cleanPct !== '' ?
+        (row.cleanPct.toFixed ? row.cleanPct.toFixed(1) : row.cleanPct) : '–'
+    );
+
+    dcSeasonsTable.innerHTML = '';
+    seasonsResults.forEach(sr => {
+      const tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td>' + (sr.seasonName || '') + '</td>' +
+        '<td>' + (sr.position || '') + '</td>' +
+        '<td>' + (sr.points || 0) + '</td>' +
+        '<td>' + (sr.racesCount || 0) + '</td>' +
+        '<td>' + (sr.wins || 0) + '</td>' +
+        '<td>' + (sr.podiums || 0) + '</td>';
+      dcSeasonsTable.appendChild(tr);
+    });
+
+    if (driverModal) driverModal.classList.add('open');
+  }
+
+  document.querySelector('#driversTable').addEventListener('click', e => {
+    const tr = e.target.closest('tr');
+    if (!tr || !tr.dataset.driverName) return;
+    renderDriverCard(tr.dataset.driverName);
+  });
+
+  if (driverModal && driverModalClose) {
+    driverModalClose.addEventListener('click', () => {
+      driverModal.classList.remove('open');
+    });
+    driverModal.addEventListener('click', e => {
+      if (e.target === driverModal) driverModal.classList.remove('open');
+    });
+  }
+
+  // TRACKS
+
+  const trackSelect = document.getElementById('trackSelect');
+  const trackTableBody = document.querySelector('#trackTable tbody');
+
+  const trackRowsAll = [];
+  tracks.forEach(t => {
+    const circuit = t.circuitName || t.trackName || '';
+    const country = t.country || '';
+    const gen = t.generalStats || {};
+
+    const raceStats = t.raceStats || {};
+    const raceBest =
+      raceStats.trackRecordRaceLap ||
+      raceStats.fastestRaceLap || {};
+
+    const qualStats = t.qualStats || t.qualificationStats || {};
+    const qual = qualStats.fastestQualLap || qualStats.fastestQualifyingLap || {};
+
+    function pushLap(src, label) {
+      if (!src || !src.time) return;
+      const seasonKey = src.seasonName || src.seasonId || '';
+      trackRowsAll.push({
+        circuit,
+        country,
+        totalSeasons: gen.totalSeasons || '',
+        totalEvents: gen.totalEvents || '',
+        totalRaces: gen.totalRaces || '',
+        kind: label,
+        time: src.time,
+        timeMs: Number(src.timeMs || 0),
+        driver: src.driverName || '',
+        team: src.teamName || '',
+        season: src.seasonName || '',
+        seasonKey,
+        sessionType: src.sessionType || ''
+      });
+    }
+
+    pushLap(raceBest, 'Fastest race lap');
+    pushLap(qual, 'Fastest qual lap');
+  });
+
+  const trackNames = Array.from(new Set(trackRowsAll.map(r => r.circuit))).sort();
+
+  function populateTrackSelect(sel) {
+    if (!sel) return;
+    sel.innerHTML = '<option value="">All tracks</option>';
+    trackNames.forEach(name => {
+      if (!name) return;
+      const opt = document.createElement('option');
+      opt.value = name;
+      opt.textContent = name;
+      sel.appendChild(opt);
+    });
+  }
+
+  populateTrackSelect(trackSelect);
+
+  function getFilteredTrackRows() {
+    const seasonId = currentSeasonId;
+    if (seasonId === 'all') return trackRowsAll;
+    return trackRowsAll.filter(
+      r => String(r.seasonKey || r.season) === seasonId
+    );
+  }
+
+  function renderTracks() {
+    const selectedTrack = trackSelect ? trackSelect.value : '';
+    const rows = getFilteredTrackRows();
+    trackTableBody.innerHTML = '';
+    rows
+      .filter(r => !selectedTrack || r.circuit === selectedTrack)
+      .sort((a, b) => a.timeMs - b.timeMs || a.time.localeCompare(b.time))
+      .forEach(r => {
+        const tr = document.createElement('tr');
+        tr.innerHTML =
+          '<td>' + r.circuit + '</td>' +
+          '<td>' + r.country + '</td>' +
+          '<td>' + r.totalSeasons + '</td>' +
+          '<td>' + r.totalEvents + '</td>' +
+          '<td>' + r.totalRaces + '</td>' +
+          '<td>' + r.kind + '</td>' +
+          '<td>' + r.time + '</td>' +
+          '<td>' + r.driver + '</td>' +
+          '<td>' + r.team + '</td>' +
+          '<td>' + r.season + '</td>' +
+          '<td>' + r.sessionType + '</td>';
+        trackTableBody.appendChild(tr);
+      });
+  }
+
+  const tabButtons = Array.from(document.querySelectorAll('.tab-btn'));
+  const viewSections = Array.from(document.querySelectorAll('section[data-view]'));
+
+  function setView(view) {
+    tabButtons.forEach(btn => {
+      if (!btn.dataset.view) return;
+      if (btn.classList.contains('disabled') && btn.dataset.view === 'driverTimes') return;
+      btn.classList.toggle('active', btn.dataset.view === view);
+    });
+    viewSections.forEach(sec => {
+      sec.classList.toggle('active', sec.dataset.view === view);
+    });
+  }
+
+  tabButtons.forEach(btn => {
+    if (!btn.dataset.view) return;
+    if (btn.classList.contains('disabled')) {
+      btn.onclick = () => {};
+    } else {
+      btn.onclick = () => setView(btn.dataset.view);
+    }
+  });
+  setView('seasons');
+
+  document.getElementById('driverSearch').oninput = () => {
+    driverCurrentPage = 1;
+    renderDrivers();
+  };
+  document.getElementById('minSeasons').oninput = () => {
+    driverCurrentPage = 1;
+    renderDrivers();
+  };
+  document.getElementById('driverSort').onchange = () => {
+    driverCurrentPage = 1;
+    renderDrivers();
+  };
+  document.getElementById('driverPageSize').addEventListener('change', function () {
+    driverPageSize = Number(this.value || 25);
+    driverCurrentPage = 1;
+    renderDrivers();
+  });
+  document.getElementById('driverPrevPage').addEventListener('click', () => {
+    driverCurrentPage--;
+    renderDrivers();
+  });
+  document.getElementById('driverNextPage').addEventListener('click', () => {
+    driverCurrentPage++;
+    renderDrivers();
+  });
+
+  if (trackSelect) trackSelect.onchange = renderTracks;
+
+  populateSeasonSelect();
+  if (seasonSelect) {
+    if (!seasonSelect.value) seasonSelect.value = 'all';
+    currentSeasonId = seasonSelect.value;
+    seasonSelect.addEventListener('change', () => {
+      const val = seasonSelect.value;
+      if (val === '__add__') {
+        promptAddSeasonFile();
+        seasonSelect.value = currentSeasonId || 'all';
+        return;
+      }
+      currentSeasonId = val || 'all';
+      renderSeasons(currentSeasonId);
+      renderSeasonOverview(currentSeasonId);
+      driverCurrentPage = 1;
+      renderDrivers();
+      renderTracks();
+    });
+  }
+
+  renderSeasons(currentSeasonId);
+  renderSeasonOverview(currentSeasonId);
+  renderDrivers();
+  renderTracks();
+}
+
+function mergeSeasonData(base, extra) {
+  const m1 = base.multiSeasonStatistics || {};
+  const m2 = extra.multiSeasonStatistics || {};
+
+  function mergeArray(a, b, key) {
+    const map = new Map();
+    (a || []).forEach(x => map.set(String(x[key] || x.name || ''), x));
+    (b || []).forEach(x => map.set(String(x[key] || x.name || ''), x));
+    return Array.from(map.values());
+  }
+
+  const merged = JSON.parse(JSON.stringify(base));
+
+  merged.multiSeasonStatistics = {
+    ...m1,
+    seasons: mergeArray(m1.seasons, m2.seasons, 'id'),
+    drivers: mergeArray(m1.drivers, m2.drivers, 'driverName'),
+    tracks: mergeArray(m1.tracks, m2.tracks, 'circuitName')
+  };
+
+  return merged;
+}
+
+function loadJsonFromUrl(url, asAdditional = false) {
+  fetch(url)
+    .then(r => {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    })
+    .then(data => {
+      if (!globalBaseData || !asAdditional) {
+        globalBaseData = data;
+      } else {
+        globalBaseData = mergeSeasonData(globalBaseData, data);
+      }
+      buildPage(globalBaseData);
+    })
+    .catch(err => {
+      alert('Could not load JSON file: ' + err.message);
+      console.error(err);
+    });
+}
+
+function promptAddSeasonFile() {
+  const inp = document.getElementById('addSeasonFileInput');
+  if (!inp) return;
+  inp.value = '';
+  inp.click();
+}
+
+window.addEventListener('DOMContentLoaded', function () {
+  const select = document.getElementById('fileSelect');
+  const addInp = document.getElementById('addSeasonFileInput');
+  const addSeasonBtn = document.getElementById('addSeasonBtn');
+
+  if (select) {
+    select.addEventListener('change', function () {
+      const file = this.value;
+      if (!file) return;
+      loadJsonFromUrl(file, false);
+    });
+
+    if (select.value === '') {
+      select.value = 'sunday_races.json';
+      loadJsonFromUrl(select.value, false);
+    }
+  }
+
+  if (addSeasonBtn) {
+    addSeasonBtn.addEventListener('click', () => {
+      promptAddSeasonFile();
+    });
+  }
+
+  if (addInp) {
+    addInp.addEventListener('change', function () {
+      const file = this.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        try {
+          const data = JSON.parse(e.target.result);
+          if (!globalBaseData) {
+            globalBaseData = data;
+          } else {
+            globalBaseData = mergeSeasonData(globalBaseData, data);
+          }
+          buildPage(globalBaseData);
+        } catch (err) {
+          alert('Could not parse JSON file.');
+          console.error(err);
+        }
+      };
+      reader.readAsText(file);
+    });
+  }
+});
 </script>
 </body>
 </html>
