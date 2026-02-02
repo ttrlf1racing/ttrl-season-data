@@ -5,34 +5,53 @@
   <title>TTRL Multi-Season Stats</title>
   <style>
     body { font-family: system-ui, sans-serif; margin: 0; padding: 0; background:#050608; color:#f5f5f5; }
-    header { background:#000000; padding:12px 24px 10px; border-bottom:3px solid #ff0000; }
+
+    header {
+      background:linear-gradient(to bottom,#000000 0,#050608 55%);
+      padding:14px 24px 12px;
+      border-bottom:3px solid #ff0000;
+    }
 
     header h1 { margin:0; font-size:22px; }
     header p { margin:4px 0; color:#c5c6c7; }
 
-    .header-top { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; }
+    .header-top { display:flex; align-items:stretch; justify-content:space-between; gap:16px; }
     .logo-wrap { display:flex; align-items:center; gap:16px; }
-    .logo-wrap img { height:50px; }
+    .logo-wrap img { height:52px; }
 
     .header-centre {
       flex:1 1 auto;
-      text-align:center;
-      font-size:18px;
-      font-weight:700;
-      letter-spacing:0.18em;
-      text-transform:uppercase;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      padding:4px 12px;
+      border-radius:10px;
+      background:linear-gradient(90deg,#b91c1c,#facc15,#2563eb);
       color:#f9fafb;
-      padding-top:4px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
+      text-transform:uppercase;
+      letter-spacing:0.18em;
+      font-weight:700;
+      box-shadow:0 0 18px rgba(0,0,0,0.6);
+      min-height:64px;
+    }
+    .header-centre-main {
+      font-size:15px;
+    }
+    .header-centre-sub {
+      font-size:11px;
+      opacity:0.95;
+      margin-top:2px;
     }
 
     .header-meta {
       font-size:12px;
       text-align:right;
       color:#9ca3af;
-      min-width:185px;
+      min-width:190px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
     }
 
     main { padding:20px 24px 40px; max-width:1200px; margin:0 auto; }
@@ -270,7 +289,7 @@
 
     @media (max-width:900px) {
       .header-top { flex-direction:column; align-items:flex-start; }
-      .header-centre { text-align:left; white-space:normal; }
+      .header-centre { align-items:flex-start; }
       .header-meta { text-align:left; }
       .driver-layout { flex-direction:column; }
     }
@@ -297,7 +316,8 @@
     </div>
 
     <div class="header-centre">
-      TTRL MULTI‑SEASON INSIGHTS · CROSS‑ERA DRIVER & TRACK STATS
+      <div class="header-centre-main">TTRL MULTI‑SEASON INSIGHTS</div>
+      <div class="header-centre-sub">CROSS‑ERA DRIVER & TRACK STATS</div>
     </div>
 
     <div class="header-meta">
@@ -364,6 +384,7 @@
     <h2>Drivers</h2>
     <p class="section-description">
       Stats are filtered to the currently selected season (or all seasons when "All seasons" is chosen).
+      Click a driver row to open their profile card.
     </p>
 
     <div class="filters">
@@ -968,8 +989,7 @@ function buildPage(data) {
       });
     }
 
-    // Only two types: race record and qual record
-    pushLap(raceBest, 'Fastest race lap');    // this IS the track record
+    pushLap(raceBest, 'Fastest race lap');
     pushLap(qual, 'Fastest qual lap');
   });
 
