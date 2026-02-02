@@ -17,19 +17,21 @@
       text-align:center;
       flex:1 1 auto;
       font-size:13px;
-      color:#c5c6c7;
-    }
-    .header-centre-title {
-      font-weight:600;
-      letter-spacing:0.06em;
-      text-transform:uppercase;
       color:#e5e7eb;
+      font-weight:600;
+      letter-spacing:0.12em;
+      text-transform:uppercase;
+      padding-top:6px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
     }
 
     .header-meta {
       font-size:12px;
       text-align:right;
       color:#9ca3af;
+      min-width:160px;
     }
 
     main { padding:20px 24px 40px; max-width:1200px; margin:0 auto; }
@@ -267,7 +269,7 @@
 
     @media (max-width:900px) {
       .header-top { flex-direction:column; align-items:flex-start; }
-      .header-centre { text-align:left; }
+      .header-centre { text-align:left; white-space:normal; }
       .header-meta { text-align:left; }
       .driver-layout { flex-direction:column; }
     }
@@ -294,8 +296,7 @@
     </div>
 
     <div class="header-centre">
-      <div class="header-centre-title">TTRL Multi‑Season Insights</div>
-      <div>Aggregated seasons view with driver, team and track statistics.</div>
+      TTRL MULTI‑SEASON INSIGHTS · CROSS‑ERA DRIVER & TRACK STATS
     </div>
 
     <div class="header-meta">
@@ -583,7 +584,7 @@ function buildPage(data) {
     if (!selectedSeasonId || selectedSeasonId === 'all') return;
 
     const s = seasonsSorted.find(
-      x => String(x.id || x.name) === selectedSeasonId
+      x => String(x.name || x.id) === selectedSeasonId
     );
     if (!s) return;
 
@@ -618,7 +619,7 @@ function buildPage(data) {
 
     const toRender = activeId === 'all'
       ? seasonsSorted
-      : seasonsSorted.filter(s => String(s.id || s.name) === activeId);
+      : seasonsSorted.filter(s => String(s.name || s.id) === activeId);
 
     toRender.forEach(s => {
       let statusKey = 'planned';
@@ -652,7 +653,7 @@ function buildPage(data) {
     seasonSelect.innerHTML = '<option value="all">All seasons</option>';
     seasonsSorted.forEach(s => {
       const opt = document.createElement('option');
-      const id = String(s.id || s.name || '');
+      const id = String(s.name || s.id || '');
       opt.value = id;
       opt.textContent =
         (s.startDate ? s.startDate + ' – ' : '') +
@@ -662,7 +663,7 @@ function buildPage(data) {
     if (addOpt) seasonSelect.appendChild(addOpt);
   }
 
-  // ==== Drivers and filtering by season ====
+  // ==== Drivers and season filtering ====
   const driversTable = document.querySelector('#driversTable tbody');
   const dcName = document.getElementById('dcName');
   const dcMeta = document.getElementById('dcMeta');
@@ -738,7 +739,9 @@ function buildPage(data) {
     if (!seasonId || seasonId === 'all') return true;
     const stand = d.source.standings || {};
     const list = stand.seasonResults || [];
-    return list.some(sr => String(sr.seasonId || sr.seasonName) === seasonId);
+    return list.some(sr =>
+      String(sr.seasonName || sr.seasonId) === seasonId
+    );
   }
 
   function getFilteredDriverRows() {
@@ -840,7 +843,7 @@ function buildPage(data) {
     let seasonsResults = (standings.seasonResults || []).slice();
     if (currentSeasonId !== 'all') {
       seasonsResults = seasonsResults.filter(
-        sr => String(sr.seasonId || sr.seasonName) === currentSeasonId
+        sr => String(sr.seasonName || sr.seasonId) === currentSeasonId
       );
     }
     seasonsResults.sort((a, b) =>
@@ -926,7 +929,7 @@ function buildPage(data) {
     });
   }
 
-  // Tracks filtered by season
+  // Tracks with season filtering, and race-based track record
   const trackSelect = document.getElementById('trackSelect');
   const trackTableBody = document.querySelector('#trackTable tbody');
 
@@ -935,14 +938,18 @@ function buildPage(data) {
     const circuit = t.circuitName || t.trackName || '';
     const country = t.country || '';
     const gen = t.generalStats || {};
-    const abs = gen.absoluteTrackRecord || {};
-    const race = (t.raceStats || {}).fastestRaceLap || {};
+
+    const raceStats = t.raceStats || {};
+    const raceRecord =
+      raceStats.trackRecordRaceLap ||    // explicit race record if present
+      raceStats.fastestRaceLap || {};    // fallback to fastest race lap
+
     const qualStats = t.qualStats || t.qualificationStats || {};
     const qual = qualStats.fastestQualLap || qualStats.fastestQualifyingLap || {};
 
     function pushLap(src, label) {
       if (!src || !src.time) return;
-      const seasonId = src.seasonId || src.seasonName || '';
+      const seasonKey = src.seasonName || src.seasonId || '';
       trackRowsAll.push({
         circuit,
         country,
@@ -955,13 +962,18 @@ function buildPage(data) {
         driver: src.driverName || '',
         team: src.teamName || '',
         season: src.seasonName || '',
-        seasonId,
+        seasonKey,
         sessionType: src.sessionType || ''
       });
     }
 
-    pushLap(abs, 'Track record');
-    pushLap(race, 'Fastest race lap');
+    // Track record = best race lap
+    pushLap(raceRecord, 'Track record');
+
+    // Fastest race lap (same as record if exporter doesn’t distinguish)
+    pushLap(raceStats.fastestRaceLap || raceRecord, 'Fastest race lap');
+
+    // Qualifying best
     pushLap(qual, 'Fastest qual lap');
   });
 
@@ -984,7 +996,9 @@ function buildPage(data) {
   function getFilteredTrackRows() {
     const seasonId = currentSeasonId;
     if (seasonId === 'all') return trackRowsAll;
-    return trackRowsAll.filter(r => String(r.seasonId || r.season) === seasonId);
+    return trackRowsAll.filter(
+      r => String(r.seasonKey || r.season) === seasonId
+    );
   }
 
   function renderTracks() {
