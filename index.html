@@ -306,20 +306,6 @@
     .track-subtabs { margin-top:8px; display:flex; gap:8px; }
     .track-subtab-btn { font-size:12px; padding:4px 10px; }
 
-    .track-detail-grid {
-      display:grid;
-      grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
-      gap:8px;
-      margin-top:10px;
-    }
-    .track-detail-card {
-      background:#10151f;
-      border-radius:6px;
-      padding:8px 10px;
-      font-size:12px;
-    }
-    .track-detail-label { color:#9ca3af; font-size:11px; text-transform:uppercase; }
-
     @media (max-width:900px) {
       .header-top { flex-direction:column; align-items:flex-start; }
       .header-centre { width:100%; align-items:flex-start; padding:8px 10px; }
@@ -521,22 +507,19 @@
     <div id="trackDetailsView" data-track-view="details">
       <div class="scroll-body">
         <table id="trackTable">
-         <thead>
-  <tr>
-    <th>Track</th>
-    <th>Races</th>
-    <th>Driver</th>
-    <th>Race FL</th>
-    <th>Driver</th>
-    <th>Qual FL</th>
-    <th>Max speed</th>
-    <th>Avg pitstops</th>
-    <th>SC / VSC</th>
-  </tr>
-</thead>
-
-
-
+          <thead>
+            <tr>
+              <th>Track</th>
+              <th>Races</th>
+              <th>Driver</th>
+              <th>Race FL</th>
+              <th>Driver</th>
+              <th>Qual FL</th>
+              <th>Max speed</th>
+              <th>Avg pitstops</th>
+              <th>SC / VSC</th>
+            </tr>
+          </thead>
           <tbody></tbody>
         </table>
       </div>
@@ -557,6 +540,7 @@
       </div>
       <p class="muted" style="margin-top:6px;">
         Values show fastest race lap per season for each circuit (seconds gap vs fastest season shown in green/red).
+        <span style="font-weight:600; color:#facc15;"> Hover over any time to see the driver.</span>
       </p>
     </div>
   </section>
@@ -909,8 +893,8 @@ function buildPage(data) {
   const trackSelect = document.getElementById('trackSelect');
   const trackTableBody = document.querySelector('#trackTable tbody');
 
-  // build helper object per track with season lap map
-  const allSeasonNames = (multi.seasons || []).map(s => s.name); // order used for columns
+  const allSeasonNames = (multi.seasons || []).map(s => s.name);
+
   const trackRows = tracksSrc.map(t => {
     const circuit = t.circuitName || t.trackName || '';
     const country = t.country || '';
@@ -922,8 +906,6 @@ function buildPage(data) {
     const fastestRaceLap = raceStats.fastestRaceLap || {};
     const fastestQualLap = qualStats.fastestQualLap || {};
 
-    // Build per-season fastest race lap map if export provides per‑season race fastest laps later.
-    // For now we only have global fastestRaceLap, so assign to its season.
     const seasonRaceMap = {};
     if (fastestRaceLap && fastestRaceLap.time) {
       const sName = fastestRaceLap.seasonName || 'All seasons';
@@ -931,7 +913,8 @@ function buildPage(data) {
           (fastestRaceLap.timeMs && fastestRaceLap.timeMs < seasonRaceMap[sName].timeMs)) {
         seasonRaceMap[sName] = {
           time: fastestRaceLap.time,
-          timeMs: fastestRaceLap.timeMs || 0
+          timeMs: fastestRaceLap.timeMs || 0,
+          driverName: fastestRaceLap.driverName || ''
         };
       }
     }
@@ -949,7 +932,6 @@ function buildPage(data) {
     };
   });
 
-  // populate track select
   const trackNames = Array.from(new Set(trackRows.map(r => r.circuit))).sort();
   trackSelect.innerHTML = '<option value="">All tracks</option>';
   trackNames.forEach(name => {
@@ -976,22 +958,20 @@ function buildPage(data) {
         const rs = r.raceStats || {};
         const qs = r.qualStats || {};
         const tr = document.createElement('tr');
-      tr.innerHTML =
-  '<td>' + r.circuit + '</td>' +
-  '<td>' + (gen.totalRaces || '') + '</td>' +
-  // Driver (race fastest lap)
-  '<td>' + ((rs.fastestRaceLap && rs.fastestRaceLap.driverName) || '') + '</td>' +
-  // Race FL time
-  '<td>' + ((rs.fastestRaceLap && rs.fastestRaceLap.time) || '') + '</td>' +
-  // Driver (qual fastest lap)
-  '<td>' + ((qs.fastestQualLap && qs.fastestQualLap.driverName) || '') + '</td>' +
-  // Qual FL time
-  '<td>' + ((qs.fastestQualLap && qs.fastestQualLap.time) || '') + '</td>' +
-  '<td>' + (rs.maxSpeed != null ? rs.maxSpeed + ' km/h' : '') + '</td>' +
-  '<td>' + (rs.avgPitstops != null ? rs.avgPitstops : '') + '</td>' +
-  '<td>' + formatSC(gen, rs) + '</td>';
-
-
+        tr.innerHTML =
+          '<td>' + r.circuit + '</td>' +
+          '<td>' + (gen.totalRaces || '') + '</td>' +
+          // Driver (race fastest lap)
+          '<td>' + ((rs.fastestRaceLap && rs.fastestRaceLap.driverName) || '') + '</td>' +
+          // Race FL time
+          '<td>' + ((rs.fastestRaceLap && rs.fastestRaceLap.time) || '') + '</td>' +
+          // Driver (qual fastest lap)
+          '<td>' + ((qs.fastestQualLap && qs.fastestQualLap.driverName) || '') + '</td>' +
+          // Qual FL time
+          '<td>' + ((qs.fastestQualLap && qs.fastestQualLap.time) || '') + '</td>' +
+          '<td>' + (rs.maxSpeed != null ? rs.maxSpeed + ' km/h' : '') + '</td>' +
+          '<td>' + (rs.avgPitstops != null ? rs.avgPitstops : '') + '</td>' +
+          '<td>' + formatSC(gen, rs) + '</td>';
         trackTableBody.appendChild(tr);
       });
   }
@@ -1003,7 +983,6 @@ function buildPage(data) {
   function renderTrackSeasonCmp() {
     const filterName = trackSelect.value;
 
-    // header
     cmpHeaderRow.innerHTML = '<th>Track</th>';
     allSeasonNames.forEach(sn => {
       const th = document.createElement('th');
@@ -1018,7 +997,6 @@ function buildPage(data) {
         const tr = document.createElement('tr');
         tr.innerHTML = '<td>' + r.circuit + '</td>';
 
-        // find best (fastest) among seasons we have for this circuit
         let bestMs = null;
         Object.values(r.seasonRaceMap).forEach(v => {
           if (v && v.timeMs != null) {
@@ -1029,22 +1007,25 @@ function buildPage(data) {
         allSeasonNames.forEach(sn => {
           const td = document.createElement('td');
           const entry = r.seasonRaceMap[sn];
+
           if (!entry) {
             td.textContent = '';
           } else {
             let text = entry.time || '';
             if (bestMs != null && entry.timeMs != null) {
               const diff = entry.timeMs - bestMs;
-              if (diff === 0) {
-                text += ' (best)';
-              } else {
+              if (diff !== 0) {
                 const sec = (diff / 1000).toFixed(3);
                 const sign = diff > 0 ? '+' : '';
                 text += ' ' + sign + sec + 's';
               }
             }
             td.textContent = text;
+            if (entry.driverName) {
+              td.title = entry.driverName;
+            }
           }
+
           tr.appendChild(td);
         });
 
