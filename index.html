@@ -389,12 +389,10 @@
       <img src="ttrl-logo.png" alt="TTRL logo" class="logo-img">
       <div class="header-left-text">
         <h1 id="leagueTitle">TTRL Multi-Season Statistics</h1>
-        <p id="raceDayLine">Choose race day to view:</p>
+        <p id="raceDayLine">Choose race date to view:</p>
         <div>
           <select id="fileSelect">
-            <option value="">Select race day…</option>
-            <option value="sunday_races.json">Sunday races</option>
-            <option value="wed_races.json">Wednesday races</option>
+            <option value="">Select race date…</option>
           </select>
         </div>
       </div>
@@ -636,8 +634,28 @@ let currentSeasonId = 'all';
 
 const DRIVER_AVATAR_FOLDER = 'Drivers Avatars';
 
+// EDIT THIS LIST to match the JSON files in export_data/
+const EXPORT_FILES = [
+  // example entries:
+  // { value: 'export_data/2025-11-23.json', label: '2025‑11‑23 – F125 Season 3 – T1' },
+  // { value: 'export_data/2025-08-10.json', label: '2025‑08‑10 – TTRL Season 2 – T1‑T4' },
+];
+
 function getDriverAvatarSrc(driverName) {
   return DRIVER_AVATAR_FOLDER + '/' + driverName + '.png';
+}
+
+function populateFileSelect() {
+  const select = document.getElementById('fileSelect');
+  if (!select) return;
+  // keep the first "Select race date…" option
+  while (select.options.length > 1) select.remove(1);
+  EXPORT_FILES.forEach(f => {
+    const opt = document.createElement('option');
+    opt.value = f.value;
+    opt.textContent = f.label;
+    select.appendChild(opt);
+  });
 }
 
 function formatLoadedMeta(meta) {
@@ -1295,6 +1313,8 @@ window.addEventListener('DOMContentLoaded', function () {
   const addInp = document.getElementById('addSeasonFileInput');
   const addSeasonBtn = document.getElementById('addSeasonBtn');
 
+  populateFileSelect();
+
   if (select) {
     select.addEventListener('change', function () {
       const file = this.value;
@@ -1302,8 +1322,9 @@ window.addEventListener('DOMContentLoaded', function () {
       loadJsonFromUrl(file, false);
     });
 
-    if (select.value === '') {
-      select.value = 'sunday_races.json';
+    // optional auto‑load first export file
+    if (select.value === '' && EXPORT_FILES.length) {
+      select.value = EXPORT_FILES[0].value;
       loadJsonFromUrl(select.value, false);
     }
   }
