@@ -306,6 +306,43 @@
     .track-subtabs { margin-top:8px; display:flex; gap:8px; }
     .track-subtab-btn { font-size:12px; padding:4px 10px; }
 
+    /* Season comparison hover box */
+    .track-hover {
+      position:relative;
+      cursor:help;
+    }
+    .track-hover-tooltip {
+      position:absolute;
+      left:50%;
+      bottom:125%;
+      transform:translateX(-50%);
+      background:#020617;
+      color:#e5e7eb;
+      padding:4px 8px;
+      border-radius:6px;
+      font-size:11px;
+      white-space:nowrap;
+      border:1px solid #facc15;
+      box-shadow:0 0 10px rgba(0,0,0,0.7);
+      opacity:0;
+      pointer-events:none;
+      transition:opacity 0.12s ease-out;
+      z-index:20;
+    }
+    .track-hover-tooltip::after {
+      content:'';
+      position:absolute;
+      top:100%;
+      left:50%;
+      transform:translateX(-50%);
+      border-width:5px;
+      border-style:solid;
+      border-color:#facc15 transparent transparent transparent;
+    }
+    .track-hover:hover .track-hover-tooltip {
+      opacity:1;
+    }
+
     @media (max-width:900px) {
       .header-top { flex-direction:column; align-items:flex-start; }
       .header-centre { width:100%; align-items:flex-start; padding:8px 10px; }
@@ -532,7 +569,6 @@
           <thead>
             <tr id="trackSeasonCmpHeader">
               <th>Track</th>
-              <!-- season columns injected -->
             </tr>
           </thead>
           <tbody id="trackSeasonCmpBody"></tbody>
@@ -669,8 +705,18 @@ function buildPage(data) {
     const reliabPct = discipline.reliabilityPercent != null ? discipline.reliabilityPercent : '';
     const seasonsPart = participation.seasonsParticipated || 0;
     const totalRaces = participation.totalRaces || participation.totalMajorRaces || 0;
-    const fastRaceLaps = Number(fastest.totalFastestRaceLaps || fastest.race || 0);
-    const fastPoleLaps = Number(fastest.totalFastestQualLaps || fastest.qual || 0);
+
+    // pick up fastest lap counts from JSON (matches t4.json structure)
+    const fastRaceLaps = Number(
+      fastest.totalFastestRaceLaps != null
+        ? fastest.totalFastestRaceLaps
+        : fastest.race || 0
+    );
+    const fastPoleLaps = Number(
+      fastest.totalFastestQualLaps != null
+        ? fastest.totalFastestQualLaps
+        : fastest.qual || 0
+    );
 
     return {
       source: d,
@@ -897,7 +943,6 @@ function buildPage(data) {
 
   const trackRows = tracksSrc.map(t => {
     const circuit = t.circuitName || t.trackName || '';
-    const country = t.country || '';
     const gen = t.generalStats || {};
     const raceStats = t.raceStats || {};
     const qualStats = t.qualificationStats || {};
@@ -921,7 +966,6 @@ function buildPage(data) {
 
     return {
       circuit,
-      country,
       gen,
       raceStats,
       qualStats,
@@ -961,13 +1005,9 @@ function buildPage(data) {
         tr.innerHTML =
           '<td>' + r.circuit + '</td>' +
           '<td>' + (gen.totalRaces || '') + '</td>' +
-          // Driver (race fastest lap)
           '<td>' + ((rs.fastestRaceLap && rs.fastestRaceLap.driverName) || '') + '</td>' +
-          // Race FL time
           '<td>' + ((rs.fastestRaceLap && rs.fastestRaceLap.time) || '') + '</td>' +
-          // Driver (qual fastest lap)
           '<td>' + ((qs.fastestQualLap && qs.fastestQualLap.driverName) || '') + '</td>' +
-          // Qual FL time
           '<td>' + ((qs.fastestQualLap && qs.fastestQualLap.time) || '') + '</td>' +
           '<td>' + (rs.maxSpeed != null ? rs.maxSpeed + ' km/h' : '') + '</td>' +
           '<td>' + (rs.avgPitstops != null ? rs.avgPitstops : '') + '</td>' +
@@ -976,7 +1016,6 @@ function buildPage(data) {
       });
   }
 
-  // season comparison
   const cmpHeaderRow = document.getElementById('trackSeasonCmpHeader');
   const cmpBody = document.getElementById('trackSeasonCmpBody');
 
@@ -1020,9 +1059,18 @@ function buildPage(data) {
                 text += ' ' + sign + sec + 's';
               }
             }
-            td.textContent = text;
+
+            td.classList.add('track-hover');
+
+            const span = document.createElement('span');
+            span.textContent = text;
+            td.appendChild(span);
+
             if (entry.driverName) {
-              td.title = entry.driverName;
+              const tip = document.createElement('div');
+              tip.className = 'track-hover-tooltip';
+              tip.textContent = entry.driverName;
+              td.appendChild(tip);
             }
           }
 
