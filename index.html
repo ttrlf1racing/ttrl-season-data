@@ -634,11 +634,11 @@ let currentSeasonId = 'all';
 
 const DRIVER_AVATAR_FOLDER = 'Drivers Avatars';
 
-// EDIT THIS LIST to match the JSON files in export_data/
+// Files currently in export_data/
 const EXPORT_FILES = [
-  // example entries:
-  // { value: 'export_data/2025-11-23.json', label: '2025‑11‑23 – F125 Season 3 – T1' },
-  // { value: 'export_data/2025-08-10.json', label: '2025‑08‑10 – TTRL Season 2 – T1‑T4' },
+  { value: 'export_data/sunday_races.json', label: 'Sunday races' },
+  { value: 'export_data/wed_races.json',    label: 'Wednesday races' },
+  { value: 'export_data/t4.json',           label: 'T4 season data' }
 ];
 
 function getDriverAvatarSrc(driverName) {
@@ -648,7 +648,6 @@ function getDriverAvatarSrc(driverName) {
 function populateFileSelect() {
   const select = document.getElementById('fileSelect');
   if (!select) return;
-  // keep the first "Select race date…" option
   while (select.options.length > 1) select.remove(1);
   EXPORT_FILES.forEach(f => {
     const opt = document.createElement('option');
@@ -887,8 +886,8 @@ function buildPage(data) {
   function driverBelongsToSeason(d, seasonId) {
     if (!seasonId || seasonId === 'all') return true;
     const stand = d.source.standings || {};
-    const list = stand.seasonResults || [];
-    return list.some(sr =>
+    the list = stand.seasonResults || [];
+    return the list.some(sr =>
       getSeasonResultKey(sr) === seasonId
     );
   }
@@ -1322,7 +1321,6 @@ window.addEventListener('DOMContentLoaded', function () {
       loadJsonFromUrl(file, false);
     });
 
-    // optional auto‑load first export file
     if (select.value === '' && EXPORT_FILES.length) {
       select.value = EXPORT_FILES[0].value;
       loadJsonFromUrl(select.value, false);
