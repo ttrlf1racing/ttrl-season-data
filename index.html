@@ -525,16 +525,16 @@
   <tr>
     <th>Track</th>
     <th>Races</th>
-    <th>Record driver</th>
+    <th>Driver</th>
     <th>Race FL</th>
-    <th>Race FL driver</th>
+    <th>Driver</th>
     <th>Qual FL</th>
-    <th>Qual FL driver</th>
-    <th>Avg pitstops</th>
     <th>Max speed</th>
+    <th>Avg pitstops</th>
     <th>SC / VSC</th>
   </tr>
 </thead>
+
 
 
           <tbody></tbody>
@@ -976,16 +976,15 @@ function buildPage(data) {
         const rs = r.raceStats || {};
         const qs = r.qualStats || {};
         const tr = document.createElement('tr');
-        tr.innerHTML =
+       tr.innerHTML =
   '<td>' + r.circuit + '</td>' +
   '<td>' + (gen.totalRaces || '') + '</td>' +
   '<td>' + (r.absRec.driverName || '') + '</td>' +
   '<td>' + ((rs.fastestRaceLap && rs.fastestRaceLap.time) || '') + '</td>' +
   '<td>' + ((rs.fastestRaceLap && rs.fastestRaceLap.driverName) || '') + '</td>' +
   '<td>' + ((qs.fastestQualLap && qs.fastestQualLap.time) || '') + '</td>' +
-  '<td>' + ((qs.fastestQualLap && qs.fastestQualLap.driverName) || '') + '</td>' +
-  '<td>' + (rs.avgPitstops != null ? rs.avgPitstops : '') + '</td>' +
   '<td>' + (rs.maxSpeed != null ? rs.maxSpeed + ' km/h' : '') + '</td>' +
+  '<td>' + (rs.avgPitstops != null ? rs.avgPitstops : '') + '</td>' +
   '<td>' + formatSC(gen, rs) + '</td>';
 
 
