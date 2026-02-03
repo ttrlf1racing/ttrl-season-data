@@ -531,7 +531,6 @@
     <th>Race FL driver</th>
     <th>Qual FL</th>
     <th>Qual FL driver</th>
-    <th>Avg pitstops</th>
     <th>Max speed</th>
     <th>SC / VSC</th>
   </tr>
@@ -980,7 +979,6 @@ function buildPage(data) {
   '<td>' + r.circuit + '</td>' +
   '<td>' + (gen.totalRaces || '') + '</td>' +
   '<td>' + (r.absRec.time || '') + '</td>' +
-  '<td>' + (r.absRec.driverName || '') + '</td>' +
   '<td>' + ((rs.fastestRaceLap && rs.fastestRaceLap.time) || '') + '</td>' +
   '<td>' + ((rs.fastestRaceLap && rs.fastestRaceLap.driverName) || '') + '</td>' +
   '<td>' + ((qs.fastestQualLap && qs.fastestQualLap.time) || '') + '</td>' +
