@@ -525,16 +525,17 @@
   <tr>
     <th>Track</th>
     <th>Races</th>
-    <th>Abs. record</th>
     <th>Record driver</th>
     <th>Race FL</th>
     <th>Race FL driver</th>
     <th>Qual FL</th>
     <th>Qual FL driver</th>
+    <th>Avg pitstops</th>
     <th>Max speed</th>
     <th>SC / VSC</th>
   </tr>
 </thead>
+
 
           <tbody></tbody>
         </table>
@@ -978,7 +979,7 @@ function buildPage(data) {
         tr.innerHTML =
   '<td>' + r.circuit + '</td>' +
   '<td>' + (gen.totalRaces || '') + '</td>' +
-  '<td>' + (r.absRec.time || '') + '</td>' +
+  '<td>' + (r.absRec.driverName || '') + '</td>' +
   '<td>' + ((rs.fastestRaceLap && rs.fastestRaceLap.time) || '') + '</td>' +
   '<td>' + ((rs.fastestRaceLap && rs.fastestRaceLap.driverName) || '') + '</td>' +
   '<td>' + ((qs.fastestQualLap && qs.fastestQualLap.time) || '') + '</td>' +
@@ -986,6 +987,7 @@ function buildPage(data) {
   '<td>' + (rs.avgPitstops != null ? rs.avgPitstops : '') + '</td>' +
   '<td>' + (rs.maxSpeed != null ? rs.maxSpeed + ' km/h' : '') + '</td>' +
   '<td>' + formatSC(gen, rs) + '</td>';
+
 
         trackTableBody.appendChild(tr);
       });
