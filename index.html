@@ -575,7 +575,7 @@
         </table>
       </div>
       <p class="muted" style="margin-top:6px;">
-        Values show fastest race lap per season for each circuit (seconds gap vs fastest season shown in green/red).
+        Values show fastest race lap per season for each circuit.
         <span style="font-weight:600; color:#facc15;"> Hover over any time to see the driver.</span>
       </p>
     </div>
@@ -691,10 +691,10 @@ function buildPage(data) {
     const infoD = d.driverInfo || {};
     const points = d.points || {};
     const racePositions = d.racePositions || {};
+    const qualPositions = d.qualPositions || {};
     const standings = d.standings || {};
     const discipline = d.discipline || {};
     const participation = d.participation || {};
-    const fastest = d.fastestLaps || d.fastest || {};
 
     const totalPoints = Number(points.totalPoints || 0);
     const avgPerMajor = Number(points.averagePerMajorRace || points.averagePerEvent || 0);
@@ -706,16 +706,9 @@ function buildPage(data) {
     const seasonsPart = participation.seasonsParticipated || 0;
     const totalRaces = participation.totalRaces || participation.totalMajorRaces || 0;
 
-    const fastRaceLaps = Number(
-      fastest.totalFastestRaceLaps != null
-        ? fastest.totalFastestRaceLaps
-        : fastest.race || 0
-    );
-    const fastPoleLaps = Number(
-      fastest.totalFastestQualLaps != null
-        ? fastest.totalFastestQualLaps
-        : fastest.qual || 0
-    );
+    // Use existing lap-related counters that actually exist in t4.json
+    const fastRaceLaps = Number(racePositions.fastestRaceLaps || 0);
+    const fastPoleLaps = Number(qualPositions.poles || 0);
 
     return {
       source: d,
@@ -945,7 +938,6 @@ function buildPage(data) {
     const gen = t.generalStats || {};
     const raceStats = t.raceStats || {};
     const qualStats = t.qualificationStats || {};
-    const absRec = gen.absoluteTrackRecord || {};
 
     const fastestRaceLap = raceStats.fastestRaceLap || {};
     const fastestQualLap = qualStats.fastestQualLap || {};
@@ -953,11 +945,11 @@ function buildPage(data) {
     const seasonRaceMap = {};
     if (fastestRaceLap && fastestRaceLap.time) {
       const sName = fastestRaceLap.seasonName || 'All seasons';
-      if (!seasonRaceMap[sName] ||
-          (fastestRaceLap.timeMs && fastestRaceLap.timeMs < seasonRaceMap[sName].timeMs)) {
+      const current = seasonRaceMap[sName];
+      if (!current || (fastestRaceLap.timeMs && fastestRaceLap.timeMs < current.timeMs)) {
         seasonRaceMap[sName] = {
           time: fastestRaceLap.time,
-          timeMs: fastestRaceLap.timeMs || 0,
+          timeMs: fastestRaceLap.timeMs || null,
           driverName: fastestRaceLap.driverName || ''
         };
       }
@@ -968,7 +960,6 @@ function buildPage(data) {
       gen,
       raceStats,
       qualStats,
-      absRec,
       fastestRaceLap,
       fastestQualLap,
       seasonRaceMap
@@ -1035,13 +1026,6 @@ function buildPage(data) {
         const tr = document.createElement('tr');
         tr.innerHTML = '<td>' + r.circuit + '</td>';
 
-        let bestMs = null;
-        Object.values(r.seasonRaceMap).forEach(v => {
-          if (v && v.timeMs != null) {
-            if (bestMs == null || v.timeMs < bestMs) bestMs = v.timeMs;
-          }
-        });
-
         allSeasonNames.forEach(sn => {
           const td = document.createElement('td');
           const entry = r.seasonRaceMap[sn];
@@ -1049,26 +1033,10 @@ function buildPage(data) {
           if (!entry) {
             td.textContent = '';
           } else {
-            const container = document.createElement('span');
-
-            const timeSpan = document.createElement('span');
-            timeSpan.textContent = entry.time || '';
-            container.appendChild(timeSpan);
-
-            if (bestMs != null && entry.timeMs != null) {
-              const diff = entry.timeMs - bestMs;
-              if (diff !== 0) {
-                const gapSpan = document.createElement('span');
-                const sec = (diff / 1000).toFixed(3);
-                const sign = diff > 0 ? '+' : '';
-                gapSpan.textContent = ' ' + sign + sec + 's';
-                gapSpan.style.color = diff > 0 ? '#f97373' : '#4ade80';
-                container.appendChild(gapSpan);
-              }
-            }
-
             td.classList.add('track-hover');
-            td.appendChild(container);
+            const span = document.createElement('span');
+            span.textContent = entry.time || '';
+            td.appendChild(span);
 
             if (entry.driverName) {
               const tip = document.createElement('div');
