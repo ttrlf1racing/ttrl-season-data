@@ -369,9 +369,7 @@
       .header-subline { white-space:normal; }
       .header-meta { text-align:left; margin-top:6px; }
       .logo-wrap { gap:10px; }
-      .logo-img {
-        height:54px;
-      }
+      .logo-img { height:54px; }
       .driver-layout { flex-direction:column; }
     }
 
@@ -634,7 +632,7 @@ let currentSeasonId = 'all';
 
 const DRIVER_AVATAR_FOLDER = 'Drivers Avatars';
 
-// Files currently in export_data/
+// Files currently in /export_data/
 const EXPORT_FILES = [
   { value: 'export_data/sunday_races.json', label: 'Sunday races' },
   { value: 'export_data/wed_races.json',    label: 'Wednesday races' },
@@ -886,8 +884,8 @@ function buildPage(data) {
   function driverBelongsToSeason(d, seasonId) {
     if (!seasonId || seasonId === 'all') return true;
     const stand = d.source.standings || {};
-    the list = stand.seasonResults || [];
-    return the list.some(sr =>
+    const list = stand.seasonResults || [];
+    return list.some(sr =>
       getSeasonResultKey(sr) === seasonId
     );
   }
