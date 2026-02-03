@@ -306,7 +306,7 @@
     .track-subtabs { margin-top:8px; display:flex; gap:8px; }
     .track-subtab-btn { font-size:12px; padding:4px 10px; }
 
-    /* Season comparison hover box */
+    /* Season comparison hover box (below cells) */
     .track-hover {
       position:relative;
       cursor:help;
@@ -314,7 +314,7 @@
     .track-hover-tooltip {
       position:absolute;
       left:50%;
-      bottom:125%;
+      top:115%;
       transform:translateX(-50%);
       background:#020617;
       color:#e5e7eb;
@@ -332,12 +332,12 @@
     .track-hover-tooltip::after {
       content:'';
       position:absolute;
-      top:100%;
+      bottom:100%;
       left:50%;
       transform:translateX(-50%);
       border-width:5px;
       border-style:solid;
-      border-color:#facc15 transparent transparent transparent;
+      border-color:transparent transparent #facc15 transparent;
     }
     .track-hover:hover .track-hover-tooltip {
       opacity:1;
@@ -635,7 +635,7 @@ function formatLoadedMeta(meta) {
 function buildPage(data) {
   globalBaseData = data;
   const meta = data.metadata || {};
-  const multi = data.multiSeasonStatistics || {};
+  �const multi = data.multiSeasonStatistics || {};
   const info = multi.multiSeasonInfo || {};
   const driversSrc = multi.drivers || multi.driverStatistics || data.drivers || [];
   const tracksSrc = multi.tracks || multi.trackStatistics || data.tracks || [];
@@ -706,7 +706,6 @@ function buildPage(data) {
     const seasonsPart = participation.seasonsParticipated || 0;
     const totalRaces = participation.totalRaces || participation.totalMajorRaces || 0;
 
-    // pick up fastest lap counts from JSON (matches t4.json structure)
     const fastRaceLaps = Number(
       fastest.totalFastestRaceLaps != null
         ? fastest.totalFastestRaceLaps
@@ -1050,21 +1049,26 @@ function buildPage(data) {
           if (!entry) {
             td.textContent = '';
           } else {
-            let text = entry.time || '';
+            const container = document.createElement('span');
+
+            const timeSpan = document.createElement('span');
+            timeSpan.textContent = entry.time || '';
+            container.appendChild(timeSpan);
+
             if (bestMs != null && entry.timeMs != null) {
               const diff = entry.timeMs - bestMs;
               if (diff !== 0) {
+                const gapSpan = document.createElement('span');
                 const sec = (diff / 1000).toFixed(3);
                 const sign = diff > 0 ? '+' : '';
-                text += ' ' + sign + sec + 's';
+                gapSpan.textContent = ' ' + sign + sec + 's';
+                gapSpan.style.color = diff > 0 ? '#f97373' : '#4ade80';
+                container.appendChild(gapSpan);
               }
             }
 
             td.classList.add('track-hover');
-
-            const span = document.createElement('span');
-            span.textContent = text;
-            td.appendChild(span);
+            td.appendChild(container);
 
             if (entry.driverName) {
               const tip = document.createElement('div');
