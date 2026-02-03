@@ -521,24 +521,22 @@
     <div id="trackDetailsView" data-track-view="details">
       <div class="scroll-body">
         <table id="trackTable">
-          <thead>
-            <tr>
-              <th>Track</th>
-              <th>Country</th>
-              <th>Seasons</th>
-              <th>Events</th>
-              <th>Races</th>
-              <th>Abs. record</th>
-              <th>Record driver</th>
-              <th>Race FL</th>
-              <th>Race FL driver</th>
-              <th>Qual FL</th>
-              <th>Qual FL driver</th>
-              <th>Avg pitstops</th>
-              <th>Max speed</th>
-              <th>SC / VSC</th>
-            </tr>
-          </thead>
+         <thead>
+  <tr>
+    <th>Track</th>
+    <th>Races</th>
+    <th>Abs. record</th>
+    <th>Record driver</th>
+    <th>Race FL</th>
+    <th>Race FL driver</th>
+    <th>Qual FL</th>
+    <th>Qual FL driver</th>
+    <th>Avg pitstops</th>
+    <th>Max speed</th>
+    <th>SC / VSC</th>
+  </tr>
+</thead>
+
           <tbody></tbody>
         </table>
       </div>
@@ -979,20 +977,18 @@ function buildPage(data) {
         const qs = r.qualStats || {};
         const tr = document.createElement('tr');
         tr.innerHTML =
-          '<td>' + r.circuit + '</td>' +
-          '<td>' + r.country + '</td>' +
-          '<td>' + (gen.totalSeasons || '') + '</td>' +
-          '<td>' + (gen.totalEvents || '') + '</td>' +
-          '<td>' + (gen.totalRaces || '') + '</td>' +
-          '<td>' + (r.absRec.time || '') + '</td>' +
-          '<td>' + (r.absRec.driverName || '') + '</td>' +
-          '<td>' + ((rs.fastestRaceLap && rs.fastestRaceLap.time) || '') + '</td>' +
-          '<td>' + ((rs.fastestRaceLap && rs.fastestRaceLap.driverName) || '') + '</td>' +
-          '<td>' + ((qs.fastestQualLap && qs.fastestQualLap.time) || '') + '</td>' +
-          '<td>' + ((qs.fastestQualLap && qs.fastestQualLap.driverName) || '') + '</td>' +
-          '<td>' + (rs.avgPitstops != null ? rs.avgPitstops : '') + '</td>' +
-          '<td>' + (rs.maxSpeed != null ? rs.maxSpeed + ' km/h' : '') + '</td>' +
-          '<td>' + formatSC(gen, rs) + '</td>';
+  '<td>' + r.circuit + '</td>' +
+  '<td>' + (gen.totalRaces || '') + '</td>' +
+  '<td>' + (r.absRec.time || '') + '</td>' +
+  '<td>' + (r.absRec.driverName || '') + '</td>' +
+  '<td>' + ((rs.fastestRaceLap && rs.fastestRaceLap.time) || '') + '</td>' +
+  '<td>' + ((rs.fastestRaceLap && rs.fastestRaceLap.driverName) || '') + '</td>' +
+  '<td>' + ((qs.fastestQualLap && qs.fastestQualLap.time) || '') + '</td>' +
+  '<td>' + ((qs.fastestQualLap && qs.fastestQualLap.driverName) || '') + '</td>' +
+  '<td>' + (rs.avgPitstops != null ? rs.avgPitstops : '') + '</td>' +
+  '<td>' + (rs.maxSpeed != null ? rs.maxSpeed + ' km/h' : '') + '</td>' +
+  '<td>' + formatSC(gen, rs) + '</td>';
+
         trackTableBody.appendChild(tr);
       });
   }
