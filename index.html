@@ -635,7 +635,7 @@ function formatLoadedMeta(meta) {
 function buildPage(data) {
   globalBaseData = data;
   const meta = data.metadata || {};
-  �const multi = data.multiSeasonStatistics || {};
+  const multi = data.multiSeasonStatistics || {};
   const info = multi.multiSeasonInfo || {};
   const driversSrc = multi.drivers || multi.driverStatistics || data.drivers || [];
   const tracksSrc = multi.tracks || multi.trackStatistics || data.tracks || [];
