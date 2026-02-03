@@ -976,12 +976,16 @@ function buildPage(data) {
         const rs = r.raceStats || {};
         const qs = r.qualStats || {};
         const tr = document.createElement('tr');
-       tr.innerHTML =
+      tr.innerHTML =
   '<td>' + r.circuit + '</td>' +
   '<td>' + (gen.totalRaces || '') + '</td>' +
-  '<td>' + (r.absRec.driverName || '') + '</td>' +
-  '<td>' + ((rs.fastestRaceLap && rs.fastestRaceLap.time) || '') + '</td>' +
+  // Driver (race fastest lap)
   '<td>' + ((rs.fastestRaceLap && rs.fastestRaceLap.driverName) || '') + '</td>' +
+  // Race FL time
+  '<td>' + ((rs.fastestRaceLap && rs.fastestRaceLap.time) || '') + '</td>' +
+  // Driver (qual fastest lap)
+  '<td>' + ((qs.fastestQualLap && qs.fastestQualLap.driverName) || '') + '</td>' +
+  // Qual FL time
   '<td>' + ((qs.fastestQualLap && qs.fastestQualLap.time) || '') + '</td>' +
   '<td>' + (rs.maxSpeed != null ? rs.maxSpeed + ' km/h' : '') + '</td>' +
   '<td>' + (rs.avgPitstops != null ? rs.avgPitstops : '') + '</td>' +
