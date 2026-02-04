@@ -878,6 +878,7 @@ function buildPage(data) {
 
     const totalPoints = Number(points.totalPoints || 0);
     const avgPerMajor = Number(points.averagePerMajorRace || points.averagePerEvent || 0);
+    all
     const wins = Number(racePositions.wins || 0);
     const podiums = Number(racePositions.podiums || 0);
     const bestChampPos = standings.bestPosition || '';
@@ -1143,7 +1144,7 @@ function buildPage(data) {
           racePositions.averagePositionChange : '' }
     ]);
 
-    // Performance (from performance block if present)
+    // Performance
     fillTable('ddPerformanceTable', [
       { label: 'Fastest laps', value: performance.fastestLaps ?? '' },
       { label: 'Laps led', value: performance.lapsLed ?? '' },
@@ -1168,7 +1169,7 @@ function buildPage(data) {
       });
     }
 
-    // Race / Qualifying history (if present)
+    // Race / Qualifying history
     const raceHistEl = document.getElementById('ddRaceHistory');
     const qualHistEl = document.getElementById('ddQualHistory');
     if (raceHistEl) raceHistEl.innerHTML = '';
@@ -1410,7 +1411,7 @@ document.querySelectorAll('.track-subtab-btn').forEach(btn => {
   });
 });
 
-// driver subtabs inside modal
+// driver subtabs inside modal — KEEP THIS LAST
 document.querySelectorAll('.driver-subtab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.driver-subtab-btn').forEach(b => b.classList.remove('active'));
@@ -1435,32 +1436,6 @@ document.getElementById('fileSelect').addEventListener('change', async e => {
     console.error(err);
     alert('Failed to load JSON: ' + err.message);
   }
-});
-  // file loading
-populateFileSelect();
-document.getElementById('fileSelect').addEventListener('change', async e => {
-  const path = e.target.value;
-  if (!path) return;
-  try {
-    const res = await fetch(path);
-    const json = await res.json();
-    buildPage(json);
-  } catch (err) {
-    console.error(err);
-    alert('Failed to load JSON: ' + err.message);
-  }
-});
-
-// driver subtabs inside modal — KEEP THIS LAST
-document.querySelectorAll('.driver-subtab-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.driver-subtab-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    const view = btn.getAttribute('data-driver-view');
-    document.querySelectorAll('#driverCard [data-driver-view]').forEach(el => {
-      el.style.display = el.getAttribute('data-driver-view') === view ? '' : 'none';
-    });
-  });
 });
 </script>
 </body>
