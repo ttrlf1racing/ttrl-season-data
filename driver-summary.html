@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>TTRL – Individual Driver Summary</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body { font-family: system-ui, sans-serif; margin:0; padding:16px; background:#050608; color:#f5f5f5; }
+    h1 { margin:0 0 8px; }
+    .section-description { font-size:13px; color:#c5c6c7; margin-bottom:12px; }
+    .filters { display:flex; flex-wrap:wrap; gap:8px; margin:12px 0; align-items:center; }
+    .filters label { font-size:14px; color:#e5e7eb; }
+    select { padding:4px 6px; font-size:14px; border-radius:4px; border:1px solid #3b4252; background:#050608; color:#f5f5f5; }
+    .driver-card {
+      margin-top:12px;
+      padding:16px 18px;
+      border-radius:10px;
+      background:#0b1018;
+      border:1px solid #374151;
+    }
+    .dd-grid { display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:10px; margin-top:10px; }
+    .dd-card { background:#050a12; border-radius:8px; padding:8px 10px; border:1px solid #1f2937; }
+    .dd-title { font-size:12px; text-transform:uppercase; letter-spacing:0.08em; color:#9ca3af; margin-bottom:4px; }
+    .dd-table { width:100%; border-collapse:collapse; font-size:12px; }
+    .dd-table td { padding:2px 0; border:none; }
+    .dd-table td:first-child { color:#9ca3af; }
+    .dd-scroll { max-height:220px; overflow-y:auto; font-size:12px; }
+    .dd-history-item { padding:2px 0; border-bottom:1px solid #111827; }
+    .dd-history-item:last-child { border-bottom:none; }
+    .dd-history-event { color:#e5e7eb; }
+    .dd-history-meta { color:#9ca3af; font-size:11px; }
+    .dd-seasons-pill { padding:3px 6px; border-radius:999px; background:#020617; border:1px solid #374151; margin:0 4px 4px 0; display:inline-block; }
+    .muted { color:#9ca3af; font-size:13px; }
+    .pills { margin-top:8px; display:flex; flex-wrap:wrap; gap:8px; }
+    .pill { padding:3px 8px; border-radius:999px; background:#111827; border:1px solid #374151; font-size:12px; }
+  </style>
+</head>
+<body>
+  <h1>Individual Driver Summary</h1>
+  <p class="section-description">
+    Standalone view using the same export JSON as your main stats page. Load a file, then pick a driver.
+  </p>
+
+  <div class="filters">
+    <label>
+      JSON file:
+      <input type="file" id="jsonFileInput" accept=".json,application/json">
+    </label>
+    <label>
+      Driver:
+      <select id="driverSelect" disabled>
+        <option value="">Select driver…</option>
+      </select>
+    </label>
+  </div>
+
+  <div id="summary" style="display:none;">
+    <div class="driver-card">
+      <h2 id="drvName" style="margin:0 0 4px;"></h2>
+      <div id="drvMeta" class="muted"></div>
+      <div class="pills">
+        <span class="pill" id="pillWins"></span>
+        <span class="pill" id="pillPodiums"></span>
+        <span class="pill" id="pillTitles"></span>
+        <span class="pill" id="pillAvgFinish"></span>
+        <span class="pill" id="pillClean"></span>
+      </div>
+
+      <div class="dd-grid">
+        <div class="dd-card">
+          <div class="dd-title">Career</div>
+          <table class="dd-table" id="tblCareer"></table>
+        </div>
+        <div class="dd-card">
+          <div class="dd-title">Races</div>
+          <table class="dd-table" id="tblRaces"></table>
+        </div>
+        <div class="dd-card">
+          <div class="dd-title">Qualifications</div>
+          <table class="dd-table" id="tblQual"></table>
+        </div>
+        <div class="dd-card">
+          <div class="dd-title">Points</div>
+          <table class="dd-table" id="tblPoints"></table>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:2fr 1.4fr 1.4fr; gap:10px; margin-top:10px;">
+        <div class="dd-card">
+          <div class="dd-title">Seasons</div>
+          <div class="dd-scroll" id="listSeasons"></div>
+        </div>
+        <div class="dd-card">
+          <div class="dd-title">Race history</div>
+          <div class="dd-scroll" id="listRaceHistory"></div>
+        </div>
+        <div class="dd-card">
+          <div class="dd-title">Qualifying history</div>
+          <div class="dd-scroll" id="listQualHistory"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+let driversSrc = [];
+let driverRowsAll = [];
+
+function deriveDriverRow(d) {
+  const infoD = d.driverInfo || {};
+  const points = d.points || {};
+  const racePositions = d.racePositions || {};
+  const discipline = d.discipline || {};
+  const participation = d.participation || {};
+  const standings = d.standings || {};
+  return {
+    source: d,
+    name: d.driverName || infoD.realName || '',
+    nationality: infoD.nationality || '',
+    raceNumber: infoD.raceNumber || '',
+    seasons: participation.seasonsParticipated || 0,
+    totalPoints: Number(points.totalPoints || 0),
+    wins: Number(racePositions.wins || 0),
+    podiums: Number(racePositions.podiums || 0),
+    bestChampPos: standings.bestPosition || '',
+    avgFinish: racePositions.averagePosition,
+    cleanPct: discipline.cleanRacePercent
+  };
+}
+
+function fillTable(elId, rows) {
+  const el = document.getElementById(elId);
+  if (!el) return;
+  el.innerHTML = rows.map(r =>
+    '<tr><td>' + r.label + '</td><td style="text-align:right;">' +
+    (r.value ?? '') + '</td></tr>'
+  ).join('');
+}
+
+function populateDriverSelect() {
+  const sel = document.getElementById('driverSelect');
+  if (!sel) return;
+  sel.innerHTML = '<option value="">Select driver…</option>';
+  const sorted = driverRowsAll.slice().sort((a,b) =>
+    a.name.localeCompare(b.name)
+  );
+  sorted.forEach(dr => {
+    if (!dr.name) return;
+    const opt = document.createElement('option');
+    opt.value = dr.name;
+    opt.textContent = dr.name;
+    sel.appendChild(opt);
+  });
+  sel.disabled = sorted.length === 0;
+}
+
+function renderDriverSummary(name) {
+  const row = driverRowsAll.find(d => d.name === name);
+  const summary = document.getElementById('summary');
+  if (!row || !summary) {
+    if (summary) summary.style.display = 'none';
+    return;
+  }
+  const src = row.source;
+  const infoD = src.driverInfo || {};
+  const participation = src.participation || {};
+  const standings = src.standings || {};
+  const points = src.points || {};
+  const racePositions = src.racePositions || {};
+  const qualPositions = src.qualPositions || {};
+  const discipline = src.discipline || {};
+  const performance = src.performance || {};
+  const seasons = standings.seasonResults || [];
+  const history = src.history || {};
+  const raceHistory = history.raceHistory || [];
+  const qualHistory = history.qualifyingHistory || [];
+
+  summary.style.display = '';
+
+  document.getElementById('drvName').textContent = row.name || '';
+  document.getElementById('drvMeta').textContent =
+    (infoD.nationality || 'Nationality unknown') +
+    (infoD.raceNumber ? ' • #' + infoD.raceNumber : '') +
+    (participation.seasonsParticipated ?
+      ' • ' + participation.seasonsParticipated + ' seasons' : '');
+
+  document.getElementById('pillWins').textContent =
+    'Wins: ' + (racePositions.wins || 0);
+  document.getElementById('pillPodiums').textContent =
+    'Podiums: ' + (racePositions.podiums || 0);
+  document.getElementById('pillTitles').textContent =
+    'Titles: ' + (standings.championshipsWon || 0);
+  document.getElementById('pillAvgFinish').textContent =
+    'Avg finish: ' + (racePositions.averagePosition ?? '–');
+  document.getElementById('pillClean').textContent =
+    'Clean %: ' + (discipline.cleanRacePercent != null ?
+      discipline.cleanRacePercent : '–');
+
+  fillTable('tblCareer', [
+    { label:'Races', value: participation.totalRaces ?? '' },
+    { label:'Seasons', value: participation.seasonsParticipated ?? '' },
+    { label:'Titles', value: standings.championshipsWon ?? '' },
+    { label:'Top 3', value: standings.top3Finishes ?? '' },
+    { label:'Best standings', value: standings.bestPosition ?? '' },
+    { label:'Avg standings', value: standings.averagePosition ?? '' }
+  ]);
+
+  fillTable('tblRaces', [
+    { label:'Wins', value: racePositions.wins ?? '' },
+    { label:'Podiums', value: racePositions.podiums ?? '' },
+    { label:'Top 5', value: racePositions.top5 ?? '' },
+    { label:'Top 10', value: racePositions.top10 ?? '' },
+    { label:'Best finish', value: racePositions.bestPosition != null ?
+        'P' + racePositions.bestPosition : '' },
+    { label:'Avg finish', value: racePositions.averagePosition ?? '' },
+    { label:'Avg grid', value: racePositions.averageGridPosition ?? '' },
+    { label:'Avg pos change', value: racePositions.averagePositionChange != null ?
+        (racePositions.averagePositionChange > 0 ? '+' : '') +
+        racePositions.averagePositionChange : '' }
+  ]);
+
+  fillTable('tblQual', [
+    { label:'Poles', value: qualPositions.poles ?? '' },
+    { label:'Front rows', value: qualPositions.frontRows ?? '' },
+    { label:'Top 3', value: qualPositions.top3 ?? '' },
+    { label:'Best qualifying', value: qualPositions.bestPosition != null ?
+        'P' + qualPositions.bestPosition : '' },
+    { label:'Avg position', value: qualPositions.averagePosition ?? '' },
+    { label:'Pole rate', value: qualPositions.poleRatePercent != null ?
+        qualPositions.poleRatePercent + '%' : '' }
+  ]);
+
+  fillTable('tblPoints', [
+    { label:'Total points', value: points.totalPoints ?? '' },
+    { label:'Avg per season', value: points.averagePerSeason ?? '' },
+    { label:'Avg per race', value: points.averagePerMajorRace ?? '' },
+    { label:'Avg per event', value: points.averagePerEvent ?? '' },
+    { label:'Best season', value: points.bestSeasonPoints ?
+        points.bestSeasonPoints + ' (' + (points.bestSeasonName || '') + ')' : '' }
+  ]);
+
+  const seasonsEl = document.getElementById('listSeasons');
+  seasonsEl.innerHTML = '';
+  seasons.slice().sort((a,b) =>
+    String(a.seasonName || '').localeCompare(String(b.seasonName || ''))
+  ).forEach(s => {
+    const pill = document.createElement('span');
+    pill.className = 'dd-seasons-pill';
+    pill.textContent =
+      (s.seasonName || '') + ' • P' + (s.position || '') +
+      ' • ' + (s.points || 0) + ' pts';
+    seasonsEl.appendChild(pill);
+  });
+
+  const raceEl = document.getElementById('listRaceHistory');
+  raceEl.innerHTML = '';
+  raceHistory.forEach(ev => {
+    const div = document.createElement('div');
+    div.className = 'dd-history-item';
+    div.innerHTML =
+      '<div class="dd-history-event">' +
+        (ev.roundName || ev.trackName || '') +
+        (ev.resultPosition != null ? ' • P' + ev.resultPosition : '') +
+      '</div>' +
+      '<div class="dd-history-meta">' +
+        (ev.sessionName || 'Race') +
+        (ev.date ? ' • ' + ev.date : '') +
+      '</div>';
+    raceEl.appendChild(div);
+  });
+
+  const qualEl = document.getElementById('listQualHistory');
+  qualEl.innerHTML = '';
+  qualHistory.forEach(ev => {
+    const div = document.createElement('div');
+    div.className = 'dd-history-item';
+    div.innerHTML =
+      '<div class="dd-history-event">' +
+        (ev.roundName || ev.trackName || '') +
+        (ev.resultPosition != null ? ' • P' + ev.resultPosition : '') +
+      '</div>' +
+      '<div class="dd-history-meta">' +
+        (ev.sessionName || 'Qual') +
+        (ev.date ? ' • ' + ev.date : '') +
+      '</div>';
+    qualEl.appendChild(d
