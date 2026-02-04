@@ -284,6 +284,12 @@
 let driversSrc = [];
 let driverRowsAll = [];
 
+// read query params
+function getQueryParam(name) {
+  const params = new URLSearchParams(window.location.search);
+  return params.get(name);
+}
+
 function safeNum(v, fallback = 0) {
   const n = Number(v);
   return Number.isFinite(n) ? n : fallback;
@@ -345,6 +351,7 @@ function fillTable(elId, rows) {
   ).join('');
 }
 
+/* avatar path – Drivers Avatars/<driverName>.png fallback default */
 function avatarFor(infoD, driverName) {
   const base = 'Drivers Avatars/';
   const raw =
@@ -454,7 +461,7 @@ function renderDriverSummary(name) {
     metaLine.className = 'season-meta-line';
 
     const eventsVal =
-      s.racesCount != null ? s.racesCount : 0;  // main JSON field for race count [file:41]
+      s.racesCount != null ? s.racesCount : 0;
 
     const lineParts = [];
     lineParts.push(eventsVal + ' events');
@@ -483,25 +490,53 @@ function renderDriverSummary(name) {
   });
 }
 
-document.getElementById('jsonFileInput').addEventListener('change', e => {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = ev => {
-    try {
-      const data = JSON.parse(ev.target.result);
-      const multi = data.multiSeasonStatistics || {};
-      driversSrc = multi.drivers || multi.driverStatistics || data.drivers || [];
-      driverRowsAll = driversSrc.map(deriveDriverRow);
-      renderDriverList('');
-      document.getElementById('driverSearch').disabled = driverRowsAll.length === 0;
-      document.getElementById('layoutRoot').style.display = 'none';
-      document.getElementById('driverSearch').value = '';
-    } catch (err) {
-      alert('Failed to parse JSON: ' + err.message);
-    }
-  };
-  reader.readAsText(file);
+/* -------- data loading -------- */
+
+function loadJsonFromUrlOrFile(initialDriverName) {
+  const fileInput = document.getElementById('jsonFileInput');
+  const storedJson = localStorage.getItem('ttrl_selected_json');
+
+  if (storedJson) {
+    fetch('export_data/' + storedJson)
+      .then(r => r.json())
+      .then(data => {
+        const multi = data.multiSeasonStatistics || {};
+        driversSrc = multi.drivers || multi.driverStatistics || data.drivers || [];
+        driverRowsAll = driversSrc.map(deriveDriverRow);
+        renderDriverList('');
+        document.getElementById('driverSearch').disabled = driverRowsAll.length === 0;
+
+        if (initialDriverName) {
+          document.getElementById('driverSearch').value = initialDriverName;
+          renderDriverSummary(initialDriverName);
+        }
+      })
+      .catch(err => alert('Failed to load JSON: ' + err.message));
+  } else if (fileInput.files[0]) {
+    const file = fileInput.files[0];
+    const reader = new FileReader();
+    reader.onload = ev => {
+      try {
+        const data = JSON.parse(ev.target.result);
+        const multi = data.multiSeasonStatistics || {};
+        driversSrc = multi.drivers || multi.driverStatistics || data.drivers || [];
+        driverRowsAll = driversSrc.map(deriveDriverRow);
+        renderDriverList('');
+        document.getElementById('driverSearch').disabled = driverRowsAll.length === 0;
+      } catch (err) {
+        alert('Failed to parse JSON: ' + err.message);
+      }
+    };
+    reader.readAsText(file);
+  }
+}
+
+document.getElementById('jsonFileInput').addEventListener('change', () => {
+  localStorage.removeItem('ttrl_selected_json');
+  localStorage.removeItem('ttrl_selected_driver');
+  loadJsonFromUrlOrFile(null);
+  document.getElementById('layoutRoot').style.display = 'none';
+  document.getElementById('driverSearch').value = '';
 });
 
 document.getElementById('driverSearch').addEventListener('input', e => {
@@ -530,6 +565,15 @@ document.getElementById('driverList').addEventListener('click', e => {
   document.getElementById('driverSearch').value = name;
   document.getElementById('driverList').classList.remove('open');
   renderDriverSummary(name);
+});
+
+window.addEventListener('DOMContentLoaded', () => {
+  const cameFromIndex = getQueryParam('from') === 'index';
+  const storedDriver = localStorage.getItem('ttrl_selected_driver');
+
+  if (cameFromIndex && storedDriver) {
+    loadJsonFromUrlOrFile(storedDriver);
+  }
 });
 </script>
 </body>
