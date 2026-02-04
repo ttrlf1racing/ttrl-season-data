@@ -187,7 +187,7 @@
       background:#020617;
       color:var(--text-main);
       font-size:13px;
-      min-width:180px;
+      min-width:220px;
     }
     .picker-input::placeholder{color:#6b7280;}
 
@@ -222,11 +222,9 @@
 </head>
 <body>
   <h1>Driver summary</h1>
-  <p class="page-sub">Load a multi‑season export JSON, then pick a driver to view their TTRL career.</p>
+  <p class="page-sub">Multi‑season breakdown for a single driver, loaded from the selection on the main page.</p>
 
   <div class="picker-bar">
-    <span class="picker-label">JSON file</span>
-    <input type="file" id="jsonFileInput" accept=".json,application/json" class="picker-input">
     <span class="picker-label">Driver</span>
     <div class="driver-list-dropdown">
       <input id="driverSearch" class="picker-input" type="text" placeholder="Search driver…" disabled>
@@ -284,7 +282,6 @@
 let driversSrc = [];
 let driverRowsAll = [];
 
-// read query params
 function getQueryParam(name) {
   const params = new URLSearchParams(window.location.search);
   return params.get(name);
@@ -351,7 +348,6 @@ function fillTable(elId, rows) {
   ).join('');
 }
 
-/* avatar path – Drivers Avatars/<driverName>.png fallback default */
 function avatarFor(infoD, driverName) {
   const base = 'Drivers Avatars/';
   const raw =
@@ -490,55 +486,28 @@ function renderDriverSummary(name) {
   });
 }
 
-/* -------- data loading -------- */
-
-function loadJsonFromUrlOrFile(initialDriverName) {
-  const fileInput = document.getElementById('jsonFileInput');
+function loadJsonFromStored(initialDriverName) {
   const storedJson = localStorage.getItem('ttrl_selected_json');
+  if (!storedJson) return;
 
-  if (storedJson) {
-    fetch('export_data/' + storedJson)
-      .then(r => r.json())
-      .then(data => {
-        const multi = data.multiSeasonStatistics || {};
-        driversSrc = multi.drivers || multi.driverStatistics || data.drivers || [];
-        driverRowsAll = driversSrc.map(deriveDriverRow);
-        renderDriverList('');
-        document.getElementById('driverSearch').disabled = driverRowsAll.length === 0;
+  fetch('export_data/' + storedJson)
+    .then(r => r.json())
+    .then(data => {
+      const multi = data.multiSeasonStatistics || {};
+      driversSrc = multi.drivers || multi.driverStatistics || data.drivers || [];
+      driverRowsAll = driversSrc.map(deriveDriverRow);
+      renderDriverList('');
+      document.getElementById('driverSearch').disabled = driverRowsAll.length === 0;
 
-        if (initialDriverName) {
-          document.getElementById('driverSearch').value = initialDriverName;
-          renderDriverSummary(initialDriverName);
-        }
-      })
-      .catch(err => alert('Failed to load JSON: ' + err.message));
-  } else if (fileInput.files[0]) {
-    const file = fileInput.files[0];
-    const reader = new FileReader();
-    reader.onload = ev => {
-      try {
-        const data = JSON.parse(ev.target.result);
-        const multi = data.multiSeasonStatistics || {};
-        driversSrc = multi.drivers || multi.driverStatistics || data.drivers || [];
-        driverRowsAll = driversSrc.map(deriveDriverRow);
-        renderDriverList('');
-        document.getElementById('driverSearch').disabled = driverRowsAll.length === 0;
-      } catch (err) {
-        alert('Failed to parse JSON: ' + err.message);
+      if (initialDriverName) {
+        document.getElementById('driverSearch').value = initialDriverName;
+        renderDriverSummary(initialDriverName);
       }
-    };
-    reader.readAsText(file);
-  }
+    })
+    .catch(err => alert('Failed to load JSON: ' + err.message));
 }
 
-document.getElementById('jsonFileInput').addEventListener('change', () => {
-  localStorage.removeItem('ttrl_selected_json');
-  localStorage.removeItem('ttrl_selected_driver');
-  loadJsonFromUrlOrFile(null);
-  document.getElementById('layoutRoot').style.display = 'none';
-  document.getElementById('driverSearch').value = '';
-});
-
+// search + dropdown
 document.getElementById('driverSearch').addEventListener('input', e => {
   renderDriverList(e.target.value || '');
   const panel = document.getElementById('driverList');
@@ -572,7 +541,10 @@ window.addEventListener('DOMContentLoaded', () => {
   const storedDriver = localStorage.getItem('ttrl_selected_driver');
 
   if (cameFromIndex && storedDriver) {
-    loadJsonFromUrlOrFile(storedDriver);
+    loadJsonFromStored(storedDriver);
+  } else {
+    // still load JSON if present, but no initial driver
+    loadJsonFromStored(null);
   }
 });
 </script>
