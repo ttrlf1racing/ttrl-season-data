@@ -343,18 +343,40 @@
     }
     .track-hover:hover .track-hover-tooltip { opacity:1; }
 
-    @media (max-width:900px) {
+       @media (max-width:900px) {
       .header-top { flex-direction:column; align-items:flex-start; }
-      .header-centre { width:100%; align-items:flex-start; padding:8px 10px; }
-      .header-title-row { font-size:16px; white-space:normal; }
-      .header-subline { white-space:normal; }
-      .header-meta { text-align:left; margin-top:6px; }
-      .logo-wrap { gap:10px; }
-      .logo-img { height:54px; }
+      ...
       .driver-layout { flex-direction:column; }
     }
     @media (max-width:600px) { .header-title-row { font-size:15px; } }
+
+    /* NEW: shrink driver profile card on mobile */
+    @media (max-width:600px) {
+      .driver-modal .driver-card {
+        padding:16px 16px 12px;
+      }
+      .driver-card-header {
+        gap:10px;
+        margin-bottom:6px;
+      }
+      .driver-card-logo {
+        width:60px;
+        height:60px;
+      }
+      .driver-card h3 {
+        font-size:18px;
+      }
+      .driver-meta,
+      .driver-statline {
+        font-size:13px;
+      }
+      .driver-cta-inline {
+        font-size:10px;
+        padding:5px 10px;
+      }
+    }
   </style>
+
 </head>
 <body>
 <input id="addSeasonFileInput" type="file" accept=".json,application/json" style="display:none;">
