@@ -512,14 +512,15 @@
     <div class="cards" id="overviewCards"></div>
   </section>
 
-  <section id="viewSelector">
-    <div class="filters" style="margin-top:0;">
-      <label style="margin-right:8px;">View:</label>
-      <button class="tab-btn active" data-view="drivers">Drivers</button>
-      <button class="tab-btn" data-view="tracks">Tracks</button>
-      <button class="tab-btn disabled" data-view="driverTimes" aria-disabled="true">Driver Times (coming soon)</button>
-    </div>
-  </section>
+ <section id="viewSelector">
+  <div class="filters" style="margin-top:0;">
+    <label style="margin-right:8px;">View:</label>
+    <button class="tab-btn active" data-view="drivers">Drivers</button>
+    <button class="tab-btn" data-view="tracks">Tracks</button>
+    <button class="tab-btn disabled" data-view="driverTimes" aria-disabled="true">Driver Times (coming soon)</button>
+  </div>
+</section>
+
 
   <!-- Drivers -->
   <section id="driversSection" data-view="drivers" class="active">
@@ -701,6 +702,83 @@
       </div>
     </div>
   </div>
+
+    <!-- Individual Driver Summary -->
+  <section id="driverSummarySection" data-view="driverSummary">
+    <h2>Individual Driver Summary</h2>
+    <p class="section-description">
+      Detailed multi‑season breakdown for a single driver: career, points, race and qualifying stats, seasons, and scrollable race history.
+    </p>
+
+    <div class="filters">
+      <label>
+        Driver:
+        <select id="summaryDriverSelect">
+          <option value="">Select driver…</option>
+        </select>
+      </label>
+    </div>
+
+    <div id="driverSummaryContent" style="display:none; margin-top:10px;">
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:10px;">
+        <img
+          id="summaryDriverAvatar"
+          src="Drivers Avatars/default.png?v=2"
+          alt="Driver avatar"
+          style="width:60px; height:60px; border-radius:999px; object-fit:cover; box-shadow:0 0 10px rgba(0,0,0,0.8);">
+        <div>
+          <div class="driver-handle">TTRL DRIVER SUMMARY</div>
+          <h3 id="summaryDriverName" style="margin:0;"></h3>
+          <div id="summaryDriverMeta" class="driver-meta" style="margin:2px 0 0;"></div>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:10px; margin-bottom:10px;">
+        <span class="driver-stat-pill" id="summaryPillWins"></span>
+        <span class="driver-stat-pill" id="summaryPillPodiums"></span>
+        <span class="driver-stat-pill" id="summaryPillTitles"></span>
+        <span class="driver-stat-pill" id="summaryPillAvgFinish"></span>
+        <span class="driver-stat-pill" id="summaryPillClean"></span>
+      </div>
+
+      <div style="display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:10px; margin-bottom:10px;">
+        <div class="dd-card">
+          <div class="dd-title">Career</div>
+          <table class="dd-table" id="sumCareerTable"></table>
+        </div>
+        <div class="dd-card">
+          <div class="dd-title">Races</div>
+          <table class="dd-table" id="sumRacesTable"></table>
+        </div>
+        <div class="dd-card">
+          <div class="dd-title">Qualifications</div>
+          <table class="dd-table" id="sumQualTable"></table>
+        </div>
+        <div class="dd-card">
+          <div class="dd-title">Points</div>
+          <table class="dd-table" id="sumPointsTable"></table>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:2fr 1.4fr 1.4fr; gap:10px;">
+        <div class="dd-card">
+          <div class="dd-title">Seasons</div>
+          <div class="dd-scroll" id="sumSeasonsList"></div>
+        </div>
+
+        <div class="dd-card">
+          <div class="dd-title">Race history</div>
+          <div class="dd-history-scroll" id="sumRaceHistory" style="max-height:260px;"></div>
+        </div>
+
+        <div class="dd-card">
+          <div class="dd-title">Qualifying history</div>
+          <div class="dd-history-scroll" id="sumQualHistory" style="max-height:260px;"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
 
   <!-- Tracks -->
   <section id="trackSection" data-view="tracks">
@@ -912,6 +990,211 @@ function buildPage(data) {
   let selectedDriverName = null;
   let driverCurrentPage = 1;
   let driverPageSize = 25;
+
+    // ===== INDIVIDUAL DRIVER SUMMARY =====
+  const summarySelect = document.getElementById('summaryDriverSelect');
+  const summaryContent = document.getElementById('driverSummaryContent');
+
+  function populateSummarySelect() {
+    if (!summarySelect) return;
+    summarySelect.innerHTML = '<option value="">Select driver…</option>';
+    const sorted = driverRowsAll.slice().sort((a,b) =>
+      a.name.localeCompare(b.name)
+    );
+    sorted.forEach(dr => {
+      if (!dr.name) return;
+      const opt = document.createElement('option');
+      opt.value = dr.name;
+      opt.textContent = dr.name;
+      summarySelect.appendChild(opt);
+    });
+  }
+
+  function fillSummaryTable(elId, rows) {
+    const el = document.getElementById(elId);
+    if (!el) return;
+    el.innerHTML = rows.map(r =>
+      '<tr><td>' + r.label + '</td><td style="text-align:right;">' + (r.value ?? '') + '</td></tr>'
+    ).join('');
+  }
+
+  function renderDriverSummary(driverName) {
+    if (!summaryContent) return;
+    const row = driverRowsAll.find(d => d.name === driverName);
+    if (!row) {
+      summaryContent.style.display = 'none';
+      return;
+    }
+    const src = row.source;
+    const infoD = src.driverInfo || {};
+    const participation = src.participation || {};
+    const standings = src.standings || {};
+    const points = src.points || {};
+    const racePositions = src.racePositions || {};
+    const qualPositions = src.qualPositions || {};
+    const discipline = src.discipline || {};
+    const performance = src.performance || {};
+    const seasons = standings.seasonResults || [];
+    const history = src.history || {};
+    const raceHistory = history.raceHistory || [];
+    const qualHistory = history.qualifyingHistory || [];
+
+    summaryContent.style.display = '';
+
+    const nameEl = document.getElementById('summaryDriverName');
+    const metaEl = document.getElementById('summaryDriverMeta');
+    const avatarEl = document.getElementById('summaryDriverAvatar');
+    if (nameEl) nameEl.textContent = row.name;
+    if (metaEl) {
+      metaEl.textContent =
+        (infoD.nationality || 'Nationality unknown') +
+        (infoD.raceNumber ? ' • #' + infoD.raceNumber : '') +
+        (participation.seasonsParticipated ?
+          ' • ' + participation.seasonsParticipated + ' seasons' : '');
+    }
+    if (avatarEl) {
+      const srcPath = getDriverAvatarSrc(row.name);
+      const fallback = DRIVER_AVATAR_FOLDER + '/default.png?v=2';
+      avatarEl.onerror = function () {
+        this.onerror = null;
+        this.src = fallback;
+      };
+      avatarEl.src = srcPath;
+      avatarEl.alt = row.name;
+    }
+
+    // pills
+    const pillWins = document.getElementById('summaryPillWins');
+    const pillPods = document.getElementById('summaryPillPodiums');
+    const pillTitles = document.getElementById('summaryPillTitles');
+    const pillAvgFinish = document.getElementById('summaryPillAvgFinish');
+    const pillClean = document.getElementById('summaryPillClean');
+
+    if (pillWins) pillWins.textContent = 'Wins: ' + (racePositions.wins || 0);
+    if (pillPods) pillPods.textContent = 'Podiums: ' + (racePositions.podiums || 0);
+    if (pillTitles) pillTitles.textContent = 'Titles: ' + (standings.championshipsWon || 0);
+    if (pillAvgFinish) pillAvgFinish.textContent =
+      'Avg finish: ' + (racePositions.averagePosition != null ? racePositions.averagePosition : '–');
+    if (pillClean) pillClean.textContent =
+      'Clean %: ' + (discipline.cleanRacePercent != null ?
+        (discipline.cleanRacePercent.toFixed ?
+          discipline.cleanRacePercent.toFixed(0) : discipline.cleanRacePercent) + '%' : '–');
+
+    // career
+    fillSummaryTable('sumCareerTable', [
+      { label:'Races', value: participation.totalRaces ?? '' },
+      { label:'Seasons', value: participation.seasonsParticipated ?? '' },
+      { label:'Titles', value: standings.championshipsWon ?? '' },
+      { label:'Top 3', value: standings.top3Finishes ?? '' },
+      { label:'Best standings', value: standings.bestPosition ?? '' },
+      { label:'Avg standings', value: standings.averagePosition ?? '' }
+    ]);
+
+    // races
+    fillSummaryTable('sumRacesTable', [
+      { label:'Wins', value: racePositions.wins ?? '' },
+      { label:'Podiums', value: racePositions.podiums ?? '' },
+      { label:'Top 5', value: racePositions.top5 ?? '' },
+      { label:'Top 10', value: racePositions.top10 ?? '' },
+      { label:'Best finish', value: racePositions.bestPosition != null ?
+          'P' + racePositions.bestPosition : '' },
+      { label:'Avg finish', value: racePositions.averagePosition ?? '' },
+      { label:'Avg grid', value: racePositions.averageGridPosition ?? '' },
+      { label:'Avg pos change', value: racePositions.averagePositionChange != null ?
+          (racePositions.averagePositionChange > 0 ? '+' : '') +
+          racePositions.averagePositionChange : '' }
+    ]);
+
+    // qualifications
+    fillSummaryTable('sumQualTable', [
+      { label:'Poles', value: qualPositions.poles ?? '' },
+      { label:'Front rows', value: qualPositions.frontRows ?? '' },
+      { label:'Top 3', value: qualPositions.top3 ?? '' },
+      { label:'Best qualifying', value: qualPositions.bestPosition != null ?
+          'P' + qualPositions.bestPosition : '' },
+      { label:'Avg position', value: qualPositions.averagePosition ?? '' },
+      { label:'Pole rate', value: qualPositions.poleRatePercent != null ?
+          qualPositions.poleRatePercent + '%' : '' }
+    ]);
+
+    // points
+    fillSummaryTable('sumPointsTable', [
+      { label:'Total points', value: points.totalPoints ?? '' },
+      { label:'Avg per season', value: points.averagePerSeason ?? '' },
+      { label:'Avg per race', value: points.averagePerMajorRace ?? '' },
+      { label:'Avg per event', value: points.averagePerEvent ?? '' },
+      { label:'Best season', value: points.bestSeasonPoints ?
+          points.bestSeasonPoints + ' (' + (points.bestSeasonName || '') + ')' : '' }
+    ]);
+
+    // seasons list
+    const seasonsListEl = document.getElementById('sumSeasonsList');
+    if (seasonsListEl) {
+      seasonsListEl.innerHTML = '';
+      seasons.slice().sort((a,b) =>
+        String(a.seasonName || '').localeCompare(String(b.seasonName || ''))
+      ).forEach(s => {
+        const pill = document.createElement('span');
+        pill.className = 'dd-seasons-pill';
+        pill.innerHTML =
+          '<span>' + (s.seasonName || '') + '</span>' +
+          ' &nbsp; <span>P' + (s.position || '') +
+          ' • ' + (s.points || 0) + ' pts</span>';
+        seasonsListEl.appendChild(pill);
+      });
+    }
+
+    // race history
+    const raceHistEl = document.getElementById('sumRaceHistory');
+    const qualHistEl = document.getElementById('sumQualHistory');
+    if (raceHistEl) {
+      raceHistEl.innerHTML = '';
+      raceHistory.forEach(ev => {
+        const div = document.createElement('div');
+        div.className = 'dd-history-item';
+        div.innerHTML =
+          '<div class="dd-history-event">' +
+            (ev.roundName || ev.trackName || '') +
+            (ev.resultPosition != null ? ' • P' + ev.resultPosition : '') +
+          '</div>' +
+          '<div class="dd-history-meta">' +
+            (ev.sessionName || 'Race') +
+            (ev.date ? ' • ' + ev.date : '') +
+          '</div>';
+        raceHistEl.appendChild(div);
+      });
+    }
+    if (qualHistEl) {
+      qualHistEl.innerHTML = '';
+      qualHistory.forEach(ev => {
+        const div = document.createElement('div');
+        div.className = 'dd-history-item';
+        div.innerHTML =
+          '<div class="dd-history-event">' +
+            (ev.roundName || ev.trackName || '') +
+            (ev.resultPosition != null ? ' • P' + ev.resultPosition : '') +
+          '</div>' +
+          '<div class="dd-history-meta">' +
+            (ev.sessionName || 'Qual') +
+            (ev.date ? ' • ' + ev.date : '') +
+          '</div>';
+        qualHistEl.appendChild(div);
+      });
+    }
+  }
+
+  populateSummarySelect();
+  if (summarySelect) {
+    summarySelect.addEventListener('change', e => {
+      const name = e.target.value;
+      if (!name) {
+        if (summaryContent) summaryContent.style.display = 'none';
+      } else {
+        renderDriverSummary(name);
+      }
+    });
+  }
+
 
   function getFilteredDriverRows() { return driverRowsAll; }
 
