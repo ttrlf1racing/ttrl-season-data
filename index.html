@@ -249,8 +249,8 @@
     }
     .driver-modal-card {
       position:relative;
-      max-width:820px;
-      width:92%;
+      max-width:1100px;
+      width:96%;
       transform:translateY(10px);
       transition:transform 150ms ease-out, opacity 150ms ease-out;
       opacity:0;
@@ -306,7 +306,6 @@
     .track-subtabs { margin-top:8px; display:flex; gap:8px; }
     .track-subtab-btn { font-size:12px; padding:4px 10px; }
 
-    /* Season comparison hover box (below cells) */
     .track-hover {
       position:relative;
       cursor:help;
@@ -343,6 +342,119 @@
       opacity:1;
     }
 
+    /* Driver subtabs + details layout */
+    .driver-subtabs {
+      margin:8px 0 10px;
+      display:flex;
+      gap:8px;
+    }
+    .driver-subtab-btn {
+      background:#11151f;
+      border:1px solid #3b4252;
+      color:#f5f5f5;
+      padding:4px 10px;
+      border-radius:4px;
+      font-size:12px;
+      cursor:pointer;
+    }
+    .driver-subtab-btn.active {
+      background:#007bff;
+      border-color:#007bff;
+    }
+
+    .driver-details-grid {
+      display:flex;
+      gap:10px;
+    }
+    .driver-details-col {
+      flex:0 0 220px;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+    .driver-details-col-wide {
+      flex:1 1 auto;
+      min-width:260px;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+
+    .dd-card {
+      background:rgba(15,23,42,0.9);
+      border-radius:8px;
+      padding:8px 10px;
+      border:1px solid #1f2937;
+    }
+    .dd-title {
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:0.08em;
+      color:#9ca3af;
+      margin-bottom:4px;
+    }
+    .dd-table {
+      width:100%;
+      border-collapse:collapse;
+      font-size:12px;
+    }
+    .dd-table tr td:first-child {
+      color:#9ca3af;
+    }
+    .dd-table td {
+      padding:2px 0;
+      border:none;
+    }
+
+    .dd-scroll {
+      max-height:150px;
+      overflow-y:auto;
+      font-size:12px;
+    }
+    .dd-seasons-pill {
+      padding:3px 6px;
+      border-radius:999px;
+      background:#020617;
+      border:1px solid #374151;
+      margin:0 4px 4px 0;
+      display:inline-block;
+    }
+    .dd-seasons-pill span {
+      color:#e5e7eb;
+    }
+
+    .dd-history-wrap {
+      padding:8px 6px;
+    }
+    .dd-history-columns {
+      display:flex;
+      gap:8px;
+    }
+    .dd-history-col {
+      flex:1 1 0;
+      display:flex;
+      flex-direction:column;
+    }
+    .dd-history-scroll {
+      max-height:180px;
+      overflow-y:auto;
+      font-size:12px;
+    }
+    .dd-history-item {
+      padding:2px 0;
+      border-bottom:1px solid #111827;
+    }
+    .dd-history-item:last-child {
+      border-bottom:none;
+    }
+    .dd-history-event {
+      color:#e5e7eb;
+    }
+    .dd-history-meta {
+      color:#9ca3af;
+      font-size:11px;
+    }
+
     @media (max-width:900px) {
       .header-top { flex-direction:column; align-items:flex-start; }
       .header-centre { width:100%; align-items:flex-start; padding:8px 10px; }
@@ -352,6 +464,11 @@
       .logo-wrap { gap:10px; }
       .logo-img { height:54px; }
       .driver-layout { flex-direction:column; }
+      .driver-details-grid { flex-direction:column; }
+      .driver-details-col,
+      .driver-details-col-wide {
+        flex:1 1 auto;
+      }
     }
     @media (max-width:600px) { .header-title-row { font-size:15px; } }
   </style>
@@ -482,14 +599,18 @@
     </div>
   </section>
 
-  <!-- Driver modal -->
+  <!-- Driver modal with subtabs -->
   <div id="driverModal" class="driver-modal">
     <div class="driver-modal-backdrop"></div>
     <div class="driver-modal-card">
       <button id="driverModalClose" class="driver-modal-close">&times;</button>
       <div id="driverCard" class="driver-card">
         <div class="driver-card-header">
-          <img id="driverAvatar" src="Drivers Avatars/default.png" alt="Driver avatar" class="driver-card-logo">
+          <img
+            id="driverAvatar"
+            src="Drivers Avatars/default.png?v=2"
+            alt="Driver avatar"
+            class="driver-card-logo">
           <div>
             <div class="driver-handle">TTRL DRIVER PROFILE</div>
             <h3 id="dcName"></h3>
@@ -497,24 +618,86 @@
         </div>
         <div class="driver-meta" id="dcMeta"></div>
         <div id="dcCats" style="margin-bottom:6px;"></div>
-        <div class="driver-statline" id="dcSummary"></div>
-        <div id="dcPills" style="margin-bottom:8px;"></div>
-        <h4 style="margin:4px 0 4px; font-size:14px;">Season results</h4>
-        <div style="max-height:320px; overflow-y:auto;">
-          <table class="driver-seasons-table" id="dcSeasonsTable">
-            <thead>
-              <tr>
-                <th>Season</th>
-                <th>Pos</th>
-                <th>Pts</th>
-                <th>Races</th>
-                <th>Wins</th>
-                <th>Podiums</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
+
+        <div class="driver-subtabs">
+          <button class="driver-subtab-btn active" data-driver-view="summary">Summary</button>
+          <button class="driver-subtab-btn" data-driver-view="details">Details</button>
         </div>
+
+        <!-- Summary view -->
+        <div id="driverSummaryView" data-driver-view="summary">
+          <div class="driver-statline" id="dcSummary"></div>
+          <div id="dcPills" style="margin-bottom:8px;"></div>
+          <h4 style="margin:4px 0 4px; font-size:14px;">Season results</h4>
+          <div style="max-height:320px; overflow-y:auto;">
+            <table class="driver-seasons-table" id="dcSeasonsTable">
+              <thead>
+                <tr>
+                  <th>Season</th>
+                  <th>Pos</th>
+                  <th>Pts</th>
+                  <th>Races</th>
+                  <th>Wins</th>
+                  <th>Podiums</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Details view -->
+        <div id="driverDetailsView" data-driver-view="details" style="display:none;">
+          <div class="driver-details-grid">
+            <!-- Col 1 -->
+            <div class="driver-details-col">
+              <div class="dd-card">
+                <div class="dd-title">Career</div>
+                <table class="dd-table" id="ddCareerTable"></table>
+              </div>
+              <div class="dd-card">
+                <div class="dd-title">Points</div>
+                <table class="dd-table" id="ddPointsTable"></table>
+              </div>
+              <div class="dd-card">
+                <div class="dd-title">Discipline</div>
+                <table class="dd-table" id="ddDisciplineTable"></table>
+              </div>
+            </div>
+
+            <!-- Col 2 -->
+            <div class="driver-details-col">
+              <div class="dd-card">
+                <div class="dd-title">Races</div>
+                <table class="dd-table" id="ddRacesTable"></table>
+              </div>
+              <div class="dd-card">
+                <div class="dd-title">Performance</div>
+                <table class="dd-table" id="ddPerformanceTable"></table>
+              </div>
+            </div>
+
+            <!-- Col 3 -->
+            <div class="driver-details-col-wide">
+              <div class="dd-card">
+                <div class="dd-title">Seasons</div>
+                <div class="dd-scroll" id="ddSeasonsList"></div>
+              </div>
+              <div class="dd-card dd-history-wrap">
+                <div class="dd-history-columns">
+                  <div class="dd-history-col">
+                    <div class="dd-title">Race history</div>
+                    <div class="dd-history-scroll" id="ddRaceHistory"></div>
+                  </div>
+                  <div class="dd-history-col">
+                    <div class="dd-title">Qualifying history</div>
+                    <div class="dd-history-scroll" id="ddQualHistory"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div> <!-- /grid -->
+        </div> <!-- /details -->
       </div>
     </div>
   </div>
@@ -540,7 +723,6 @@
       <button class="tab-btn track-subtab-btn" data-track-view="seasonCmp">Season Comparison</button>
     </div>
 
-    <!-- Track details view -->
     <div id="trackDetailsView" data-track-view="details">
       <div class="scroll-body">
         <table id="trackTable">
@@ -562,7 +744,6 @@
       </div>
     </div>
 
-    <!-- Track season comparison view -->
     <div id="trackSeasonCmpView" data-track-view="seasonCmp" style="display:none;">
       <div class="scroll-body">
         <table id="trackSeasonCmpTable">
@@ -581,7 +762,6 @@
     </div>
   </section>
 
-  <!-- Driver Times placeholder -->
   <section id="driverTimesSection" data-view="driverTimes">
     <h2>Driver Times</h2>
     <p class="muted">
@@ -706,7 +886,6 @@ function buildPage(data) {
     const seasonsPart = participation.seasonsParticipated || 0;
     const totalRaces = participation.totalRaces || participation.totalMajorRaces || 0;
 
-    // Use existing lap-related counters that actually exist in t4.json
     const fastRaceLaps = Number(racePositions.fastestRaceLaps || 0);
     const fastPoleLaps = Number(qualPositions.poles || 0);
 
@@ -839,9 +1018,10 @@ function buildPage(data) {
 
     if (driverAvatar) {
       const avatarSrc = getDriverAvatarSrc(row.name);
+      const defaultSrc = DRIVER_AVATAR_FOLDER + '/default.png?v=2';
       driverAvatar.onerror = function () {
         this.onerror = null;
-        this.src = DRIVER_AVATAR_FOLDER + '/default.png';
+        this.src = defaultSrc;
       };
       driverAvatar.src = avatarSrc;
       driverAvatar.alt = row.name;
@@ -898,6 +1078,148 @@ function buildPage(data) {
       dcSeasonsTable.appendChild(tr);
     });
 
+    // ====== DETAILS VIEW POPULATION ======
+    const racePositions = src.racePositions || {};
+    const qualPositions = src.qualPositions || {};
+    const discipline = src.discipline || {};
+    const performance = src.performance || {};
+    const points = src.points || {};
+    const seasons = standings.seasonResults || [];
+
+    const fillTable = (elId, rows) => {
+      const el = document.getElementById(elId);
+      if (!el) return;
+      el.innerHTML = rows.map(r =>
+        '<tr><td>' + r.label + '</td><td style="text-align:right;">' + (r.value ?? '') + '</td></tr>'
+      ).join('');
+    };
+
+    // Career
+    fillTable('ddCareerTable', [
+      { label: 'Races', value: participation.totalRaces ?? '' },
+      { label: 'Seasons', value: participation.seasonsParticipated ?? '' },
+      { label: 'Titles', value: standings.championshipsWon ?? '' },
+      { label: 'Top 3', value: standings.top3Finishes ?? '' },
+      { label: 'Best standings', value: standings.bestPosition ?? '' },
+      { label: 'Avg standings', value: standings.averagePosition ?? '' }
+    ]);
+
+    // Points
+    fillTable('ddPointsTable', [
+      { label: 'Total points', value: points.totalPoints ?? '' },
+      { label: 'Avg per season', value: points.averagePerSeason ?? '' },
+      { label: 'Avg per race', value: points.averagePerMajorRace ?? '' },
+      { label: 'Avg per event', value: points.averagePerEvent ?? '' },
+      { label: 'Best season', value: points.bestSeasonPoints ?
+          points.bestSeasonPoints + ' (' + (points.bestSeasonName || '') + ')' : '' }
+    ]);
+
+    // Discipline
+    fillTable('ddDisciplineTable', [
+      { label: 'DNFs', value: discipline.dnfCount ?? '' },
+      { label: 'DSQs', value: discipline.dsqCount ?? '' },
+      { label: 'Time penalties', value: (discipline.totalPenaltySeconds != null ?
+          discipline.totalPenaltySeconds + 's' : '') },
+      { label: 'Clean races', value: discipline.cleanRacesCount ?? '' },
+      { label: 'Clean %', value: discipline.cleanRacePercent != null ?
+          (discipline.cleanRacePercent.toFixed ?
+            discipline.cleanRacePercent.toFixed(0) : discipline.cleanRacePercent) + '%' : '' },
+      { label: 'Reliability', value: discipline.reliabilityPercent != null ?
+          discipline.reliabilityPercent + '%' : '' }
+    ]);
+
+    // Races
+    fillTable('ddRacesTable', [
+      { label: 'Wins', value: racePositions.wins ?? '' },
+      { label: 'Podiums', value: racePositions.podiums ?? '' },
+      { label: 'Top 5', value: racePositions.top5 ?? '' },
+      { label: 'Top 10', value: racePositions.top10 ?? '' },
+      { label: 'Best finish', value: racePositions.bestPosition != null ?
+          'P' + racePositions.bestPosition : '' },
+      { label: 'Average finish', value: racePositions.averagePosition ?? '' },
+      { label: 'Avg grid', value: racePositions.averageGridPosition ?? '' },
+      { label: 'Avg pos change', value: racePositions.averagePositionChange != null ?
+          (racePositions.averagePositionChange > 0 ? '+' : '') +
+          racePositions.averagePositionChange : '' }
+    ]);
+
+    // Performance (from performance block if present)
+    fillTable('ddPerformanceTable', [
+      { label: 'Fastest laps', value: performance.fastestLaps ?? '' },
+      { label: 'Laps led', value: performance.lapsLed ?? '' },
+      { label: 'Lead %', value: performance.leadPercentage != null ?
+          performance.leadPercentage + '%' : '' },
+      { label: 'Total laps', value: performance.totalLaps ?? '' },
+      { label: 'Overtakes', value: performance.overtakes ?? '' }
+    ]);
+
+    // Seasons list pills
+    const seasonsListEl = document.getElementById('ddSeasonsList');
+    if (seasonsListEl) {
+      seasonsListEl.innerHTML = '';
+      seasons.forEach(s => {
+        const pill = document.createElement('span');
+        pill.className = 'dd-seasons-pill';
+        pill.innerHTML =
+          '<span>' + (s.seasonName || '') + '</span>' +
+          ' &nbsp; <span>P' + (s.position || '') +
+          ' • ' + (s.points || 0) + ' pts</span>';
+        seasonsListEl.appendChild(pill);
+      });
+    }
+
+    // Race / Qualifying history (if present)
+    const raceHistEl = document.getElementById('ddRaceHistory');
+    const qualHistEl = document.getElementById('ddQualHistory');
+    if (raceHistEl) raceHistEl.innerHTML = '';
+    if (qualHistEl) qualHistEl.innerHTML = '';
+
+    const history = src.history || {};
+    const raceHistory = history.raceHistory || [];
+    const qualHistory = history.qualifyingHistory || [];
+
+    if (raceHistEl) {
+      raceHistory.forEach(ev => {
+        const div = document.createElement('div');
+        div.className = 'dd-history-item';
+        div.innerHTML =
+          '<div class="dd-history-event">' +
+            (ev.roundName || ev.trackName || '') +
+            (ev.resultPosition != null ? ' • P' + ev.resultPosition : '') +
+          '</div>' +
+          '<div class="dd-history-meta">' +
+            (ev.sessionName || 'Race') +
+            (ev.date ? ' • ' + ev.date : '') +
+          '</div>';
+        raceHistEl.appendChild(div);
+      });
+    }
+
+    if (qualHistEl) {
+      qualHistory.forEach(ev => {
+        const div = document.createElement('div');
+        div.className = 'dd-history-item';
+        div.innerHTML =
+          '<div class="dd-history-event">' +
+            (ev.roundName || ev.trackName || '') +
+            (ev.resultPosition != null ? ' • P' + ev.resultPosition : '') +
+          '</div>' +
+          '<div class="dd-history-meta">' +
+            (ev.sessionName || 'Qual') +
+            (ev.date ? ' • ' + ev.date : '') +
+          '</div>';
+        qualHistEl.appendChild(div);
+      });
+    }
+
+    // Default to Summary tab each time modal opens
+    document.querySelectorAll('.driver-subtab-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('data-driver-view') === 'summary');
+    });
+    document.querySelectorAll('#driverCard [data-driver-view]').forEach(el => {
+      el.style.display = el.getAttribute('data-driver-view') === 'summary' ? '' : 'none';
+    });
+
     if (driverModal) driverModal.classList.add('open');
   }
 
@@ -913,7 +1235,6 @@ function buildPage(data) {
     });
   }
 
-  // pagination & filters
   document.getElementById('driverSearch').addEventListener('input', () => { driverCurrentPage = 1; renderDrivers(); });
   document.getElementById('minSeasons').addEventListener('change', () => { driverCurrentPage = 1; renderDrivers(); });
   document.getElementById('driverSort').addEventListener('change', () => { driverCurrentPage = 1; renderDrivers(); });
@@ -1085,6 +1406,18 @@ document.querySelectorAll('.track-subtab-btn').forEach(btn => {
       if (el.id === 'trackDetailsView' || el.id === 'trackSeasonCmpView') {
         el.style.display = el.getAttribute('data-track-view') === view ? '' : 'none';
       }
+    });
+  });
+});
+
+// driver subtabs inside modal
+document.querySelectorAll('.driver-subtab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.driver-subtab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const view = btn.getAttribute('data-driver-view');
+    document.querySelectorAll('#driverCard [data-driver-view]').forEach(el => {
+      el.style.display = el.getAttribute('data-driver-view') === view ? '' : 'none';
     });
   });
 });
