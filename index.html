@@ -1436,6 +1436,32 @@ document.getElementById('fileSelect').addEventListener('change', async e => {
     alert('Failed to load JSON: ' + err.message);
   }
 });
+  // file loading
+populateFileSelect();
+document.getElementById('fileSelect').addEventListener('change', async e => {
+  const path = e.target.value;
+  if (!path) return;
+  try {
+    const res = await fetch(path);
+    const json = await res.json();
+    buildPage(json);
+  } catch (err) {
+    console.error(err);
+    alert('Failed to load JSON: ' + err.message);
+  }
+});
+
+// driver subtabs inside modal — KEEP THIS LAST
+document.querySelectorAll('.driver-subtab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.driver-subtab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const view = btn.getAttribute('data-driver-view');
+    document.querySelectorAll('#driverCard [data-driver-view]').forEach(el => {
+      el.style.display = el.getAttribute('data-driver-view') === view ? '' : 'none';
+    });
+  });
+});
 </script>
 </body>
 </html>
