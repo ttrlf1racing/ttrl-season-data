@@ -755,6 +755,24 @@ function buildPage(data) {
   }
 
   const driverRowsAll = driversSrc.map(deriveDriverRow);
+  // ---- Individual Driver Summary: populate dropdown ----
+  const summarySelect = document.getElementById('summaryDriverSelect');
+
+  function populateSummarySelect() {
+    if (!summarySelect) return;
+    summarySelect.innerHTML = '<option value="">Select driver…</option>';
+    const sorted = driverRowsAll.slice().sort((a, b) =>
+      a.name.localeCompare(b.name)
+    );
+    sorted.forEach(dr => {
+      if (!dr.name) return;
+      const opt = document.createElement('option');
+      opt.value = dr.name;
+      opt.textContent = dr.name;
+      summarySelect.appendChild(opt);
+    });
+  }
+
   let selectedDriverName = null;
   let driverCurrentPage = 1;
   let driverPageSize = 25;
@@ -1080,10 +1098,12 @@ function buildPage(data) {
 
   renderTrackDetails();
   renderTrackSeasonCmp();
+  populateSummarySelect();
 
   trackSelect.addEventListener('change', () => {
     renderTrackDetails();
     renderTrackSeasonCmp();
+    
   });
 }
 
