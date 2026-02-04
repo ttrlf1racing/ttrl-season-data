@@ -104,7 +104,7 @@
     #driversTable th,
     #driversTable td { font-size:12px; white-space:normal; overflow:visible; text-overflow:clip; }
     #driversTable th:nth-child(1),
-    #driversTable td:nth-child(1) { width:160px; }
+    #driversTable td:nth-child(1) { width:180px; }
 
     .filters { display:flex; flex-wrap:wrap; gap:8px; margin:12px 0 6px; align-items:center; }
     .filters input, .filters select, .filters button {
@@ -120,6 +120,15 @@
     .filters label { font-size:13px; color:#c5c6c7; }
 
     .section-description { font-size:13px; color:#c5c6c7; margin-top:4px; }
+
+    .click-note {
+      margin-top:6px;
+      font-size:12px;
+      color:#facc15;
+      font-weight:600;
+      letter-spacing:0.06em;
+      text-transform:uppercase;
+    }
 
     .tab-btn {
       background:#11151f;
@@ -343,7 +352,7 @@
     }
     .track-hover:hover .track-hover-tooltip { opacity:1; }
 
-               @media (max-width:900px) {
+    @media (max-width:900px) {
       .header-top { flex-direction:column; align-items:flex-start; }
       .header-centre { width:100%; align-items:flex-start; padding:8px 10px; }
       .header-title-row { font-size:16px; white-space:normal; }
@@ -413,8 +422,6 @@
       }
     }
   </style>
-
-
 </head>
 <body>
 <input id="addSeasonFileInput" type="file" accept=".json,application/json" style="display:none;">
@@ -470,6 +477,7 @@
     <p class="section-description">
       Stats cover all seasons contained in the currently selected export.
     </p>
+    <p class="click-note">Click on a driver row for more details.</p>
 
     <div class="filters">
       <label>
@@ -502,7 +510,6 @@
               <tr>
                 <th>Driver</th>
                 <th>Nat.</th>
-                <th>Car number</th>
                 <th>Seasons</th>
                 <th>Races</th>
                 <th>Total pts</th>
@@ -661,8 +668,7 @@ window.currentDriverName = '';
 
 const EXPORT_FILES = [
   { value: 'export_data/sunday_races.json', label: 'Sunday races' },
-  { value: 'export_data/wed_races.json',    label: 'Wednesday races' },
-  { value: 'export_data/t4.json',           label: 'T4 season data' }
+  { value: 'export_data/wed_races.json',    label: 'Wednesday races' }
 ];
 
 function getDriverAvatarSrc(driverName) {
@@ -778,7 +784,6 @@ function buildPage(data) {
       source: d,
       name: d.driverName || infoD.realName || '',
       nationality: infoD.nationality || '',
-      raceNumber: infoD.raceNumber || '',
       seasons: seasonsPart,
       races: totalRaces,
       totalPoints,
@@ -809,7 +814,7 @@ function buildPage(data) {
     const rows = getFilteredDriverRows();
     const filtered = rows.filter(dr => {
       if (dr.seasons < minSeasons) return false;
-      const text = (dr.name + ' ' + dr.nationality + ' ' + dr.raceNumber).toLowerCase();
+      const text = (dr.name + ' ' + dr.nationality).toLowerCase();
       if (search && !text.includes(search)) return false;
       return true;
     });
@@ -841,7 +846,6 @@ function buildPage(data) {
       tr.innerHTML =
         '<td>' + dr.name + '</td>' +
         '<td>' + dr.nationality + '</td>' +
-        '<td>' + dr.raceNumber + '</td>' +
         '<td>' + dr.seasons + '</td>' +
         '<td>' + dr.races + '</td>' +
         '<td>' + dr.totalPoints + '</td>' +
@@ -900,7 +904,6 @@ function buildPage(data) {
     dcName.textContent = row.name;
     dcMeta.textContent =
       (infoD.nationality || 'Nationality unknown') +
-      (infoD.raceNumber ? ' • #' + infoD.raceNumber : '') +
       (participation.seasonsParticipated ?
         ' • ' + participation.seasonsParticipated + ' seasons' : '');
 
@@ -1161,7 +1164,6 @@ document.getElementById('fileSelect').addEventListener('change', async e => {
   const path = e.target.value;
   if (!path) return;
 
-  // remember for driver-summary.html
   window.currentExportFilename = path.split('/').pop();
 
   try {
