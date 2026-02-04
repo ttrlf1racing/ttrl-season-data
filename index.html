@@ -343,7 +343,7 @@
     }
     .track-hover:hover .track-hover-tooltip { opacity:1; }
 
-           @media (max-width:900px) {
+               @media (max-width:900px) {
       .header-top { flex-direction:column; align-items:flex-start; }
       .header-centre { width:100%; align-items:flex-start; padding:8px 10px; }
       .header-title-row { font-size:16px; white-space:normal; }
@@ -357,7 +357,7 @@
       .header-title-row { font-size:15px; }
     }
 
-    /* NEW: shrink driver profile card on mobile */
+    /* Shrink driver profile card on narrow screens */
     @media (max-width:600px) {
       .driver-modal .driver-card {
         padding:16px 16px 12px;
@@ -380,6 +380,36 @@
       .driver-cta-inline {
         font-size:10px;
         padding:5px 10px;
+      }
+    }
+
+    /* Compact modal for short (landscape) screens */
+    @media (max-height:600px) {
+      .driver-modal-card {
+        max-height:90vh;
+        overflow-y:auto;
+      }
+      .driver-modal .driver-card {
+        padding:14px 14px 10px;
+      }
+      .driver-card-header {
+        gap:8px;
+        margin-bottom:4px;
+      }
+      .driver-card-logo {
+        width:54px;
+        height:54px;
+      }
+      .driver-card h3 {
+        font-size:17px;
+      }
+      .driver-meta,
+      .driver-statline {
+        font-size:12px;
+      }
+      .driver-cta-inline {
+        font-size:10px;
+        padding:4px 9px;
       }
     }
   </style>
