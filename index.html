@@ -1145,6 +1145,46 @@ function buildPage(data) {
         seasonsListEl.appendChild(pill);
       });
     }
+      // race & qualifying history
+  const raceHistEl = document.getElementById('sumRaceHistory');
+  const qualHistEl = document.getElementById('sumQualHistory');
+
+  if (raceHistEl) {
+    raceHistEl.innerHTML = '';
+    raceHistory.forEach(ev => {
+      const div = document.createElement('div');
+      div.className = 'dd-history-item';
+      div.innerHTML =
+        '<div class="dd-history-event">' +
+          (ev.roundName || ev.trackName || '') +
+          (ev.resultPosition != null ? ' • P' + ev.resultPosition : '') +
+        '</div>' +
+        '<div class="dd-history-meta">' +
+          (ev.sessionName || 'Race') +
+          (ev.date ? ' • ' + ev.date : '') +
+        '</div>';
+      raceHistEl.appendChild(div);
+    });
+  }
+
+  if (qualHistEl) {
+    qualHistEl.innerHTML = '';
+    qualHistory.forEach(ev => {
+      const div = document.createElement('div');
+      div.className = 'dd-history-item';
+      div.innerHTML =
+        '<div class="dd-history-event">' +
+          (ev.roundName || ev.trackName || '') +
+          (ev.resultPosition != null ? ' • P' + ev.resultPosition : '') +
+        '</div>' +
+        '<div class="dd-history-meta">' +
+          (ev.sessionName || 'Qual') +
+          (ev.date ? ' • ' + ev.date : '') +
+        '</div>';
+      qualHistEl.appendChild(div);
+    });
+  }
+
 
     // race history
     const raceHistEl = document.getElementById('sumRaceHistory');
