@@ -555,16 +555,47 @@
       font-size: 12px;
     }
 
+    /* Updated seasons pill and list styling */
     .dd-seasons-pill {
-      padding: 3px 6px;
+      padding: 2px 6px;
       border-radius: 999px;
       background: #020617;
       border: 1px solid #374151;
-      margin: 0 4px 4px 0;
-      display: inline-block;
+      margin: 0 4px 0 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
     }
     .dd-seasons-pill span {
       color: #e5e7eb;
+    }
+
+    #sumSeasonsList .season-row {
+      padding: 4px 0;
+      border-bottom: 1px solid #111827;
+      display: grid;
+      grid-template-columns: minmax(0, 2.2fr) auto;
+      column-gap: 8px;
+      align-items: center;
+    }
+    #sumSeasonsList .season-row:last-child {
+      border-bottom: none;
+    }
+    #sumSeasonsList .season-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    #sumSeasonsList .season-code {
+      font-size: 12px;
+      font-weight: 600;
+    }
+    #sumSeasonsList .season-right {
+      text-align: right;
+      font-size: 11px;
+      color: #9ca3af;
+      white-space: nowrap;
     }
 
     .dd-history-wrap {
@@ -864,7 +895,7 @@
   <section id="driverSummarySection" data-view="driverSummary">
     <h2>Individual Driver Summary</h2>
     <p class="section-description">
-      Detailed multiseason breakdown for a single driver: career, points, race and qualifying stats, and seasons.
+      Detailed multiseason breakdown for a single driver: career, points, race stats, and seasons.
     </p>
 
     <div class="filters">
@@ -895,7 +926,7 @@
         <span class="driver-stat-pill" id="summaryPillClean"></span>
       </div>
 
-      <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:10px;">
+      <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:10px;">
         <div class="dd-card">
           <div class="dd-title">Career</div>
           <table class="dd-table" id="sumCareerTable"></table>
@@ -903,10 +934,6 @@
         <div class="dd-card">
           <div class="dd-title">Races</div>
           <table class="dd-table" id="sumRacesTable"></table>
-        </div>
-        <div class="dd-card">
-          <div class="dd-title">Qualifications</div>
-          <table class="dd-table" id="sumQualTable"></table>
         </div>
         <div class="dd-card">
           <div class="dd-title">Points</div>
@@ -1183,9 +1210,7 @@
       const standings = src.standings || {};
       const points = src.points || {};
       const racePositions = src.racePositions || {};
-      const qualPositions = src.qualPositions || {};
       const discipline = src.discipline || {};
-      const performance = src.performance || {};
       const seasons = (standings.seasonResults || []).slice();
 
       summaryContent.style.display = "";
@@ -1273,26 +1298,6 @@
         }
       ]);
 
-      // qualifications
-      fillSummaryTable("sumQualTable", [
-        { label: "Poles", value: qualPositions.poles ?? "" },
-        { label: "Front rows", value: qualPositions.frontRows ?? "" },
-        { label: "Top 3", value: qualPositions.top3 ?? "" },
-        {
-          label: "Best qualifying",
-          value:
-            qualPositions.bestPosition != null ? "P" + qualPositions.bestPosition : ""
-        },
-        { label: "Avg position", value: qualPositions.averagePosition ?? "" },
-        {
-          label: "Pole rate",
-          value:
-            qualPositions.poleRatePercent != null
-              ? qualPositions.poleRatePercent + "%"
-              : ""
-        }
-      ]);
-
       // points
       fillSummaryTable("sumPointsTable", [
         { label: "Total points", value: points.totalPoints ?? "" },
@@ -1317,25 +1322,41 @@
           )
           .forEach(s => {
             const rowEl = document.createElement("div");
-            rowEl.style.padding = "6px 0";
-            rowEl.style.borderBottom = "1px solid #111827";
-            rowEl.style.display = "grid";
-            rowEl.style.gridTemplateColumns = "minmax(0,2fr) auto";
-            rowEl.style.columnGap = "8px";
-            rowEl.style.alignItems = "center";
+            rowEl.className = "season-row";
 
             const left = document.createElement("div");
+            left.className = "season-left";
+
+            const code = document.createElement("div");
+            code.className = "season-code";
+            code.textContent = s.seasonShortCode || s.seasonName || "";
+            left.appendChild(code);
+
+            const badges = document.createElement("div");
+
+            const posBadge = document.createElement("span");
+            posBadge.className = "dd-seasons-pill";
+            posBadge.textContent = s.position != null ? "P" + s.position : "—";
+            badges.appendChild(posBadge);
+
+            if (s.isOngoing || s.status === "Ongoing") {
+              const ongoing = document.createElement("span");
+              ongoing.className = "dd-seasons-pill";
+              ongoing.textContent = "ONGOING";
+              badges.appendChild(ongoing);
+            }
+
+            if (s.teamName) {
+              const teamBadge = document.createElement("span");
+              teamBadge.className = "dd-seasons-pill";
+              teamBadge.textContent = s.teamName;
+              badges.appendChild(teamBadge);
+            }
+
+            left.appendChild(badges);
+
             const right = document.createElement("div");
-            right.style.textAlign = "right";
-            right.style.fontSize = "11px";
-
-            const name = document.createElement("div");
-            name.textContent = s.seasonName || "";
-            name.style.fontSize = "13px";
-            name.style.fontWeight = "600";
-
-            const meta = document.createElement("div");
-            meta.className = "dd-history-meta";
+            right.className = "season-right";
 
             const events = s.eventsCount != null ? s.eventsCount : s.racesCount;
             const races = s.racesCount != null ? s.racesCount : s.eventsCount;
@@ -1347,33 +1368,7 @@
             if (races) parts.push(races + " races");
             if (pts !== "") parts.push(pts + " pts");
             if (wins !== "") parts.push(wins + " W");
-            meta.textContent = parts.join(" • ");
-
-            left.appendChild(name);
-            left.appendChild(meta);
-
-            const badges = document.createElement("div");
-
-            const posBadge = document.createElement("span");
-            posBadge.className = "dd-seasons-pill";
-            posBadge.textContent = s.position != null ? "P" + s.position : "—";
-            badges.appendChild(posBadge);
-
-            if (s.teamName) {
-              const teamBadge = document.createElement("span");
-              teamBadge.className = "dd-seasons-pill";
-              teamBadge.textContent = s.teamName;
-              badges.appendChild(teamBadge);
-            }
-
-            if (s.isOngoing || s.status === "Ongoing") {
-              const ongoing = document.createElement("span");
-              ongoing.className = "dd-seasons-pill";
-              ongoing.textContent = "ONGOING";
-              badges.appendChild(ongoing);
-            }
-
-            right.appendChild(badges);
+            right.textContent = parts.join(" • ");
 
             rowEl.appendChild(left);
             rowEl.appendChild(right);
