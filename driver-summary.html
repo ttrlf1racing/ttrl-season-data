@@ -283,4 +283,34 @@ function renderDriverSummary(name) {
         (ev.sessionName || 'Qual') +
         (ev.date ? ' • ' + ev.date : '') +
       '</div>';
-    qualEl.appendChild(d
+    qualEl.appendChild(div);
+  });
+}
+
+document.getElementById('jsonFileInput').addEventListener('change', e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const data = JSON.parse(ev.target.result);
+      const multi = data.multiSeasonStatistics || {};
+      // Your JSON uses multiSeasonStatistics.drivers
+      driversSrc = multi.drivers || multi.driverStatistics || data.drivers || [];
+      driverRowsAll = driversSrc.map(deriveDriverRow);
+      populateDriverSelect();
+      document.getElementById('summary').style.display = 'none';
+    } catch (err) {
+      alert('Failed to parse JSON: ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+});
+
+document.getElementById('driverSelect').addEventListener('change', e => {
+  const name = e.target.value;
+  renderDriverSummary(name || null);
+});
+</script>
+</body>
+</html>
