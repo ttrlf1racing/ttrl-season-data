@@ -997,6 +997,8 @@ function buildPage(data) {
   const summarySelect = document.getElementById('summaryDriverSelect');
   const summaryContent = document.getElementById('driverSummaryContent');
 
+  populateSummarySelect();
+
   function populateSummarySelect() {
     if (!summarySelect) return;
     summarySelect.innerHTML = '<option value="">Select driver…</option>';
