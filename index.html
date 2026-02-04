@@ -1020,13 +1020,14 @@ function buildPage(data) {
     ).join('');
   }
 
-  function renderDriverSummary(driverName) {
+    function renderDriverSummary(driverName) {
     if (!summaryContent) return;
     const row = driverRowsAll.find(d => d.name === driverName);
     if (!row) {
       summaryContent.style.display = 'none';
       return;
     }
+
     const src = row.source;
     const infoD = src.driverInfo || {};
     const participation = src.participation || {};
@@ -1075,12 +1076,20 @@ function buildPage(data) {
     if (pillWins) pillWins.textContent = 'Wins: ' + (racePositions.wins || 0);
     if (pillPods) pillPods.textContent = 'Podiums: ' + (racePositions.podiums || 0);
     if (pillTitles) pillTitles.textContent = 'Titles: ' + (standings.championshipsWon || 0);
-    if (pillAvgFinish) pillAvgFinish.textContent =
-      'Avg finish: ' + (racePositions.averagePosition != null ? racePositions.averagePosition : '–');
-    if (pillClean) pillClean.textContent =
-      'Clean %: ' + (discipline.cleanRacePercent != null ?
-        (discipline.cleanRacePercent.toFixed ?
-          discipline.cleanRacePercent.toFixed(0) : discipline.cleanRacePercent) + '%' : '–');
+    if (pillAvgFinish) {
+      pillAvgFinish.textContent =
+        'Avg finish: ' +
+        (racePositions.averagePosition != null ? racePositions.averagePosition : '–');
+    }
+    if (pillClean) {
+      pillClean.textContent =
+        'Clean %: ' +
+        (discipline.cleanRacePercent != null
+          ? (discipline.cleanRacePercent.toFixed
+              ? discipline.cleanRacePercent.toFixed(0)
+              : discipline.cleanRacePercent) + '%'
+          : '–');
+    }
 
     // career
     fillSummaryTable('sumCareerTable', [
@@ -1098,13 +1107,14 @@ function buildPage(data) {
       { label:'Podiums', value: racePositions.podiums ?? '' },
       { label:'Top 5', value: racePositions.top5 ?? '' },
       { label:'Top 10', value: racePositions.top10 ?? '' },
-      { label:'Best finish', value: racePositions.bestPosition != null ?
-          'P' + racePositions.bestPosition : '' },
+      { label:'Best finish', value: racePositions.bestPosition != null
+          ? 'P' + racePositions.bestPosition : '' },
       { label:'Avg finish', value: racePositions.averagePosition ?? '' },
       { label:'Avg grid', value: racePositions.averageGridPosition ?? '' },
-      { label:'Avg pos change', value: racePositions.averagePositionChange != null ?
-          (racePositions.averagePositionChange > 0 ? '+' : '') +
-          racePositions.averagePositionChange : '' }
+      { label:'Avg pos change', value: racePositions.averagePositionChange != null
+          ? (racePositions.averagePositionChange > 0 ? '+' : '') +
+            racePositions.averagePositionChange
+          : '' }
     ]);
 
     // qualifications
@@ -1112,11 +1122,12 @@ function buildPage(data) {
       { label:'Poles', value: qualPositions.poles ?? '' },
       { label:'Front rows', value: qualPositions.frontRows ?? '' },
       { label:'Top 3', value: qualPositions.top3 ?? '' },
-      { label:'Best qualifying', value: qualPositions.bestPosition != null ?
-          'P' + qualPositions.bestPosition : '' },
+      { label:'Best qualifying', value: qualPositions.bestPosition != null
+          ? 'P' + qualPositions.bestPosition : '' },
       { label:'Avg position', value: qualPositions.averagePosition ?? '' },
-      { label:'Pole rate', value: qualPositions.poleRatePercent != null ?
-          qualPositions.poleRatePercent + '%' : '' }
+      { label:'Pole rate', value: qualPositions.poleRatePercent != null
+          ? qualPositions.poleRatePercent + '%'
+          : '' }
     ]);
 
     // points
@@ -1125,8 +1136,9 @@ function buildPage(data) {
       { label:'Avg per season', value: points.averagePerSeason ?? '' },
       { label:'Avg per race', value: points.averagePerMajorRace ?? '' },
       { label:'Avg per event', value: points.averagePerEvent ?? '' },
-      { label:'Best season', value: points.bestSeasonPoints ?
-          points.bestSeasonPoints + ' (' + (points.bestSeasonName || '') + ')' : '' }
+      { label:'Best season', value: points.bestSeasonPoints
+          ? points.bestSeasonPoints + ' (' + (points.bestSeasonName || '') + ')'
+          : '' }
     ]);
 
     // seasons list
@@ -1145,45 +1157,48 @@ function buildPage(data) {
         seasonsListEl.appendChild(pill);
       });
     }
-      // race & qualifying history
-  const raceHistEl = document.getElementById('sumRaceHistory');
-  const qualHistEl = document.getElementById('sumQualHistory');
 
-  if (raceHistEl) {
-    raceHistEl.innerHTML = '';
-    raceHistory.forEach(ev => {
-      const div = document.createElement('div');
-      div.className = 'dd-history-item';
-      div.innerHTML =
-        '<div class="dd-history-event">' +
-          (ev.roundName || ev.trackName || '') +
-          (ev.resultPosition != null ? ' • P' + ev.resultPosition : '') +
-        '</div>' +
-        '<div class="dd-history-meta">' +
-          (ev.sessionName || 'Race') +
-          (ev.date ? ' • ' + ev.date : '') +
-        '</div>';
-      raceHistEl.appendChild(div);
-    });
+    // race & qualifying history
+    const raceHistEl = document.getElementById('sumRaceHistory');
+    const qualHistEl = document.getElementById('sumQualHistory');
+
+    if (raceHistEl) {
+      raceHistEl.innerHTML = '';
+      raceHistory.forEach(ev => {
+        const div = document.createElement('div');
+        div.className = 'dd-history-item';
+        div.innerHTML =
+          '<div class="dd-history-event">' +
+            (ev.roundName || ev.trackName || '') +
+            (ev.resultPosition != null ? ' • P' + ev.resultPosition : '') +
+          '</div>' +
+          '<div class="dd-history-meta">' +
+            (ev.sessionName || 'Race') +
+            (ev.date ? ' • ' + ev.date : '') +
+          '</div>';
+        raceHistEl.appendChild(div);
+      });
+    }
+
+    if (qualHistEl) {
+      qualHistEl.innerHTML = '';
+      qualHistory.forEach(ev => {
+        const div = document.createElement('div');
+        div.className = 'dd-history-item';
+        div.innerHTML =
+          '<div class="dd-history-event">' +
+            (ev.roundName || ev.trackName || '') +
+            (ev.resultPosition != null ? ' • P' + ev.resultPosition : '') +
+          '</div>' +
+          '<div class="dd-history-meta">' +
+            (ev.sessionName || 'Qual') +
+            (ev.date ? ' • ' + ev.date : '') +
+          '</div>';
+        qualHistEl.appendChild(div);
+      });
+    }
   }
 
-  if (qualHistEl) {
-    qualHistEl.innerHTML = '';
-    qualHistory.forEach(ev => {
-      const div = document.createElement('div');
-      div.className = 'dd-history-item';
-      div.innerHTML =
-        '<div class="dd-history-event">' +
-          (ev.roundName || ev.trackName || '') +
-          (ev.resultPosition != null ? ' • P' + ev.resultPosition : '') +
-        '</div>' +
-        '<div class="dd-history-meta">' +
-          (ev.sessionName || 'Qual') +
-          (ev.date ? ' • ' + ev.date : '') +
-        '</div>';
-      qualHistEl.appendChild(div);
-    });
-  }
 
 
     // race history
