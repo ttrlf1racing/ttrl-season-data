@@ -277,26 +277,29 @@
 
     .muted { color:#9ca3af; font-size:13px; }
 
-    .driver-cta {
-      margin-top:6px;
-      padding:6px 10px;
-      border-radius:6px;
-      background:linear-gradient(90deg,#ff1a1a,#1d4ed8,#facc15);
-      color:#000;
-      font-size:12px;
-      font-weight:600;
-      letter-spacing:0.09em;
-      text-transform:uppercase;
+    .driver-cta-inline {
+      margin-top:8px;
       display:inline-flex;
       align-items:center;
       gap:6px;
+      padding:6px 12px;
+      border-radius:999px;
+      border:1px solid #f97316;
+      background:linear-gradient(90deg,#f97316,#facc15);
+      color:#111827;
+      font-size:11px;
+      font-weight:700;
+      letter-spacing:0.08em;
+      text-transform:uppercase;
+      cursor:pointer;
+      box-shadow:0 0 12px rgba(248,113,113,0.4);
     }
-    .driver-cta-icon {
-      width:14px;
-      height:14px;
-      border-radius:3px;
-      background:#000;
-      display:inline-flex;
+    .driver-cta-inline span.icon {
+      width:16px;
+      height:16px;
+      border-radius:50%;
+      background:#111827;
+      display:flex;
       align-items:center;
       justify-content:center;
       color:#facc15;
@@ -338,9 +341,7 @@
       border-style:solid;
       border-color:transparent transparent #facc15 transparent;
     }
-    .track-hover:hover .track-hover-tooltip {
-      opacity:1;
-    }
+    .track-hover:hover .track-hover-tooltip { opacity:1; }
 
     @media (max-width:900px) {
       .header-top { flex-direction:column; align-items:flex-start; }
@@ -398,8 +399,6 @@
     <div class="filters" style="margin-top:0;">
       <label style="margin-right:8px;">View:</label>
       <button class="tab-btn active" data-view="drivers">Drivers</button>
-      <button class="tab-btn" data-view="driverSummary"
-              onclick="openDriverSummaryView()">Individual Driver Summary</button>
       <button class="tab-btn" data-view="tracks">Tracks</button>
       <button class="tab-btn disabled" data-view="driverTimes" aria-disabled="true">Driver Times (coming soon)</button>
     </div>
@@ -411,11 +410,6 @@
     <p class="section-description">
       Stats cover all seasons contained in the currently selected export.
     </p>
-
-    <div class="driver-cta">
-      <span class="driver-cta-icon">ⓘ</span>
-      <span>Click a driver row to open their profile card.</span>
-    </div>
 
     <div class="filters">
       <label>
@@ -500,7 +494,13 @@
         <div id="dcCats" style="margin-bottom:6px;"></div>
         <div class="driver-statline" id="dcSummary"></div>
         <div id="dcPills" style="margin-bottom:8px;"></div>
-        <h4 style="margin:4px 0 4px; font-size:14px;">Season results</h4>
+
+        <button type="button" class="driver-cta-inline" onclick="openDriverSummaryView()">
+          <span class="icon">↗</span>
+          <span>Click here for full summary</span>
+        </button>
+
+        <h4 style="margin:10px 0 4px; font-size:14px;">Season results</h4>
         <div style="max-height:320px; overflow-y:auto;">
           <table class="driver-seasons-table" id="dcSeasonsTable">
             <thead>
@@ -519,29 +519,6 @@
       </div>
     </div>
   </div>
-
-  <!-- Individual Driver Summary -->
-  <section id="driverSummarySection" data-view="driverSummary">
-    <h2>Individual Driver Summary</h2>
-    <p class="section-description">
-      Detailed multi‑season breakdown for a single driver. This page will show career, race, qualifying stats, seasons, and scrollable race history.
-    </p>
-
-    <div class="filters">
-      <label>
-        Driver:
-        <select id="summaryDriverSelect">
-          <option value="">Select driver…</option>
-        </select>
-      </label>
-    </div>
-
-    <div id="driverSummaryContent" style="margin-top:10px;">
-      <p class="muted">
-        Driver summary layout not wired yet. Once connected, this area will show the cards and history similar to your TTRL desktop app.
-      </p>
-    </div>
-  </section>
 
   <!-- Tracks -->
   <section id="trackSection" data-view="tracks">
@@ -758,23 +735,6 @@ function buildPage(data) {
 
   const driverRowsAll = driversSrc.map(deriveDriverRow);
 
-  const summarySelect = document.getElementById('summaryDriverSelect');
-
-  function populateSummarySelect() {
-    if (!summarySelect) return;
-    summarySelect.innerHTML = '<option value="">Select driver…</option>';
-    const sorted = driverRowsAll.slice().sort((a, b) =>
-      a.name.localeCompare(b.name)
-    );
-    sorted.forEach(dr => {
-      if (!dr.name) return;
-      const opt = document.createElement('option');
-      opt.value = dr.name;
-      opt.textContent = dr.name;
-      summarySelect.appendChild(opt);
-    });
-  }
-
   let selectedDriverName = null;
   let driverCurrentPage = 1;
   let driverPageSize = 25;
@@ -861,7 +821,7 @@ function buildPage(data) {
     if (!row) return;
 
     selectedDriverName = row.name;
-    window.currentDriverName = row.name; // for driver-summary.html
+    window.currentDriverName = row.name; // used by driver-summary.html
 
     Array.from(driversTableBody.querySelectorAll('tr')).forEach(tr => {
       tr.classList.toggle('driver-row-selected', tr.dataset.driverName === selectedDriverName);
@@ -1101,14 +1061,6 @@ function buildPage(data) {
 
   renderTrackDetails();
   renderTrackSeasonCmp();
-  populateSummarySelect();
-
-  if (summarySelect) {
-    summarySelect.addEventListener('change', e => {
-      const name = e.target.value || '';
-      window.currentDriverName = name;
-    });
-  }
 
   trackSelect.addEventListener('change', () => {
     renderTrackDetails();
@@ -1162,13 +1114,13 @@ document.getElementById('fileSelect').addEventListener('change', async e => {
   }
 });
 
-// go to driver-summary.html
+// open full summary page
 function openDriverSummaryView() {
   const jsonFilename = window.currentExportFilename || '';
   const driverName   = window.currentDriverName || '';
 
   if (!jsonFilename || !driverName) {
-    alert('Pick a JSON file and select a driver first.');
+    alert('Pick a race date and select a driver first.');
     return;
   }
 
