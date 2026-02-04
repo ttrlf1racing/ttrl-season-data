@@ -221,6 +221,20 @@
   </style>
 </head>
 <body>
+  <button id="backBtn"
+          style="
+            margin:0 0 10px;
+            padding:4px 10px;
+            border-radius:999px;
+            border:1px solid #4b5563;
+            background:#020617;
+            color:#e5e7eb;
+            font-size:12px;
+            cursor:pointer;
+          ">
+    ← Back to overview
+  </button>
+
   <h1>Driver summary</h1>
   <p class="page-sub">Multi‑season breakdown for a single driver, loaded from the selection on the main page.</p>
 
@@ -536,6 +550,10 @@ document.getElementById('driverList').addEventListener('click', e => {
   renderDriverSummary(name);
 });
 
+document.getElementById('backBtn').addEventListener('click', () => {
+  window.location.href = 'index.html';
+});
+
 window.addEventListener('DOMContentLoaded', () => {
   const cameFromIndex = getQueryParam('from') === 'index';
   const storedDriver = localStorage.getItem('ttrl_selected_driver');
@@ -543,7 +561,6 @@ window.addEventListener('DOMContentLoaded', () => {
   if (cameFromIndex && storedDriver) {
     loadJsonFromStored(storedDriver);
   } else {
-    // still load JSON if present, but no initial driver
     loadJsonFromStored(null);
   }
 });
