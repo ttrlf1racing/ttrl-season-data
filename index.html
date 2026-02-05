@@ -588,65 +588,66 @@
   </div>
 
   <!-- Tracks -->
-<section id="trackSection" data-view="tracks">
-  <h2>Tracks</h2>
-  <p class="section-description">
-    Per‑track fastest laps and season comparison across the export.
-  </p>
-
-  <div class="filters">
-    <label>
-      Track:
-      <select id="trackSelect">
-        <option value="">All tracks</option>
-      </select>
-    </label>
-  </div>
-
-  <div class="track-subtabs">
-    <button class="tab-btn track-subtab-btn active" data-track-view="details">Track Details</button>
-    <button class="tab-btn track-subtab-btn" data-track-view="seasonCmp">Season Comparison</button>
-  </div>
-
-  <!-- Track details view -->
-  <div id="trackDetailsView" data-track-view="details">
-    <div class="scroll-body">
-      <table id="trackTable">
-        <thead>
-          <tr>
-            <th style="width:22%;">Track</th>
-            <th style="width:6%;">Races</th>
-            <th style="width:12%;">Race FL Driver</th>
-            <th style="width:12%;">Race FL</th>
-            <th style="width:12%;">Qual FL Driver</th>
-            <th style="width:12%;">Qual FL</th>
-            <th style="width:10%;">Max Speed</th>
-            <th style="width:14%;">SC / VSC</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- Track season comparison view -->
-  <div id="trackSeasonCmpView" data-track-view="seasonCmp" style="display:none;">
-    <div class="scroll-body">
-      <table id="trackSeasonCmpTable">
-        <thead>
-          <tr id="trackSeasonCmpHeader">
-            <th style="width:22%;">Track</th>
-          </tr>
-        </thead>
-        <tbody id="trackSeasonCmpBody"></tbody>
-      </table>
-    </div>
-    <p class="muted" style="margin-top:6px;">
-      Values show fastest race lap per season for each circuit.
-      <span style="font-weight:600; color:#facc15;"> Hover over any time to see the driver.</span>
+  <section id="trackSection" data-view="tracks">
+    <h2>Tracks</h2>
+    <p class="section-description">
+      Per‑track fastest laps and season comparison across the export.
     </p>
-  </div>
-</section>
+
+    <div class="filters">
+      <label>
+        Track:
+        <select id="trackSelect">
+          <option value="">All tracks</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="track-subtabs">
+      <button class="tab-btn track-subtab-btn active" data-track-view="details">Track Details</button>
+      <button class="tab-btn track-subtab-btn" data-track-view="seasonCmp">Season Comparison</button>
+    </div>
+
+    <!-- Track details view -->
+    <div id="trackDetailsView" data-track-view="details">
+      <div class="scroll-body">
+        <table id="trackTable">
+          <thead>
+            <tr>
+              <th>Track</th>
+              <th>Races</th>
+              <th>Driver</th>
+              <th>Race FL</th>
+              <th>Driver</th>
+              <th>Qual FL</th>
+              <th>Max speed</th>
+              <th>Avg pitstops</th>
+              <th>SC / VSC</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Track season comparison view -->
+    <div id="trackSeasonCmpView" data-track-view="seasonCmp" style="display:none;">
+      <div class="scroll-body">
+        <table id="trackSeasonCmpTable">
+          <thead>
+            <tr id="trackSeasonCmpHeader">
+              <th>Track</th>
+            </tr>
+          </thead>
+          <tbody id="trackSeasonCmpBody"></tbody>
+        </table>
+      </div>
+      <p class="muted" style="margin-top:6px;">
+        Values show fastest race lap per season for each circuit.
+        <span style="font-weight:600; color:#facc15;"> Hover over any time to see the driver.</span>
+      </p>
+    </div>
+  </section>
 
   <!-- Driver Times placeholder -->
   <section id="driverTimesSection" data-view="driverTimes">
@@ -1051,75 +1052,83 @@ function buildPage(data) {
   }
 
   function renderTrackDetails() {
-  const filterName = trackSelect.value;
-  trackTableBody.innerHTML = '';
-  trackRows
-    .filter(r => !filterName || r.circuit === filterName)
-    .forEach(r => {
-      const gen = r.gen;
-      const rs = r.raceStats || {};
-      const qs = r.qualStats || {};
-      const tr = document.createElement('tr');
-      tr.innerHTML =
-        '<td>' + r.circuit + '</td>' +
-        '<td>' + (gen.totalRaces || '') + '</td>' +
-        '<td>' + ((rs.fastestRaceLap && rs.fastestRaceLap.driverName) || '') + '</td>' +
-        '<td>' + ((rs.fastestRaceLap && rs.fastestRaceLap.time) || '') + '</td>' +
-        '<td>' + ((qs.fastestQualLap && qs.fastestQualLap.driverName) || '') + '</td>' +
-        '<td>' + ((qs.fastestQualLap && qs.fastestQualLap.time) || '') + '</td>' +
-        '<td>' + (rs.maxSpeed != null ? rs.maxSpeed + ' km/h' : '') + '</td>' +
-        '<td>' + formatSC(gen, rs) + '</td>';
-      trackTableBody.appendChild(tr);
-    });
-}
-
+    const filterName = trackSelect.value;
+    trackTableBody.innerHTML = '';
+    trackRows
+      .filter(r => !filterName || r.circuit === filterName)
+      .forEach(r => {
+        const gen = r.gen;
+        const rs = r.raceStats || {};
+        const qs = r.qualStats || {};
+        const tr = document.createElement('tr');
+        tr.innerHTML =
+          '<td>' + r.circuit + '</td>' +
+          '<td>' + (gen.totalRaces || '') + '</td>' +
+          '<td>' + ((rs.fastestRaceLap && rs.fastestRaceLap.driverName) || '') + '</td>' +
+          '<td>' + ((rs.fastestRaceLap && rs.fastestRaceLap.time) || '') + '</td>' +
+          '<td>' + ((qs.fastestQualLap && qs.fastestQualLap.driverName) || '') + '</td>' +
+          '<td>' + ((qs.fastestQualLap && qs.fastestQualLap.time) || '') + '</td>' +
+          '<td>' + (rs.maxSpeed != null ? rs.maxSpeed + ' km/h' : '') + '</td>' +
+          '<td>' + (rs.avgPitstops != null ? rs.avgPitstops : '') + '</td>' +
+          '<td>' + formatSC(gen, rs) + '</td>';
+        trackTableBody.appendChild(tr);
+      });
+  }
 
   const cmpHeaderRow = document.getElementById('trackSeasonCmpHeader');
   const cmpBody = document.getElementById('trackSeasonCmpBody');
 
- function renderTrackSeasonCmp() {
-  const filterName = trackSelect.value;
+  function renderTrackSeasonCmp() {
+    const filterName = trackSelect.value;
 
-  cmpHeaderRow.innerHTML = '<th style="width:22%;">Track</th>';
-  allSeasonNames.forEach(sn => {
-    const th = document.createElement('th');
-    th.style.width = `${(100 - 22) / allSeasonNames.length}%`;
-    th.textContent = sn;
-    cmpHeaderRow.appendChild(th);
-  });
-
-  cmpBody.innerHTML = '';
-  trackRows
-    .filter(r => !filterName || r.circuit === filterName)
-    .forEach(r => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = '<td style="width:22%;">' + r.circuit + '</td>';
-
-      allSeasonNames.forEach(sn => {
-        const td = document.createElement('td');
-        const entry = r.seasonRaceMap[sn];
-
-        if (!entry) {
-          td.textContent = '';
-        } else {
-          td.classList.add('track-hover');
-          const span = document.createElement('span');
-          span.textContent = entry.time || '';
-          td.appendChild(span);
-
-          if (entry.driverName) {
-            const tip = document.createElement('div');
-            tip.className = 'track-hover-tooltip';
-            tip.textContent = entry.driverName;
-            td.appendChild(tip);
-          }
-        }
-
-        tr.appendChild(td);
-      });
-
-      cmpBody.appendChild(tr);
+    cmpHeaderRow.innerHTML = '<th>Track</th>';
+    allSeasonNames.forEach(sn => {
+      const th = document.createElement('th');
+      th.textContent = sn;
+      cmpHeaderRow.appendChild(th);
     });
+
+    cmpBody.innerHTML = '';
+    trackRows
+      .filter(r => !filterName || r.circuit === filterName)
+      .forEach(r => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = '<td>' + r.circuit + '</td>';
+
+        allSeasonNames.forEach(sn => {
+          const td = document.createElement('td');
+          const entry = r.seasonRaceMap[sn];
+
+          if (!entry) {
+            td.textContent = '';
+          } else {
+            td.classList.add('track-hover');
+            const span = document.createElement('span');
+            span.textContent = entry.time || '';
+            td.appendChild(span);
+
+            if (entry.driverName) {
+              const tip = document.createElement('div');
+              tip.className = 'track-hover-tooltip';
+              tip.textContent = entry.driverName;
+              td.appendChild(tip);
+            }
+          }
+
+          tr.appendChild(td);
+        });
+
+        cmpBody.appendChild(tr);
+      });
+  }
+
+  renderTrackDetails();
+  renderTrackSeasonCmp();
+
+  trackSelect.addEventListener('change', () => {
+    renderTrackDetails();
+    renderTrackSeasonCmp();
+  });
 }
 
 // top-level view switching
