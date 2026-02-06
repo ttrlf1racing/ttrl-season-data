@@ -720,8 +720,7 @@ function buildPage(data) {
     seasonMetaByName[s.name] = {
       startDate: s.startDate || '',
       endDate: s.endDate || '',
-      status: s.status || ''
-    };
+      status: s.isCompleted ? 'Completed' : (s.isStarted ? 'In Progress' : 'Not Started')    };
   });
   window.seasonMetaByName = seasonMetaByName;
 
