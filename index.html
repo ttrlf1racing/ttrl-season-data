@@ -573,6 +573,9 @@
             <thead>
               <tr>
                 <th>Season</th>
+              <th>Start</th>
+              <th>End</th>
+              <th>Status</th>
                 <th>Pos</th>
                 <th>Pts</th>
                 <th>Races</th>
@@ -710,6 +713,17 @@ function buildPage(data) {
   const info = multi.multiSeasonInfo || {};
   const driversSrc = multi.drivers || multi.driverStatistics || data.drivers || [];
   const tracksSrc = multi.tracks || multi.trackStatistics || data.tracks || [];
+
+  // Create season metadata lookup
+  const seasonMetaByName = {};
+  (multi.seasons || []).forEach(s => {
+    seasonMetaByName[s.name] = {
+      startDate: s.startDate || '',
+      endDate: s.endDate || '',
+      status: s.status || ''
+    };
+  });
+  window.seasonMetaByName = seasonMetaByName;
 
   formatLoadedMeta(meta);
 
@@ -960,6 +974,9 @@ function buildPage(data) {
       const tr = document.createElement('tr');
       tr.innerHTML =
         '<td>' + (sr.seasonName || '') + '</td>' +
+        '<td>' + ((window.seasonMetaByName || {})[sr.seasonName] || {}).startDate + '</td>' +
+        '<td>' + ((window.seasonMetaByName || {})[sr.seasonName] || {}).endDate + '</td>' +
+        '<td>' + ((window.seasonMetaByName || {})[sr.seasonName] || {}).status + '</td>' +
         '<td>' + (sr.position || '') + '</td>' +
         '<td>' + (sr.points || 0) + '</td>' +
         '<td>' + (sr.racesCount || 0) + '</td>' +
