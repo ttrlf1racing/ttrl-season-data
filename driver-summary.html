@@ -474,8 +474,15 @@ function renderDriverSummary(name) {
       s.racesCount != null ? s.racesCount : 0;
 
     const lineParts = [];
+    const seasonMeta = ((window.seasonMetaByName || {})[s.seasonName] || {});
     lineParts.push(eventsVal + ' events');
     lineParts.push((s.points || 0) + ' pts');
+    if (seasonMeta.startDate || seasonMeta.endDate) {
+      lineParts.push((seasonMeta.startDate || '?') + ' – ' + (seasonMeta.endDate || '?'));
+    }
+    if (seasonMeta.status) {
+      lineParts.push(seasonMeta.status);
+    }
     metaLine.innerHTML = lineParts.map(x => '<span>' + x + '</span>').join('');
     left.appendChild(metaLine);
 
@@ -508,6 +515,17 @@ function loadJsonFromStored(initialDriverName) {
     .then(r => r.json())
     .then(data => {
       const multi = data.multiSeasonStatistics || {};
+
+    // Create season metadata lookup
+    const seasonMetaByName = {};
+    (multi.seasons || []).forEach(s => {
+      seasonMetaByName[s.name] = {
+        startDate: s.startDate || '',
+        endDate: s.endDate || '',
+        status: s.status || ''
+      };
+    });
+    window.seasonMetaByName = seasonMetaByName;
       driversSrc = multi.drivers || multi.driverStatistics || data.drivers || [];
       driverRowsAll = driversSrc.map(deriveDriverRow);
       renderDriverList('');
