@@ -372,7 +372,7 @@ function avatarFor(infoD, driverName) {
     '';
   if (!raw) return base + 'default.png';
   const safe = raw.replace(/[^\w.-]+/g,' ').trim().replace(/\s+/g,' ');
-  return base + safe + '.png';
+  return base + safe + '.gif';
 }
 
 function renderDriverSummary(name) {
@@ -405,7 +405,7 @@ function renderDriverSummary(name) {
 
   const avatarImg = document.getElementById('drvAvatar');
   avatarImg.src = avatarFor(infoD, row.name);
-  avatarImg.onerror = () => { avatarImg.src = 'Drivers Avatars/default.png'; };
+  avatarImg.onerror = () => { if (avatarImg.src.endsWith('.gif')) { avatarImg.src = avatarImg.src.replace('.gif', '.png'); } else { avatarImg.src = 'Drivers Avatars/default.png'; } };
 
   document.getElementById('pillWins').textContent =
     'Wins: ' + (racePositions.wins || 0);
