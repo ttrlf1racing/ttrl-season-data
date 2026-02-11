@@ -924,6 +924,7 @@ function buildPage(data) {
       const avatarSrc = getDriverAvatarSrc(row.name);
 
       driverAvatar.onerror = () => { if (driverAvatar.src.includes('.gif')) { driverAvatar.src = driverAvatar.src.replace('.gif', '.png'); } else { driverAvatar.src = DRIVER_AVATAR_FOLDER + '/default.png'; } };    if (cats.length) {
+        
       cats.forEach((c, idx) => {
         const span = document.createElement('span');
         span.className = 'driver-chip' + (idx === 0 ? ' primary' : '');
