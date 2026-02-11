@@ -922,8 +922,7 @@ function buildPage(data) {
 
     if (driverAvatar) {
       const avatarSrc = getDriverAvatarSrc(row.name);
-      driverAvatar.onerror = () => { this.onerror=null; this.src = this.src.replace('.gif', '.png') || DRIVER_AVATAR_FOLDER + '/default.png'; };
-      driverAvatar.src = avatarSrc;
+      driverAvatar.onerror = () => { driverAvatar.onerror=null; driverAvatar.src = driverAvatar.src.replace('.gif', '.png') || DRIVER_AVATAR_FOLDER + '/default.png'; };      driverAvatar.src = avatarSrc;
       driverAvatar.alt = row.name;
     }
 
