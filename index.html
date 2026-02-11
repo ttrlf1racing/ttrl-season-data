@@ -926,6 +926,9 @@ function buildPage(data) {
       driverAvatar.onerror = () => { if (driverAvatar.src.includes('.gif')) { driverAvatar.src = driverAvatar.src
           .replace('.gif', '.png'); } else { driverAvatar.src = DRIVER_AVATAR_FOLDER + '/default.png'; } };  
       driverAvatar.src = avatarSrc; 
+        }
+
+      dcCats.innerHTML = '';
 
        if (cats.length) {
         
