@@ -675,7 +675,7 @@ const EXPORT_FILES = [
 ];
 
 function getDriverAvatarSrc(driverName) {
-  return DRIVER_AVATAR_FOLDER + '/' + driverName + '.png';
+  return DRIVER_AVATAR_FOLDER + '/' + driverName + '.gif';
 }
 
 function populateFileSelect() {
@@ -923,9 +923,13 @@ function buildPage(data) {
     if (driverAvatar) {
       const avatarSrc = getDriverAvatarSrc(row.name);
       driverAvatar.onerror = function () {
+        if (this.src.endsWith('.gif')) {
+        this.src = this.src.replace('.gif', '.png');
+      } else {
         this.onerror = null;
         this.src = DRIVER_AVATAR_FOLDER + '/default.png';
-      };
+      }
+    
       driverAvatar.src = avatarSrc;
       driverAvatar.alt = row.name;
     }
