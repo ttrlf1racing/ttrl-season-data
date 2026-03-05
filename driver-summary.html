@@ -141,18 +141,20 @@
     }
     .tag-pos { background:var(--accent-yellow); color:#111827; }
 
-    .summary-grid {
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:10px;
-    }
-    @media (max-width:640px){ .summary-grid{grid-template-columns:1fr;} }
-    .dd-card {
-      background:var(--bg-card);
-      border-radius:10px;
-      border:1px solid var(--border-subtle);
-      padding:8px 10px;
-    }
+   .summary-grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+}
+@media (min-width:900px){
+  .summary-grid{grid-template-columns:repeat(3,minmax(0,1fr));}
+}
+@media (min-width:1200px){
+  .summary-grid{grid-template-columns:repeat(4,minmax(0,1fr));}
+}
+@media (max-width:640px){
+  .summary-grid{grid-template-columns:1fr;}
+}
     .dd-title {
       font-size:11px;
       text-transform:uppercase;
@@ -275,22 +277,27 @@
 
       <div class="card">
         <div class="summary-grid">
-          <div class="dd-card">
-            <div class="dd-title">Career</div>
-            <table class="dd-table" id="tblCareer"></table>
-          </div>
-          <div class="dd-card">
-            <div class="dd-title">Races</div>
-            <table class="dd-table" id="tblRaces"></table>
-          </div>
-          <div class="dd-card">
-            <div class="dd-title">Points</div>
-            <table class="dd-table" id="tblPoints"></table>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div class="dd-card">
+    <div class="dd-title">Career</div>
+    <table class="dd-table" id="tblCareer"></table>
   </div>
+  <div class="dd-card">
+    <div class="dd-title">Races</div>
+    <table class="dd-table" id="tblRaces"></table>
+  </div>
+  <div class="dd-card">
+    <div class="dd-title">Points</div>
+    <table class="dd-table" id="tblPoints"></table>
+  </div>
+  <div class="dd-card">
+    <div class="dd-title">Qualifying</div>
+    <table class="dd-table" id="tblQuali"></table>
+  </div>
+  <div class="dd-card">
+    <div class="dd-title">Discipline</div>
+    <table class="dd-table" id="tblDiscipline"></table>
+  </div>
+</div>
 
 <script>
 let driversSrc = [];
@@ -420,36 +427,64 @@ function renderDriverSummary(name) {
       discipline.cleanRacePercent : '–');
 
   fillTable('tblCareer', [
-    { label:'Races', value: participation.totalRaces ?? '' },
-    { label:'Seasons', value: participation.seasonsParticipated ?? '' },
-    { label:'Titles', value: standings.championshipsWon ?? '' },
-    { label:'Top 3', value: standings.top3Finishes ?? '' },
-    { label:'Best standings', value: standings.bestPosition ?? '' },
-    { label:'Avg standings', value: standings.averagePosition ?? '' }
-  ]);
+  { label:'Events', value: participation.totalEvents ?? '' },
+  { label:'Races', value: participation.totalRaces ?? '' },
+  { label:'Seasons', value: participation.seasonsParticipated ?? '' },
+  { label:'Titles', value: standings.championshipsWon ?? '' },
+  { label:'Top 3', value: standings.top3Finishes ?? '' },
+  { label:'Best standings', value: standings.bestPosition ?? '' },
+  { label:'Avg standings', value: standings.averagePosition ?? '' },
+  { label:'Event completion %', value: participation.eventCompletionRatePercent ?? '' },
+  { label:'Race completion %', value: participation.raceCompletionRatePercent ?? '' }
+]);
 
-  fillTable('tblRaces', [
-    { label:'Wins', value: racePositions.wins ?? '' },
-    { label:'Podiums', value: racePositions.podiums ?? '' },
-    { label:'Top 5', value: racePositions.top5 ?? '' },
-    { label:'Top 10', value: racePositions.top10 ?? '' },
-    { label:'Best finish', value: racePositions.bestPosition != null ?
-        'P' + racePositions.bestPosition : '' },
-    { label:'Avg finish', value: racePositions.averagePosition ?? '' },
-    { label:'Avg grid', value: racePositions.averageGridPosition ?? '' },
-    { label:'Avg pos change', value: racePositions.averagePositionChange != null ?
-        (racePositions.averagePositionChange > 0 ? '+' : '') +
-        racePositions.averagePositionChange : '' }
-  ]);
+fillTable('tblRaces', [
+  { label:'Wins', value: racePositions.wins ?? '' },
+  { label:'Podiums', value: racePositions.podiums ?? '' },
+  { label:'Top 5', value: racePositions.top5 ?? '' },
+  { label:'Top 10', value: racePositions.top10 ?? '' },
+  { label:'Total finishes', value: racePositions.totalFinishes ?? '' },
+  { label:'Best finish', value: racePositions.bestPosition != null ?
+      'P' + racePositions.bestPosition : '' },
+  { label:'Avg finish', value: racePositions.averagePosition ?? '' },
+  { label:'Avg grid', value: racePositions.averageGridPosition ?? '' },
+  { label:'Avg pos change', value: racePositions.averagePositionChange != null ?
+      (racePositions.averagePositionChange > 0 ? '+' : '') +
+      racePositions.averagePositionChange : '' }
+]);
 
-  fillTable('tblPoints', [
-    { label:'Total points', value: points.totalPoints ?? '' },
-    { label:'Avg per season', value: points.averagePerSeason ?? '' },
-    { label:'Avg per race', value: points.averagePerMajorRace ?? '' },
-    { label:'Avg per event', value: points.averagePerEvent ?? '' },
-    { label:'Best season', value: points.bestSeasonPoints ?
-        points.bestSeasonPoints + ' (' + (points.bestSeasonName || '') + ')' : '' }
-  ]);
+fillTable('tblPoints', [
+  { label:'Total points', value: points.totalPoints ?? '' },
+  { label:'Avg per season', value: points.averagePerSeason ?? '' },
+  { label:'Avg per race', value: points.averagePerMajorRace ?? '' },
+  { label:'Avg per event', value: points.averagePerEvent ?? '' },
+  { label:'Best season', value: points.bestSeasonPoints ?
+      points.bestSeasonPoints + ' (' + (points.bestSeasonName || '') + ')' : '' },
+  { label:'Scoring races', value: points.scoringRacesCount ?? '' },
+  { label:'Scoring rate %', value: points.scoringRatePercent ?? '' }
+]);
+
+fillTable('tblQuali', [
+  { label:'Best quali', value: qualPositions.bestPosition != null ?
+      'P' + qualPositions.bestPosition : '' },
+  { label:'Avg quali', value: qualPositions.averagePosition ?? '' },
+  { label:'Poles', value: qualPositions.poles ?? '' },
+  { label:'Front rows', value: qualPositions.frontRows ?? '' },
+  { label:'Top 3', value: qualPositions.top3 ?? '' },
+  { label:'Top 5', value: qualPositions.top5 ?? '' },
+  { label:'Top 10', value: qualPositions.top10 ?? '' },
+  { label:'Qual sessions', value: qualPositions.totalQualifications ?? '' }
+]);
+
+fillTable('tblDiscipline', [
+  { label:'Clean races', value: discipline.cleanRacesCount ?? '' },
+  { label:'Clean %', value: discipline.cleanRacePercent ?? '–' },
+  { label:'Reliability %', value: discipline.reliabilityPercent ?? '' },
+  { label:'DNFs', value: discipline.dnfCount ?? '' },
+  { label:'DSQs', value: discipline.dsqCount ?? '' },
+  { label:'Penalty seconds', value: discipline.totalPenaltySeconds ?? '' },
+  { label:'Races with penalties', value: discipline.racesWithPenalties ?? '' }
+]);
 
   const seasonsEl = document.getElementById('listSeasons');
   seasonsEl.innerHTML = '';
@@ -496,11 +531,14 @@ function renderDriverSummary(name) {
     posTag.textContent = 'P' + (s.position || '–');
     right.appendChild(posTag);
 
-    if (s.wins != null) {
-      const winText = document.createElement('div');
-      winText.textContent = s.wins + ' wins';
-      right.appendChild(winText);
-    }
+    if (s.wins != null || s.podiums != null) {
+  const winText = document.createElement('div');
+  const parts = [];
+  if (s.wins != null) parts.push(s.wins + ' wins');
+  if (s.podiums != null) parts.push(s.podiums + ' podiums');
+  winText.textContent = parts.join(', ');
+  right.appendChild(winText);
+}
 
     rowDiv.appendChild(right);
     seasonsEl.appendChild(rowDiv);
