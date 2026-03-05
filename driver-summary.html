@@ -1,3 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>TTRL – Driver Summary</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #050608;
+      --bg-elevated: #0b1018;
+      --bg-card: #050a12;
+      --border-subtle: #1f2937;
+      --border-strong: #374151;
+      --text-main: #f9fafb;
+      --text-subtle: #9ca3af;
+      --pill-bg: #111827;
+      --pill-border: #374151;
+      --accent-yellow: #facc15;
+    }
+    * { box-sizing:border-box; }
+    body {
+      margin:0;
+      padding:16px;
+      font-family:system-ui,-apple-system,Segoe UI,sans-serif;
+      background:var(--bg);
+      color:var(--text-main);
+    }
+    h1 { margin:0 0 4px; font-size:20px; }
+    .page-sub {
+      font-size:13px;
+      color:var(--text-subtle);
+      margin-bottom:16px;
+    }
+
+    .layout {
+      display:grid;
+      grid-template-columns:minmax(0,1.6fr) minmax(0,2.4fr);
+      gap:14px;
+    }
+    @media (max-width:960px){ .layout{grid-template-columns:1fr;} }
+
+    .card {
+      background:var(--bg-elevated);
+      border-radius:12px;
+      border:1px solid var(--border-strong);
+      padding:14px 16px;
+    }
+
+    .driver-header {
+      display:flex;
+      align-items:center;
+      gap:12px;
+      margin-bottom:10px;
+    }
+    .driver-avatar {
+      width:56px;
+      height:56px;
+      border-radius:999px;
+      background:#020617;
+      border:1px solid #111827;
+      overflow:hidden;
+      flex-shrink:0;
+    }
+    .driver-avatar img {
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+    .driver-main {
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+    }
+    .driver-name { font-size:18px; font-weight:600; }
+    .driver-meta { font-size:13px; color:var(--text-subtle); }
+    .driver-meta span+span::before{content:"•";margin:0 4px;}
+
+    .pill-row {
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:8px;
+    }
+    .pill {
+      padding:4px 10px;
+      border-radius:999px;
+      background:var(--pill-bg);
+      border:1px solid var(--pill-border);
+      font-size:12px;
+      white-space:nowrap;
+    }
+
+    .section-label {
+      font-size:11px;
+      letter-spacing:0.15em;
+      text-transform:uppercase;
+      color:var(--text-subtle);
+      margin:10px 0 4px;
+    }
+
+    .season-row {
+      background:var(--bg-card);
+      border-radius:8px;
+      border:1px solid var(--border-subtle);
+      padding:5px 10px;
+      margin-bottom:4px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:8px;
+      min-height:26px;
+    }
+    .season-main {
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+      font-size:12px;
+    }
+    .season-name { font-weight:500; }
+    .season-meta-line {
+      font-size:11px;
+      color:var(--text-subtle);
+    }
+    .season-meta-line span+span::before{content:"•";margin:0 4px;}
+    .season-right {
+      display:flex;
+      flex-direction:column;
+      align-items:flex-end;
+      gap:2px;
+      font-size:11px;
+    }
+    .tag-pill {
+      padding:1px 7px;
+      border-radius:999px;
+      font-size:10px;
+      font-weight:600;
+      letter-spacing:0.05em;
+      text-transform:uppercase;
+    }
+    .tag-pos { background:var(--accent-yellow); color:#111827; }
+
+    .summary-grid {
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:10px;
+    }
+    @media (min-width:900px){
+      .summary-grid{grid-template-columns:repeat(3,minmax(0,1fr));}
+    }
+    @media (min-width:1200px){
+      .summary-grid{grid-template-columns:repeat(4,minmax(0,1fr));}
+    }
+    @media (max-width:640px){
+      .summary-grid{grid-template-columns:1fr;}
+    }
+
+    .dd-card {
+      background:var(--bg-card);
+      border-radius:10px;
+      border:1px solid var(--border-subtle);
+      padding:8px 10px;
+    }
+    .dd-title {
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:0.14em;
+      color:var(--text-subtle);
+      margin-bottom:4px;
+    }
+    .dd-table {
+      width:100%;
+      border-collapse:collapse;
+      font-size:12px;
+    }
+    .dd-table td{padding:2px 0;border:none;}
+    .dd-table td:first-child{color:var(--text-subtle);}
+    .dd-table td:last-child{text-align:right;}
+
+    .picker-bar {
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-bottom:12px;
+      align-items:center;
+    }
+    .picker-label {
+      font-size:13px;
+      color:var(--text-subtle);
+    }
+    .picker-input {
+      padding:5px 8px;
+      border-radius:8px;
+      border:1px solid var(--border-subtle);
+      background:#020617;
+      color:var(--text-main);
+      font-size:13px;
+      min-width:180px;
+    }
+    .picker-input::placeholder{color:#6b7280;}
+
+    .driver-list-dropdown{position:relative;}
+    .driver-list-panel {
+      position:absolute;
+      z-index:10;
+      top:100%;
+      left:0;
+      margin-top:4px;
+      width:260px;
+      max-height:260px;
+      overflow-y:auto;
+      background:#020617;
+      border-radius:10px;
+      border:1px solid var(--border-subtle);
+      padding:4px 0;
+      display:none;
+    }
+    .driver-list-panel.open{display:block;}
+    .driver-item{
+      padding:4px 10px;
+      font-size:13px;
+      cursor:pointer;
+      display:flex;
+      justify-content:space-between;
+      gap:8px;
+    }
+    .driver-item span.meta{color:var(--text-subtle);font-size:11px;}
+    .driver-item:hover{background:#111827;}
+  </style>
+</head>
+<body>
+  <button id="backBtn"
+          style="
+            margin:0 0 10px;
+            padding:4px 10px;
+            border-radius:999px;
+            border:1px solid #4b5563;
+            background:#020617;
+            color:#e5e7eb;
+            font-size:12px;
+            cursor:pointer;
+          ">
+    ← Back to overview
+  </button>
+
+  <h1>Driver summary</h1>
+  <p class="page-sub">Multi‑season breakdown for a single driver, with optional season‑only view.</p>
+
+  <div class="picker-bar">
+    <span class="picker-label">Driver</span>
+    <div class="driver-list-dropdown">
+      <input id="driverSearch" class="picker-input" type="text" placeholder="Search driver…" disabled>
+      <div id="driverList" class="driver-list-panel"></div>
+    </div>
+
+    <span class="picker-label" style="margin-left:12px;">View</span>
+    <select id="viewMode" class="picker-input" style="max-width:130px;">
+      <option value="career">Career</option>
+      <option value="season">Season</option>
+    </select>
+
+    <select id="seasonSelect" class="picker-input" style="max-width:260px; display:none;"></select>
+  </div>
+
+  <div id="layoutRoot" style="display:none;">
+    <div class="layout">
+      <div>
+        <div class="card">
+          <div class="driver-header">
+            <div class="driver-avatar">
+              <img id="drvAvatar" src="Drivers Avatars/default.png" alt="">
+            </div>
+            <div class="driver-main">
+              <div class="driver-name" id="drvName"></div>
+              <div class="driver-meta" id="drvMeta"></div>
+            </div>
+          </div>
+
+          <div class="pill-row">
+            <span class="pill" id="pillWins"></span>
+            <span class="pill" id="pillPodiums"></span>
+            <span class="pill" id="pillTitles"></span>
+            <span class="pill" id="pillAvgFinish"></span>
+            <span class="pill" id="pillClean"></span>
+          </div>
+
+          <div class="section-label">Seasons</div>
+          <div id="listSeasons"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="summary-grid">
+          <div class="dd-card">
+            <div class="dd-title">Career</div>
+            <table class="dd-table" id="tblCareer"></table>
+          </div>
+          <div class="dd-card">
+            <div class="dd-title">Races</div>
+            <table class="dd-table" id="tblRaces"></table>
+          </div>
+          <div class="dd-card">
+            <div class="dd-title">Points</div>
+            <table class="dd-table" id="tblPoints"></table>
+          </div>
+          <div class="dd-card">
+            <div class="dd-title">Qualifying</div>
+            <table class="dd-table" id="tblQuali"></table>
+          </div>
+          <div class="dd-card">
+            <div class="dd-title">Discipline</div>
+            <table class="dd-table" id="tblDiscipline"></table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 <script>
 let driversSrc = [];
 let driverRowsAll = [];
@@ -83,14 +402,17 @@ function avatarFor(infoD, driverName) {
   return base + safe + '.gif';
 }
 
-// ---------- core render helpers ----------
-
 function renderDriverCommonHeader(row, infoD, participation, mode, seasonName) {
   const layoutRoot = document.getElementById('layoutRoot');
   if (!layoutRoot) return;
   layoutRoot.style.display = '';
 
-  document.getElementById('drvName').textContent = row.name || '';
+  const drvNameEl = document.getElementById('drvName');
+  const drvMetaEl = document.getElementById('drvMeta');
+  const avatarImg = document.getElementById('drvAvatar');
+  if (!drvNameEl || !drvMetaEl || !avatarImg) return;
+
+  drvNameEl.textContent = row.name || '';
 
   const metaParts = [];
   metaParts.push(infoD.nationality || 'Nationality unknown');
@@ -101,10 +423,9 @@ function renderDriverCommonHeader(row, infoD, participation, mode, seasonName) {
   if (mode === 'season' && seasonName) {
     metaParts.push(seasonName);
   }
-  document.getElementById('drvMeta').innerHTML =
+  drvMetaEl.innerHTML =
     metaParts.map(x => '<span>' + x + '</span>').join('');
 
-  const avatarImg = document.getElementById('drvAvatar');
   avatarImg.src = avatarFor(infoD, row.name);
   avatarImg.onerror = () => {
     if (avatarImg.src.endsWith('.gif')) {
@@ -115,7 +436,8 @@ function renderDriverCommonHeader(row, infoD, participation, mode, seasonName) {
   };
 }
 
-// career view
+// ---------- career view ----------
+
 function renderDriverSummary(name) {
   const row = driverRowsAll.find(d => d.name === name);
   const layoutRoot = document.getElementById('layoutRoot');
@@ -139,20 +461,20 @@ function renderDriverSummary(name) {
 
   renderDriverCommonHeader(row, infoD, participation, 'career', null);
 
-  // pill row
-  document.getElementById('pillWins').textContent =
-    'Wins: ' + (racePositions.wins || 0);
-  document.getElementById('pillPodiums').textContent =
-    'Podiums: ' + (racePositions.podiums || 0);
-  document.getElementById('pillTitles').textContent =
-    'Titles: ' + (standings.championshipsWon || 0);
-  document.getElementById('pillAvgFinish').textContent =
+  const pillWins = document.getElementById('pillWins');
+  const pillPodiums = document.getElementById('pillPodiums');
+  const pillTitles = document.getElementById('pillTitles');
+  const pillAvgFinish = document.getElementById('pillAvgFinish');
+  const pillClean = document.getElementById('pillClean');
+  if (pillWins) pillWins.textContent = 'Wins: ' + (racePositions.wins || 0);
+  if (pillPodiums) pillPodiums.textContent = 'Podiums: ' + (racePositions.podiums || 0);
+  if (pillTitles) pillTitles.textContent = 'Titles: ' + (standings.championshipsWon || 0);
+  if (pillAvgFinish) pillAvgFinish.textContent =
     'Avg finish: ' + (racePositions.averagePosition ?? '–');
-  document.getElementById('pillClean').textContent =
+  if (pillClean) pillClean.textContent =
     'Clean %: ' + (discipline.cleanRacePercent != null ?
       discipline.cleanRacePercent : '–');
 
-  // tables
   fillTable('tblCareer', [
     { label:'Events', value: participation.totalEvents ?? '' },
     { label:'Races', value: participation.totalRaces ?? '' },
@@ -213,68 +535,69 @@ function renderDriverSummary(name) {
     { label:'Races with penalties', value: discipline.racesWithPenalties ?? '' }
   ]);
 
-  // seasons list
   const seasonsEl = document.getElementById('listSeasons');
-  seasonsEl.innerHTML = '';
-  seasons.slice().sort((a,b) =>
-    String(a.seasonName || '').localeCompare(String(b.seasonName || ''))
-  ).forEach(s => {
-    const rowDiv = document.createElement('div');
-    rowDiv.className = 'season-row';
+  if (seasonsEl) {
+    seasonsEl.innerHTML = '';
+    seasons.slice().sort((a,b) =>
+      String(a.seasonName || '').localeCompare(String(b.seasonName || ''))
+    ).forEach(s => {
+      const rowDiv = document.createElement('div');
+      rowDiv.className = 'season-row';
 
-    const left = document.createElement('div');
-    left.className = 'season-main';
+      const left = document.createElement('div');
+      left.className = 'season-main';
 
-    const title = document.createElement('div');
-    title.className = 'season-name';
-    title.textContent = s.seasonName || '';
-    left.appendChild(title);
+      const title = document.createElement('div');
+      title.className = 'season-name';
+      title.textContent = s.seasonName || '';
+      left.appendChild(title);
 
-    const metaLine = document.createElement('div');
-    metaLine.className = 'season-meta-line';
+      const metaLine = document.createElement('div');
+      metaLine.className = 'season-meta-line';
 
-    const eventsVal = s.racesCount != null ? s.racesCount : 0;
-    const lineParts = [];
-    const seasonMeta = ((window.seasonMetaByName || {})[s.seasonName] || {});
-    lineParts.push(eventsVal + ' events');
-    lineParts.push((s.points || 0) + ' pts');
-    if (seasonMeta.startDate || seasonMeta.endDate) {
-      lineParts.push((seasonMeta.startDate || '?') + ' – ' + (seasonMeta.endDate || '?'));
-    }
-    if (seasonMeta.status) {
-      lineParts.push(seasonMeta.status);
-    }
-    metaLine.innerHTML = lineParts.map(x => '<span>' + x + '</span>').join('');
-    left.appendChild(metaLine);
+      const eventsVal = s.racesCount != null ? s.racesCount : 0;
+      const lineParts = [];
+      const seasonMeta = ((window.seasonMetaByName || {})[s.seasonName] || {});
+      lineParts.push(eventsVal + ' events');
+      lineParts.push((s.points || 0) + ' pts');
+      if (seasonMeta.startDate || seasonMeta.endDate) {
+        lineParts.push((seasonMeta.startDate || '?') + ' – ' + (seasonMeta.endDate || '?'));
+      }
+      if (seasonMeta.status) {
+        lineParts.push(seasonMeta.status);
+      }
+      metaLine.innerHTML = lineParts.map(x => '<span>' + x + '</span>').join('');
+      left.appendChild(metaLine);
 
-    rowDiv.appendChild(left);
+      rowDiv.appendChild(left);
 
-    const right = document.createElement('div');
-    right.className = 'season-right';
+      const right = document.createElement('div');
+      right.className = 'season-right';
 
-    const posTag = document.createElement('div');
-    posTag.className = 'tag-pill tag-pos';
-    posTag.textContent = 'P' + (s.position || '–');
-    right.appendChild(posTag);
+      const posTag = document.createElement('div');
+      posTag.className = 'tag-pill tag-pos';
+      posTag.textContent = 'P' + (s.position || '–');
+      right.appendChild(posTag);
 
-    if (s.wins != null || s.podiums != null) {
-      const winText = document.createElement('div');
-      const parts = [];
-      if (s.wins != null) parts.push(s.wins + ' wins');
-      if (s.podiums != null) parts.push(s.podiums + ' podiums');
-      winText.textContent = parts.join(', ');
-      right.appendChild(winText);
-    }
+      if (s.wins != null || s.podiums != null) {
+        const winText = document.createElement('div');
+        const parts = [];
+        if (s.wins != null) parts.push(s.wins + ' wins');
+        if (s.podiums != null) parts.push(s.podiums + ' podiums');
+        winText.textContent = parts.join(', ');
+        right.appendChild(winText);
+      }
 
-    rowDiv.appendChild(right);
-    seasonsEl.appendChild(rowDiv);
-  });
+      rowDiv.appendChild(right);
+      seasonsEl.appendChild(rowDiv);
+    });
+  }
 
-  // season dropdown
   setupSeasonDropdown(row.name, seasons);
 }
 
-// season-only view
+// ---------- season-only view ----------
+
 function renderDriverSeasonSummary(name, seasonName) {
   const row = driverRowsAll.find(d => d.name === name);
   const layoutRoot = document.getElementById('layoutRoot');
@@ -295,19 +618,19 @@ function renderDriverSeasonSummary(name, seasonName) {
 
   renderDriverCommonHeader(row, infoD, participation, 'season', seasonName);
 
-  // pills – all season-based
-  document.getElementById('pillWins').textContent =
-    'Wins: ' + (season.wins || 0);
-  document.getElementById('pillPodiums').textContent =
-    'Podiums: ' + (season.podiums || 0);
-  document.getElementById('pillTitles').textContent =
-    'Standings: P' + (season.position || '–');
-  document.getElementById('pillAvgFinish').textContent =
+  const pillWins = document.getElementById('pillWins');
+  const pillPodiums = document.getElementById('pillPodiums');
+  const pillTitles = document.getElementById('pillTitles');
+  const pillAvgFinish = document.getElementById('pillAvgFinish');
+  const pillClean = document.getElementById('pillClean');
+  if (pillWins) pillWins.textContent = 'Wins: ' + (season.wins || 0);
+  if (pillPodiums) pillPodiums.textContent = 'Podiums: ' + (season.podiums || 0);
+  if (pillTitles) pillTitles.textContent = 'Standings: P' + (season.position || '–');
+  if (pillAvgFinish) pillAvgFinish.textContent =
     'Events: ' + (season.racesCount || 0);
-  document.getElementById('pillClean').textContent =
+  if (pillClean) pillClean.textContent =
     (seasonMeta.startDate || '?') + ' – ' + (seasonMeta.endDate || '?');
 
-  // tables – limited to what JSON exposes per season
   fillTable('tblCareer', [
     { label:'Season', value: seasonName },
     { label:'Events', value: season.racesCount ?? '' },
@@ -353,69 +676,74 @@ function renderDriverSeasonSummary(name, seasonName) {
     { label:'Races with penalties', value: discipline.racesWithPenalties ?? '' }
   ]);
 
-  // seasons list reuse from career
   const seasonsEl = document.getElementById('listSeasons');
-  seasonsEl.innerHTML = '';
-  seasons.slice().sort((a,b) =>
-    String(a.seasonName || '').localeCompare(String(b.seasonName || ''))
-  ).forEach(s => {
-    const rowDiv = document.createElement('div');
-    rowDiv.className = 'season-row';
+  if (seasonsEl) {
+    seasonsEl.innerHTML = '';
+    seasons.slice().sort((a,b) =>
+      String(a.seasonName || '').localeCompare(String(b.seasonName || ''))
+    ).forEach(s => {
+      const rowDiv = document.createElement('div');
+      rowDiv.className = 'season-row';
 
-    const left = document.createElement('div');
-    left.className = 'season-main';
+      const left = document.createElement('div');
+      left.className = 'season-main';
 
-    const title = document.createElement('div');
-    title.className = 'season-name';
-    title.textContent = s.seasonName || '';
-    left.appendChild(title);
+      const title = document.createElement('div');
+      title.className = 'season-name';
+      title.textContent = s.seasonName || '';
+      left.appendChild(title);
 
-    const metaLine = document.createElement('div');
-    metaLine.className = 'season-meta-line';
+      const metaLine = document.createElement('div');
+      metaLine.className = 'season-meta-line';
 
-    const eventsVal = s.racesCount != null ? s.racesCount : 0;
-    const lineParts = [];
-    const sm = ((window.seasonMetaByName || {})[s.seasonName] || {});
-    lineParts.push(eventsVal + ' events');
-    lineParts.push((s.points || 0) + ' pts');
-    if (sm.startDate || sm.endDate) {
-      lineParts.push((sm.startDate || '?') + ' – ' + (sm.endDate || '?'));
-    }
-    if (sm.status) {
-      lineParts.push(sm.status);
-    }
-    metaLine.innerHTML = lineParts.map(x => '<span>' + x + '</span>').join('');
-    left.appendChild(metaLine);
+      const eventsVal = s.racesCount != null ? s.racesCount : 0;
+      const lineParts = [];
+      const sm = ((window.seasonMetaByName || {})[s.seasonName] || {});
+      lineParts.push(eventsVal + ' events');
+      lineParts.push((s.points || 0) + ' pts');
+      if (sm.startDate || sm.endDate) {
+        lineParts.push((sm.startDate || '?') + ' – ' + (sm.endDate || '?'));
+      }
+      if (sm.status) {
+        lineParts.push(sm.status);
+      }
+      metaLine.innerHTML = lineParts.map(x => '<span>' + x + '</span>').join('');
+      left.appendChild(metaLine);
 
-    rowDiv.appendChild(left);
+      rowDiv.appendChild(left);
 
-    const right = document.createElement('div');
-    right.className = 'season-right';
+      const right = document.createElement('div');
+      right.className = 'season-right';
 
-    const posTag = document.createElement('div');
-    posTag.className = 'tag-pill tag-pos';
-    posTag.textContent = 'P' + (s.position || '–');
-    right.appendChild(posTag);
+      const posTag = document.createElement('div');
+      posTag.className = 'tag-pill tag-pos';
+      posTag.textContent = 'P' + (s.position || '–');
+      right.appendChild(posTag);
 
-    if (s.wins != null || s.podiums != null) {
-      const winText = document.createElement('div');
-      const parts = [];
-      if (s.wins != null) parts.push(s.wins + ' wins');
-      if (s.podiums != null) parts.push(s.podiums + ' podiums');
-      winText.textContent = parts.join(', ');
-      right.appendChild(winText);
-    }
+      if (s.wins != null || s.podiums != null) {
+        const winText = document.createElement('div');
+        const parts = [];
+        if (s.wins != null) parts.push(s.wins + ' wins');
+        if (s.podiums != null) parts.push(s.podiums + ' podiums');
+        winText.textContent = parts.join(', ');
+        right.appendChild(winText);
+      }
 
-    rowDiv.appendChild(right);
-    seasonsEl.appendChild(rowDiv);
-  });
+      rowDiv.appendChild(right);
+      seasonsEl.appendChild(rowDiv);
+    });
+  }
 
   setupSeasonDropdown(row.name, seasons);
 }
 
-// build / show season dropdown (only if multiple seasons)
+// ---------- season dropdown helper ----------
+
 function setupSeasonDropdown(driverName, seasons) {
   const seasonSelect = document.getElementById('seasonSelect');
+  const viewModeEl = document.getElementById('viewMode');
+  if (!seasonSelect || !viewModeEl) return;
+
   seasonSelect.innerHTML = '';
   seasonSelect.dataset.driverName = driverName || '';
 
@@ -425,7 +753,9 @@ function setupSeasonDropdown(driverName, seasons) {
 
   if (multiSeasons.length <= 1) {
     seasonSelect.style.display = 'none';
-    document.getElementById('viewMode').value = 'career';
+    viewModeEl.value = 'career';
+    currentViewMode = 'career';
+    currentSeasonName = null;
     return;
   }
 
@@ -436,7 +766,6 @@ function setupSeasonDropdown(driverName, seasons) {
     seasonSelect.appendChild(opt);
   });
 
-  // default selection
   if (currentSeasonName) {
     const found = multiSeasons.find(s => s.seasonName === currentSeasonName);
     seasonSelect.value = found ? currentSeasonName : multiSeasons[0].seasonName;
@@ -451,7 +780,7 @@ function setupSeasonDropdown(driverName, seasons) {
   }
 }
 
-// ---------- load JSON ----------
+// ---------- JSON load ----------
 
 function loadJsonFromStored(initialDriverName) {
   const storedJson = localStorage.getItem('ttrl_selected_json');
@@ -462,7 +791,6 @@ function loadJsonFromStored(initialDriverName) {
     .then(data => {
       const multi = data.multiSeasonStatistics || {};
 
-      // season metadata lookup
       const seasonMetaByName = {};
       (multi.seasons || []).forEach(s => {
         seasonMetaByName[s.name] = {
@@ -477,98 +805,107 @@ function loadJsonFromStored(initialDriverName) {
       driversSrc = multi.drivers || multi.driverStatistics || data.drivers || [];
       driverRowsAll = driversSrc.map(deriveDriverRow);
       renderDriverList('');
-      document.getElementById('driverSearch').disabled = driverRowsAll.length === 0;
+      const driverSearchEl = document.getElementById('driverSearch');
+      if (driverSearchEl) driverSearchEl.disabled = driverRowsAll.length === 0;
 
       if (initialDriverName) {
-        document.getElementById('driverSearch').value = initialDriverName;
+        if (driverSearchEl) driverSearchEl.value = initialDriverName;
         renderDriverSummary(initialDriverName);
       }
     })
     .catch(err => alert('Failed to load JSON: ' + err.message));
 }
 
-// ---------- events ----------
+// ---------- event wiring with safety checks ----------
 
-// search + dropdown
-document.getElementById('driverSearch').addEventListener('input', e => {
-  renderDriverList(e.target.value || '');
-  const panel = document.getElementById('driverList');
-  if (!panel.classList.contains('open')) panel.classList.add('open');
-});
+const driverSearchEl = document.getElementById('driverSearch');
+if (driverSearchEl) {
+  driverSearchEl.addEventListener('input', e => {
+    renderDriverList(e.target.value || '');
+    const panel = document.getElementById('driverList');
+    if (panel && !panel.classList.contains('open')) panel.classList.add('open');
+  });
+  driverSearchEl.addEventListener('focus', () => {
+    const panel = document.getElementById('driverList');
+    if (panel && !panel.classList.contains('open')) panel.classList.add('open');
+  });
+}
 
-document.getElementById('driverSearch').addEventListener('focus', () => {
-  const panel = document.getElementById('driverList');
-  if (!panel.classList.contains('open')) panel.classList.add('open');
-});
+const driverListEl = document.getElementById('driverList');
+if (driverListEl) {
+  driverListEl.addEventListener('click', e => {
+    const item = e.target.closest('.driver-item');
+    if (!item) return;
+    const name = item.dataset.name;
+    if (driverSearchEl) driverSearchEl.value = name;
+    driverListEl.classList.remove('open');
 
-document.addEventListener('click', e => {
-  const dropdown = document.querySelector('.driver-list-dropdown');
-  const panel = document.getElementById('driverList');
-  if (!dropdown.contains(e.target)) {
-    panel.classList.remove('open');
-  }
-});
+    currentViewMode = 'career';
+    currentSeasonName = null;
 
-document.getElementById('driverList').addEventListener('click', e => {
-  const item = e.target.closest('.driver-item');
-  if (!item) return;
-  const name = item.dataset.name;
-  document.getElementById('driverSearch').value = name;
-  document.getElementById('driverList').classList.remove('open');
+    const viewModeEl = document.getElementById('viewMode');
+    const seasonSelect = document.getElementById('seasonSelect');
+    if (viewModeEl) viewModeEl.value = 'career';
+    if (seasonSelect) seasonSelect.style.display = 'none';
 
-  // reset view to career when switching driver
-  currentViewMode = 'career';
-  currentSeasonName = null;
-  document.getElementById('viewMode').value = 'career';
-  document.getElementById('seasonSelect').style.display = 'none';
+    renderDriverSummary(name);
+  });
+}
 
-  renderDriverSummary(name);
-});
-
-// view mode toggle
-document.getElementById('viewMode').addEventListener('change', e => {
-  const mode = e.target.value;
-  const seasonSelect = document.getElementById('seasonSelect');
-  const drvName = seasonSelect.dataset.driverName || '';
-  if (!drvName) return;
-
-  currentViewMode = mode;
-
-  if (mode === 'season') {
-    if (seasonSelect.options.length === 0) {
-      // no season view available
+const viewModeEl = document.getElementById('viewMode');
+if (viewModeEl) {
+  viewModeEl.addEventListener('change', e => {
+    const mode = e.target.value;
+    const seasonSelect = document.getElementById('seasonSelect');
+    if (!seasonSelect) return;
+    const drvName = seasonSelect.dataset.driverName || '';
+    if (!drvName) {
       e.target.value = 'career';
+      currentViewMode = 'career';
       return;
     }
-    seasonSelect.style.display = '';
-    const selectedSeason = seasonSelect.value || seasonSelect.options[0].value;
-    currentSeasonName = selectedSeason;
-    renderDriverSeasonSummary(drvName, selectedSeason);
-  } else {
-    seasonSelect.style.display = 'none';
-    renderDriverSummary(drvName);
-  }
-});
 
-// season change
-document.getElementById('seasonSelect').addEventListener('change', e => {
-  const drvName = e.target.dataset.driverName;
-  if (!drvName) return;
-  const seasonName = e.target.value;
-  currentSeasonName = seasonName;
-  renderDriverSeasonSummary(drvName, seasonName);
-});
+    currentViewMode = mode;
 
-// back button
-document.getElementById('backBtn').addEventListener('click', () => {
-  if (window.history.length > 1) {
-    window.history.back();
-  } else {
-    window.location.href = 'index.html';
-  }
-});
+    if (mode === 'season') {
+      if (seasonSelect.options.length === 0) {
+        e.target.value = 'career';
+        currentViewMode = 'career';
+        return;
+      }
+      seasonSelect.style.display = '';
+      const selectedSeason = seasonSelect.value || seasonSelect.options[0].value;
+      currentSeasonName = selectedSeason;
+      renderDriverSeasonSummary(drvName, selectedSeason);
+    } else {
+      seasonSelect.style.display = 'none';
+      renderDriverSummary(drvName);
+    }
+  });
+}
 
-// init
+const seasonSelectEl = document.getElementById('seasonSelect');
+if (seasonSelectEl) {
+  seasonSelectEl.addEventListener('change', e => {
+    const drvName = e.target.dataset.driverName;
+    if (!drvName) return;
+    const seasonName = e.target.value;
+    currentSeasonName = seasonName;
+    renderDriverSeasonSummary(drvName, seasonName);
+  });
+}
+
+const backBtn = document.getElementById('backBtn');
+if (backBtn) {
+  backBtn.addEventListener('click', () => {
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      window.location.href = 'index.html';
+    }
+  });
+}
+
 window.addEventListener('DOMContentLoaded', () => {
   const cameFromIndex = getQueryParam('from') === 'index';
   const storedDriver = localStorage.getItem('ttrl_selected_driver');
