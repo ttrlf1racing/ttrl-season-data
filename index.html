@@ -544,42 +544,6 @@
     </div>
   </section>
 
-    <!-- Drivers -->
-  <section id="driversSection" data-view="drivers" class="active">
-    ...
-  </section>
-
-  <!-- ADD: Cleanest drivers per tier/season -->
-  <section id="cleanestSection">
-    <h2>Cleanest driver by tier & season</h2>
-    <p class="section-description">
-      Based on overall clean race %, only counting drivers who completed
-      at least 80% of that season's rounds in that tier.
-    </p>
-    <div class="scroll-body">
-      <table id="cleanestTable">
-        <thead>
-          <tr>
-            <th>Season</th>
-            <th>Tier</th>
-            <th>Driver</th>
-            <th>Clean %</th>
-            <th>Races completed</th>
-            <th>Season races</th>
-            <th>% of season</th>
-          </tr>
-        </thead>
-        <tbody id="cleanestTableBody"></tbody>
-      </table>
-    </div>
-  </section>
-
-  <!-- Driver modal -->
-  <div id="driverModal" class="driver-modal">
-    ...
-  </div>
-
-
   <!-- Driver modal -->
   <div id="driverModal" class="driver-modal">
     <div class="driver-modal-backdrop"></div>
@@ -760,21 +724,6 @@ function buildPage(data) {
   });
   window.seasonMetaByName = seasonMetaByName;
 
-    // ADD: quick lookup for season total rounds and inferred tier (e.g. "T1")
-  const seasonInfoByName = {};
-  (multi.seasons || []).forEach(s => {
-    const name = s.name || '';
-    let tier = '';
-    const m = name.match(/-\s*(T\d+)/i); // "... - T1" -> "T1"
-    if (m) tier = m[1].toUpperCase();
-
-    seasonInfoByName[name] = {
-      totalRounds: Number(s.totalRounds || s.completedRounds || 0),
-      tier
-    };
-  });
-
-
   formatLoadedMeta(meta);
 
   const leagueName = (meta.leagueName || '').trim() || 'TTRL';
@@ -875,84 +824,6 @@ function buildPage(data) {
   let mainRow = driverRowsAll.find(
     d => (d.name || '').toLowerCase() === mainLower
   );
-
-    // ----- CLEANEST PER TIER/SEASON (using overall clean %) -----
-
-  function computeCleanestByTierSeason() {
-    const best = {}; // { seasonName: { tier: { name, cleanPct, races, totalRaces, pctOfSeason } } }
-
-    driversSrc.forEach(d => {
-      const driverName =
-        d.driverName || (d.driverInfo && d.driverInfo.realName) || '';
-      const discipline = d.discipline || {};
-      const overallClean = discipline.cleanRacePercent;
-      if (overallClean == null) return;
-      const overallCleanNum = Number(overallClean);
-      if (Number.isNaN(overallCleanNum)) return;
-
-      const standings = d.standings || {};
-      const seasonResults = standings.seasonResults || [];
-
-      seasonResults.forEach(sr => {
-        const season = sr.seasonName;
-        if (!season) return;
-
-        const sInfo = seasonInfoByName[season] || {};
-        const tier = sInfo.tier || '';
-        if (!tier) return;
-
-        const totalRaces = sInfo.totalRounds || 0;
-        const racesCompleted = Number(sr.racesCount || 0);
-        if (!totalRaces) return;
-
-        // 80% completion rule
-        const requiredRaces = Math.ceil(totalRaces * 0.8);
-        if (racesCompleted < requiredRaces) return;
-
-        if (!best[season]) best[season] = {};
-        const current = best[season][tier];
-
-        if (!current || overallCleanNum > current.cleanPct) {
-          best[season][tier] = {
-            name: driverName,
-            cleanPct: overallCleanNum,
-            races: racesCompleted,
-            totalRaces,
-            pctOfSeason: (racesCompleted / totalRaces) * 100
-          };
-        }
-      });
-    });
-
-    return best;
-  }
-
-  function renderCleanestTable() {
-    const tbody = document.getElementById('cleanestTableBody');
-    if (!tbody) return;
-
-    const data = computeCleanestByTierSeason();
-    tbody.innerHTML = '';
-
-    const seasonNames = Object.keys(data).sort();
-    seasonNames.forEach(season => {
-      const tiers = Object.keys(data[season]).sort();
-      tiers.forEach(tier => {
-        const info = data[season][tier];
-        const tr = document.createElement('tr');
-        tr.innerHTML =
-          '<td>' + season + '</td>' +
-          '<td>' + tier + '</td>' +
-          '<td>' + info.name + '</td>' +
-          '<td>' + info.cleanPct.toFixed(1) + '</td>' +
-          '<td>' + info.races + '</td>' +
-          '<td>' + info.totalRaces + '</td>' +
-          '<td>' + info.pctOfSeason.toFixed(1) + '%</td>';
-        tbody.appendChild(tr);
-      });
-    });
-  }
-
 
   if (!mainRow) {
     mainRow = {
@@ -1217,7 +1088,6 @@ function buildPage(data) {
   });
 
   renderDrivers();
-    renderCleanestTable();
 
   // ----- TRACKS -----
   const trackSelect = document.getElementById('trackSelect');
