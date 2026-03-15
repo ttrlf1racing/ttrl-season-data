@@ -844,11 +844,7 @@ function buildPage(data) {
     };
     driverRowsAll.push(mainRow);
   }
-  // helper: show NC80 when driver has < 80% completion
-function fmt80(value, completionPct) {
-  if (completionPct < 80) return 'NC80';
-  return value;
-}
+ 
 
   // Collect all alias rows
   const aliasRows = driverRowsAll.filter(
@@ -934,6 +930,12 @@ function fmt80(value, completionPct) {
     const pageRows = filtered.slice(start, start + driverPageSize);
 
     driversTableBody.innerHTML = '';
+
+      // Add this helper locally (fixes scope issue)
+  function fmt80(value, completionPct) {
+    if (completionPct < 80) return 'NC80';
+    return value;
+  }
   pageRows.forEach(dr => {
   const tr = document.createElement('tr');
   tr.dataset.driverName = dr.name;
