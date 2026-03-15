@@ -946,7 +946,7 @@ function renderDrivers() {
   const start = (driverCurrentPage - 1) * driverPageSize;
   const pageRows = filtered.slice(start, start + driverPageSize);
 
-  // helper local to renderDrivers
+  // helper just for Clean %
   function fmt80(value, completionPct) {
     if (completionPct < 80) return 'NC80';
     return value;
@@ -959,26 +959,25 @@ function renderDrivers() {
     if (dr.name === selectedDriverName) tr.classList.add('driver-row-selected');
 
     const avgPts = dr.avgPerMajor.toFixed ? dr.avgPerMajor.toFixed(1) : dr.avgPerMajor;
-    const clean = (dr.cleanPct !== '' ?
+    const cleanPct = (dr.cleanPct !== '' ?
       (dr.cleanPct.toFixed ? dr.cleanPct.toFixed(1) : dr.cleanPct) : '');
-    const reliab = (dr.reliabPct !== '' ?
+    const reliabPct = (dr.reliabPct !== '' ?
       (dr.reliabPct.toFixed ? dr.reliabPct.toFixed(1) : dr.reliabPct) : '');
 
-  tr.innerHTML =
-  '<td>' + dr.name + '</td>' +
-  '<td>' + dr.nationality + '</td>' +
-  '<td>' + dr.seasons + '</td>' +
-  '<td>' + dr.races + '</td>' +
-  '<td>' + dr.totalPoints + '</td>' +
-  '<td>' + avgPts + '</td>' +
-  '<td>' + dr.wins + '</td>' +
-  '<td>' + dr.podiums + '</td>' +
-  '<td>' + dr.fastRaceLaps + '</td>' +
-  '<td>' + dr.fastPoleLaps + '</td>' +
-  '<td>' + dr.bestChampPos + '</td>' +
-  '<td>' + fmt80(cleanPct, dr.completionPct) + '</td>' +   // NC80 only here
-  '<td>' + reliabPct + '</td>';
-
+    tr.innerHTML =
+      '<td>' + dr.name + '</td>' +
+      '<td>' + dr.nationality + '</td>' +
+      '<td>' + dr.seasons + '</td>' +
+      '<td>' + dr.races + '</td>' +
+      '<td>' + dr.totalPoints + '</td>' +
+      '<td>' + avgPts + '</td>' +
+      '<td>' + dr.wins + '</td>' +
+      '<td>' + dr.podiums + '</td>' +
+      '<td>' + dr.fastRaceLaps + '</td>' +
+      '<td>' + dr.fastPoleLaps + '</td>' +
+      '<td>' + dr.bestChampPos + '</td>' +
+      '<td>' + fmt80(cleanPct, dr.completionPct) + '</td>' +
+      '<td>' + reliabPct + '</td>';
 
     driversTableBody.appendChild(tr);
   });
@@ -993,6 +992,7 @@ function renderDrivers() {
   if (prevBtn) prevBtn.disabled = driverCurrentPage <= 1;
   if (nextBtn) nextBtn.disabled = driverCurrentPage >= totalPages;
 }
+
 
  
 
