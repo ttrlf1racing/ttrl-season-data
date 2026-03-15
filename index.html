@@ -423,7 +423,7 @@
     }
   </style>
 </head>
-<body>
+let headerSortAsc = {}<body>
 <input id="addSeasonFileInput" type="file" accept=".json,application/json" style="display:none;">
 
 <header>
@@ -508,19 +508,20 @@
           <table id="driversTable">
             <thead>
               <tr>
-                <th>Driver</th>
-                <th>Nat.</th>
-                <th>Seasons</th>
-                <th>Races</th>
-                <th>Total pts</th>
-                <th>Avg pts</th>
-                <th>Wins</th>
-                <th>Podiums</th>
-                <th>Fast race laps</th>
-                <th>Fast pole laps</th>
-                <th>Best champ pos</th>
-                <th>Clean %</th>
-                <th>Reliab. %</th>
+             <th data-sort-key="name">Driver</th>
+<th data-sort-key="nat">Nat.</th>
+<th data-sort-key="seasons">Seasons</th>
+<th data-sort-key="races">Races</th>
+<th data-sort-key="points">Total pts</th>
+<th data-sort-key="avgPoints">Avg pts</th>
+<th data-sort-key="wins">Wins</th>
+<th data-sort-key="podiums">Podiums</th>
+<th data-sort-key="fastRace">Fast race laps</th>
+<th data-sort-key="fastPole">Fast pole laps</th>
+<th data-sort-key="bestPos">Best champ pos</th>
+<th data-sort-key="clean">Clean %</th>
+<th data-sort-key="reliab">Reliab. %</th>
+
               </tr>
             </thead>
             <tbody></tbody>
@@ -927,16 +928,35 @@ function renderDrivers() {
     return true;
   });
 
-  const sorters = {
-    points: (a, b) => b.totalPoints - a.totalPoints,
-    avgPoints: (a, b) => b.avgPerMajor - a.avgPerMajor,
-    wins: (a, b) => b.wins - a.wins,
-    podiums: (a, b) => b.podiums - a.podiums,
-    fastRace: (a, b) => b.fastRaceLaps - a.fastRaceLaps,
-    fastPole: (a, b) => b.fastPoleLaps - a.fastPoleLaps,
-    clean: (a, b) => (b.cleanPct || 0) - (a.cleanPct || 0)
-  };
-  filtered.sort(sorters[sortKey] || sorters.points);
+const sorters = {
+  name:     (a, b) => a.name.localeCompare(b.name),
+  nat:      (a, b) => (a.nationality || '').localeCompare(b.nationality || ''),
+  seasons:  (a, b) => b.seasons - a.seasons,
+  races:    (a, b) => b.races - a.races,
+  points:   (a, b) => b.totalPoints - a.totalPoints,
+  avgPoints:(a, b) => b.avgPerMajor - a.avgPerMajor,
+  wins:     (a, b) => b.wins - a.wins,
+  podiums:  (a, b) => b.podiums - a.podiums,
+  fastRace: (a, b) => b.fastRaceLaps - a.fastRaceLaps,
+  fastPole: (a, b) => b.fastPoleLaps - a.fastPoleLaps,
+  bestPos:  (a, b) => {
+    const av = Number(a.bestChampPos) || 9999;
+    const bv = Number(b.bestChampPos) || 9999;
+    return av - bv;            // smaller position is better
+  },
+  clean:    (a, b) => (b.cleanPct || 0) - (a.cleanPct || 0),
+  reliab:   (a, b) => (b.reliabPct || 0) - (a.reliabPct || 0)
+};
+
+const effectiveSortKey = window.headerSortKey || sortKey;
+const baseSorter = sorters[effectiveSortKey] || sorters.points;
+
+const sorter = window.headerSortAscending
+  ? ((a, b) => baseSorter(b, a))   // ascending
+  : baseSorter;                    // descending (default)
+
+filtered.sort(sorter);
+
 
   const total = filtered.length;
   const totalPages = Math.max(1, Math.ceil(total / driverPageSize));
@@ -1250,6 +1270,30 @@ function renderDrivers() {
     renderTrackSeasonCmp();
   });
 }
+let headerSortAsc = {};   // per-column direction
+window.headerSortKey = null;
+
+document
+  .querySelectorAll('#driversTable thead th[data-sort-key]')
+  .forEach(th => {
+    th.style.cursor = 'pointer';
+    th.addEventListener('click', () => {
+      const key = th.getAttribute('data-sort-key');
+      const current = headerSortAsc[key] || false;
+      headerSortAsc[key] = !current;          // toggle
+
+      window.headerSortKey = key;
+
+      // if ascending, invert sorter by swapping a/b once via flag
+      if (headerSortAsc[key]) {
+        window.headerSortAscending = true;
+      } else {
+        window.headerSortAscending = false;
+      }
+      renderDrivers();
+    });
+  });
+
 
 // top-level view switching
 document.querySelectorAll('#viewSelector .tab-btn').forEach(btn => {
