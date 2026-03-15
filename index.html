@@ -779,6 +779,9 @@ function buildPage(data) {
     const standings = d.standings || {};
     const discipline = d.discipline || {};
     const participation = d.participation || {};
+    const participation = d.participation || {};
+const completionPct = participation.totalRaces / participation.totalMajorRaces * 100 || 100;  // or whatever your completion formula is
+
 
     const totalPoints = Number(points.totalPoints || 0);
     const avgPerMajor = Number(points.averagePerMajorRace || points.averagePerEvent || 0);
@@ -793,23 +796,24 @@ function buildPage(data) {
     const fastRaceLaps = Number(racePositions.fastestRaceLaps || 0);
     const fastPoleLaps = Number(qualPositions.poles || 0);
 
-    return {
-      source: d,
-      name: d.driverName || infoD.realName || '',
-      nationality: infoD.nationality || '',
-      seasons: seasonsPart,
-      races: totalRaces,
-      totalPoints,
-      avgPerMajor,
-      wins,
-      podiums,
-      fastRaceLaps,
-      fastPoleLaps,
-      bestChampPos,
-      cleanPct,
-      reliabPct
-    };
-  }
+   return {
+  source: d,
+  name: d.driverName || infoD.realName || '',
+  nationality: infoD.nationality || '',
+  seasons: seasonsPart,
+  races: totalRaces,
+  totalPoints,
+  avgPerMajor,
+  wins,
+  podiums,
+  fastRaceLaps,
+  fastPoleLaps,
+  bestChampPos,
+  cleanPct,
+  reliabPct,
+  completionPct   // <-- new property added here
+};
+
 
   const driverRowsAll = driversSrc.map(deriveDriverRow); 
 // Merge all "richie chappell (DNU)" rows into "RichieChappe11"
