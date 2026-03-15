@@ -822,6 +822,14 @@ function deriveDriverRow(d) {
 
 
   const driverRowsAll = driversSrc.map(deriveDriverRow); 
+  // find driver with most races in this export
+const maxRaces = driverRowsAll.reduce((max, d) => Math.max(max, d.races || 0), 0) || 1;
+
+// add completionPct = races / maxRaces * 100
+driverRowsAll.forEach(d => {
+  d.completionPct = (d.races || 0) / maxRaces * 100;
+});
+
 // Merge all "richie chappell (DNU)" rows into "RichieChappe11"
 (function mergeRichieChappell() {
   const MAIN_NAME = 'RichieChappe11';
