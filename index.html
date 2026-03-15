@@ -423,7 +423,7 @@
     }
   </style>
 </head>
-let headerSortAsc = {}<body>
+}<body>
 <input id="addSeasonFileInput" type="file" accept=".json,application/json" style="display:none;">
 
 <header>
@@ -1269,9 +1269,12 @@ filtered.sort(sorter);
     renderTrackDetails();
     renderTrackSeasonCmp();
   });
-}
-let headerSortAsc = {};   // per-column direction
+}   // end of buildPage(data)
+
+// header click sorting for driver table
+let headerSortAsc = {};
 window.headerSortKey = null;
+window.headerSortAscending = false;
 
 document
   .querySelectorAll('#driversTable thead th[data-sort-key]')
@@ -1280,16 +1283,9 @@ document
     th.addEventListener('click', () => {
       const key = th.getAttribute('data-sort-key');
       const current = headerSortAsc[key] || false;
-      headerSortAsc[key] = !current;          // toggle
-
+      headerSortAsc[key] = !current;
       window.headerSortKey = key;
-
-      // if ascending, invert sorter by swapping a/b once via flag
-      if (headerSortAsc[key]) {
-        window.headerSortAscending = true;
-      } else {
-        window.headerSortAscending = false;
-      }
+      window.headerSortAscending = headerSortAsc[key];
       renderDrivers();
     });
   });
