@@ -1265,7 +1265,7 @@ filtered.sort(sorter);
   renderTrackDetails();
   renderTrackSeasonCmp();
 
-  trackSelect.addEventListener('change', () => {
+   trackSelect.addEventListener('change', () => {
     renderTrackDetails();
     renderTrackSeasonCmp();
   });
@@ -1276,20 +1276,21 @@ let headerSortAsc = {};
 window.headerSortKey = null;
 window.headerSortAscending = false;
 
-document
-  .querySelectorAll('#driversTable thead th[data-sort-key]')
-  .forEach(th => {
-    th.style.cursor = 'pointer';
-    th.addEventListener('click', () => {
-      const key = th.getAttribute('data-sort-key');
-      const current = headerSortAsc[key] || false;
-      headerSortAsc[key] = !current;
-      window.headerSortKey = key;
-      window.headerSortAscending = headerSortAsc[key];
-      renderDrivers();
+document.addEventListener('DOMContentLoaded', () => {
+  document
+    .querySelectorAll('#driversTable thead th[data-sort-key]')
+    .forEach(th => {
+      th.style.cursor = 'pointer';
+      th.addEventListener('click', () => {
+        const key = th.getAttribute('data-sort-key');
+        const current = headerSortAsc[key] || false;
+        headerSortAsc[key] = !current;
+        window.headerSortKey = key;
+        window.headerSortAscending = headerSortAsc[key];
+        renderDrivers();
+      });
     });
-  });
-
+});
 
 // top-level view switching
 document.querySelectorAll('#viewSelector .tab-btn').forEach(btn => {
