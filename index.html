@@ -964,20 +964,21 @@ function renderDrivers() {
     const reliab = (dr.reliabPct !== '' ?
       (dr.reliabPct.toFixed ? dr.reliabPct.toFixed(1) : dr.reliabPct) : '');
 
-    tr.innerHTML =
-      '<td>' + dr.name + '</td>' +
-      '<td>' + dr.nationality + '</td>' +
-      '<td>' + fmt80(dr.seasons, dr.completionPct) + '</td>' +
-      '<td>' + fmt80(dr.races, dr.completionPct) + '</td>' +
-      '<td>' + fmt80(dr.totalPoints, dr.completionPct) + '</td>' +
-      '<td>' + fmt80(avgPts, dr.completionPct) + '</td>' +
-      '<td>' + fmt80(dr.wins, dr.completionPct) + '</td>' +
-      '<td>' + fmt80(dr.podiums, dr.completionPct) + '</td>' +
-      '<td>' + fmt80(dr.fastRaceLaps, dr.completionPct) + '</td>' +
-      '<td>' + fmt80(dr.fastPoleLaps, dr.completionPct) + '</td>' +
-      '<td>' + fmt80(dr.bestChampPos, dr.completionPct) + '</td>' +
-      '<td>' + fmt80(clean, dr.completionPct) + '</td>' +
-      '<td>' + fmt80(reliab, dr.completionPct) + '</td>';
+  tr.innerHTML =
+  '<td>' + dr.name + '</td>' +
+  '<td>' + dr.nationality + '</td>' +
+  '<td>' + dr.seasons + '</td>' +
+  '<td>' + dr.races + '</td>' +
+  '<td>' + dr.totalPoints + '</td>' +
+  '<td>' + avgPts + '</td>' +
+  '<td>' + dr.wins + '</td>' +
+  '<td>' + dr.podiums + '</td>' +
+  '<td>' + dr.fastRaceLaps + '</td>' +
+  '<td>' + dr.fastPoleLaps + '</td>' +
+  '<td>' + dr.bestChampPos + '</td>' +
+  '<td>' + fmt80(cleanPct, dr.completionPct) + '</td>' +   // NC80 only here
+  '<td>' + reliabPct + '</td>';
+
 
     driversTableBody.appendChild(tr);
   });
