@@ -771,48 +771,54 @@ function buildPage(data) {
     return String(cats).split(',').map(c => c.trim()).filter(Boolean);
   }
 
-  function deriveDriverRow(d) {
-    const infoD = d.driverInfo || {};
-    const points = d.points || {};
-    const racePositions = d.racePositions || {};
-    const qualPositions = d.qualPositions || {};
-    const standings = d.standings || {};
-    const discipline = d.discipline || {};
-    const participation = d.participation || {};
-    const participation = d.participation || {};
-const completionPct = participation.totalRaces / participation.totalMajorRaces * 100 || 100;  // or whatever your completion formula is
+function deriveDriverRow(d) {
+  const infoD = d.driverInfo || {};
+  const points = d.points || {};
+  const racePositions = d.racePositions || {};
+  const qualPositions = d.qualPositions || {};
+  const standings = d.standings || {};
+  const discipline = d.discipline || {};
+  const participation = d.participation || {};
 
+  const totalPoints = Number(points.totalPoints || 0);
+  const avgPerMajor = Number(points.averagePerMajorRace || points.averagePerEvent || 0);
+  const wins = Number(racePositions.wins || 0);
+  const podiums = Number(racePositions.podiums || 0);
+  const bestChampPos = standings.bestPosition || '';
+  const cleanPct = discipline.cleanRacePercent != null ? discipline.cleanRacePercent : '';
+  const reliabPct = discipline.reliabilityPercent != null ? discipline.reliabilityPercent : '';
+  const seasonsPart = participation.seasonsParticipated || 0;
+  const totalRaces = participation.totalRaces || participation.totalMajorRaces || 0;
 
-    const totalPoints = Number(points.totalPoints || 0);
-    const avgPerMajor = Number(points.averagePerMajorRace || points.averagePerEvent || 0);
-    const wins = Number(racePositions.wins || 0);
-    const podiums = Number(racePositions.podiums || 0);
-    const bestChampPos = standings.bestPosition || '';
-    const cleanPct = discipline.cleanRacePercent != null ? discipline.cleanRacePercent : '';
-    const reliabPct = discipline.reliabilityPercent != null ? discipline.reliabilityPercent : '';
-    const seasonsPart = participation.seasonsParticipated || 0;
-    const totalRaces = participation.totalRaces || participation.totalMajorRaces || 0;
+  const fastRaceLaps = Number(racePositions.fastestRaceLaps || 0);
+  const fastPoleLaps = Number(qualPositions.poles || 0);
 
-    const fastRaceLaps = Number(racePositions.fastestRaceLaps || 0);
-    const fastPoleLaps = Number(qualPositions.poles || 0);
+  // if you already have participation.completionPct, use that instead
+  const completionPct = participation.completionPct != null
+    ? participation.completionPct
+    : (participation.totalMajorRaces
+        ? (totalRaces / participation.totalMajorRaces) * 100
+        : 100);
 
-   return {
-  source: d,
-  name: d.driverName || infoD.realName || '',
-  nationality: infoD.nationality || '',
-  seasons: seasonsPart,
-  races: totalRaces,
-  totalPoints,
-  avgPerMajor,
-  wins,
-  podiums,
-  fastRaceLaps,
-  fastPoleLaps,
-  bestChampPos,
-  cleanPct,
-  reliabPct,
-  completionPct   // <-- new property added here
-};
+  return {
+    source: d,
+    name: d.driverName || infoD.realName || '',
+    nationality: infoD.nationality || '',
+    seasons: seasonsPart,
+    races: totalRaces,
+    totalPoints,
+    avgPerMajor,
+    wins,
+    podiums,
+    fastRaceLaps,
+    fastPoleLaps,
+    bestChampPos,
+    cleanPct,
+    reliabPct,
+    completionPct       // <‑‑ new field
+  };
+}
+
 
 
   const driverRowsAll = driversSrc.map(deriveDriverRow); 
@@ -900,86 +906,86 @@ const completionPct = participation.totalRaces / participation.totalMajorRaces *
   let driverPageSize = 25;
 
   function getFilteredDriverRows() { return driverRowsAll; }
+function renderDrivers() {
+  const search = document.getElementById('driverSearch').value.toLowerCase();
+  const minSeasons = Number(document.getElementById('minSeasons').value || 1);
+  const sortKey = document.getElementById('driverSort').value;
 
-  function renderDrivers() {
-    const search = document.getElementById('driverSearch').value.toLowerCase();
-    const minSeasons = Number(document.getElementById('minSeasons').value || 1);
-    const sortKey = document.getElementById('driverSort').value;
+  const rows = getFilteredDriverRows();
+  const filtered = rows.filter(dr => {
+    if (dr.seasons < minSeasons) return false;
+    const text = (dr.name + ' ' + dr.nationality).toLowerCase();
+    if (search && !text.includes(search)) return false;
+    return true;
+  });
 
-    const rows = getFilteredDriverRows();
-    const filtered = rows.filter(dr => {
-      if (dr.seasons < minSeasons) return false;
-      const text = (dr.name + ' ' + dr.nationality).toLowerCase();
-      if (search && !text.includes(search)) return false;
-      return true;
-    });
+  const sorters = {
+    points: (a, b) => b.totalPoints - a.totalPoints,
+    avgPoints: (a, b) => b.avgPerMajor - a.avgPerMajor,
+    wins: (a, b) => b.wins - a.wins,
+    podiums: (a, b) => b.podiums - a.podiums,
+    fastRace: (a, b) => b.fastRaceLaps - a.fastRaceLaps,
+    fastPole: (a, b) => b.fastPoleLaps - a.fastPoleLaps,
+    clean: (a, b) => (b.cleanPct || 0) - (a.cleanPct || 0)
+  };
+  filtered.sort(sorters[sortKey] || sorters.points);
 
-    const sorters = {
-      points: (a, b) => b.totalPoints - a.totalPoints,
-      avgPoints: (a, b) => b.avgPerMajor - a.avgPerMajor,
-      wins: (a, b) => b.wins - a.wins,
-      podiums: (a, b) => b.podiums - a.podiums,
-      fastRace: (a, b) => b.fastRaceLaps - a.fastRaceLaps,
-      fastPole: (a, b) => b.fastPoleLaps - a.fastPoleLaps,
-      clean: (a, b) => (b.cleanPct || 0) - (a.cleanPct || 0)
-    };
-    filtered.sort(sorters[sortKey] || sorters.points);
+  const total = filtered.length;
+  const totalPages = Math.max(1, Math.ceil(total / driverPageSize));
+  if (driverCurrentPage > totalPages) driverCurrentPage = totalPages;
+  if (driverCurrentPage < 1) driverCurrentPage = 1;
 
-    const total = filtered.length;
-    const totalPages = Math.max(1, Math.ceil(total / driverPageSize));
-    if (driverCurrentPage > totalPages) driverCurrentPage = totalPages;
-    if (driverCurrentPage < 1) driverCurrentPage = 1;
+  const start = (driverCurrentPage - 1) * driverPageSize;
+  const pageRows = filtered.slice(start, start + driverPageSize);
 
-    const start = (driverCurrentPage - 1) * driverPageSize;
-    const pageRows = filtered.slice(start, start + driverPageSize);
-
-    driversTableBody.innerHTML = '';
-
-      // Add this helper locally (fixes scope issue)
+  // helper local to renderDrivers
   function fmt80(value, completionPct) {
     if (completionPct < 80) return 'NC80';
     return value;
   }
+
+  driversTableBody.innerHTML = '';
   pageRows.forEach(dr => {
-  const tr = document.createElement('tr');
-  tr.dataset.driverName = dr.name;
-  if (dr.name === selectedDriverName) tr.classList.add('driver-row-selected');
+    const tr = document.createElement('tr');
+    tr.dataset.driverName = dr.name;
+    if (dr.name === selectedDriverName) tr.classList.add('driver-row-selected');
 
-  const avgPts = dr.avgPerMajor.toFixed ? dr.avgPerMajor.toFixed(1) : dr.avgPerMajor;
-  const cleanPct = (dr.cleanPct !== '' ?
-    (dr.cleanPct.toFixed ? dr.cleanPct.toFixed(1) : dr.cleanPct) : '');
-  const reliabPct = (dr.reliabPct !== '' ?
-    (dr.reliabPct.toFixed ? dr.reliabPct.toFixed(1) : dr.reliabPct) : '');
+    const avgPts = dr.avgPerMajor.toFixed ? dr.avgPerMajor.toFixed(1) : dr.avgPerMajor;
+    const clean = (dr.cleanPct !== '' ?
+      (dr.cleanPct.toFixed ? dr.cleanPct.toFixed(1) : dr.cleanPct) : '');
+    const reliab = (dr.reliabPct !== '' ?
+      (dr.reliabPct.toFixed ? dr.reliabPct.toFixed(1) : dr.reliabPct) : '');
 
-  tr.innerHTML =
-    '<td>' + dr.name + '</td>' +
-    '<td>' + dr.nationality + '</td>' +
-    '<td>' + fmt80(dr.seasons, dr.participationPct) + '</td>' +
-    '<td>' + fmt80(dr.races, dr.participationPct) + '</td>' +
-    '<td>' + fmt80(dr.totalPoints, dr.participationPct) + '</td>' +
-    '<td>' + fmt80(avgPts, dr.participationPct) + '</td>' +
-    '<td>' + fmt80(dr.wins, dr.participationPct) + '</td>' +
-    '<td>' + fmt80(dr.podiums, dr.participationPct) + '</td>' +
-    '<td>' + fmt80(dr.fastRaceLaps, dr.participationPct) + '</td>' +
-    '<td>' + fmt80(dr.fastPoleLaps, dr.participationPct) + '</td>' +
-    '<td>' + fmt80(dr.bestChampPos, dr.participationPct) + '</td>' +
-    '<td>' + fmt80(cleanPct, dr.participationPct) + '</td>' +
-    '<td>' + fmt80(reliabPct, dr.participationPct) + '</td>';
+    tr.innerHTML =
+      '<td>' + dr.name + '</td>' +
+      '<td>' + dr.nationality + '</td>' +
+      '<td>' + fmt80(dr.seasons, dr.completionPct) + '</td>' +
+      '<td>' + fmt80(dr.races, dr.completionPct) + '</td>' +
+      '<td>' + fmt80(dr.totalPoints, dr.completionPct) + '</td>' +
+      '<td>' + fmt80(avgPts, dr.completionPct) + '</td>' +
+      '<td>' + fmt80(dr.wins, dr.completionPct) + '</td>' +
+      '<td>' + fmt80(dr.podiums, dr.completionPct) + '</td>' +
+      '<td>' + fmt80(dr.fastRaceLaps, dr.completionPct) + '</td>' +
+      '<td>' + fmt80(dr.fastPoleLaps, dr.completionPct) + '</td>' +
+      '<td>' + fmt80(dr.bestChampPos, dr.completionPct) + '</td>' +
+      '<td>' + fmt80(clean, dr.completionPct) + '</td>' +
+      '<td>' + fmt80(reliab, dr.completionPct) + '</td>';
 
-  driversTableBody.appendChild(tr);
-});
+    driversTableBody.appendChild(tr);
+  });
 
-
-    const infoEl = document.getElementById('driverPageInfo');
-    if (infoEl) {
-      infoEl.textContent =
-        'Page ' + driverCurrentPage + ' of ' + totalPages + ' • ' + total + ' drivers';
-    }
-    const prevBtn = document.getElementById('driverPrevPage');
-    const nextBtn = document.getElementById('driverNextPage');
-    if (prevBtn) prevBtn.disabled = driverCurrentPage <= 1;
-    if (nextBtn) nextBtn.disabled = driverCurrentPage >= totalPages;
+  const infoEl = document.getElementById('driverPageInfo');
+  if (infoEl) {
+    infoEl.textContent =
+      'Page ' + driverCurrentPage + ' of ' + totalPages + ' • ' + total + ' drivers';
   }
+  const prevBtn = document.getElementById('driverPrevPage');
+  const nextBtn = document.getElementById('driverNextPage');
+  if (prevBtn) prevBtn.disabled = driverCurrentPage <= 1;
+  if (nextBtn) nextBtn.disabled = driverCurrentPage >= totalPages;
+}
+
+ 
 
   function renderDriverCard(driverName) {
     const rows = getFilteredDriverRows();
