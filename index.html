@@ -844,6 +844,11 @@ function buildPage(data) {
     };
     driverRowsAll.push(mainRow);
   }
+  // helper: show NC80 when driver has < 80% completion
+function fmt80(value, completionPct) {
+  if (completionPct < 80) return 'NC80';
+  return value;
+}
 
   // Collect all alias rows
   const aliasRows = driverRowsAll.filter(
@@ -929,34 +934,35 @@ function buildPage(data) {
     const pageRows = filtered.slice(start, start + driverPageSize);
 
     driversTableBody.innerHTML = '';
-    pageRows.forEach(dr => {
-      const tr = document.createElement('tr');
-      tr.dataset.driverName = dr.name;
-      if (dr.name === selectedDriverName) tr.classList.add('driver-row-selected');
-      tr.innerHTML =
-        '<td>' + dr.name + '</td>' +
-        '<td>' + dr.nationality + '</td>' +
-        '<td>' + dr.seasons + '</td>' +
-        '<td>' + dr.races + '</td>' +
-        '<td>' + dr.totalPoints + '</td>' +
-        '<td>' +
-          (dr.avgPerMajor.toFixed ? dr.avgPerMajor.toFixed(1) : dr.avgPerMajor) +
-        '</td>' +
-        '<td>' + dr.wins + '</td>' +
-        '<td>' + dr.podiums + '</td>' +
-        '<td>' + dr.fastRaceLaps + '</td>' +
-        '<td>' + dr.fastPoleLaps + '</td>' +
-        '<td>' + dr.bestChampPos + '</td>' +
-        '<td>' +
-          (dr.cleanPct !== '' ?
-            (dr.cleanPct.toFixed ? dr.cleanPct.toFixed(1) : dr.cleanPct) : '') +
-        '</td>' +
-        '<td>' +
-          (dr.reliabPct !== '' ?
-            (dr.reliabPct.toFixed ? dr.reliabPct.toFixed(1) : dr.reliabPct) : '') +
-        '</td>';
-      driversTableBody.appendChild(tr);
-    });
+  pageRows.forEach(dr => {
+  const tr = document.createElement('tr');
+  tr.dataset.driverName = dr.name;
+  if (dr.name === selectedDriverName) tr.classList.add('driver-row-selected');
+
+  const avgPts = dr.avgPerMajor.toFixed ? dr.avgPerMajor.toFixed(1) : dr.avgPerMajor;
+  const cleanPct = (dr.cleanPct !== '' ?
+    (dr.cleanPct.toFixed ? dr.cleanPct.toFixed(1) : dr.cleanPct) : '');
+  const reliabPct = (dr.reliabPct !== '' ?
+    (dr.reliabPct.toFixed ? dr.reliabPct.toFixed(1) : dr.reliabPct) : '');
+
+  tr.innerHTML =
+    '<td>' + dr.name + '</td>' +
+    '<td>' + dr.nationality + '</td>' +
+    '<td>' + fmt80(dr.seasons, dr.participationPct) + '</td>' +
+    '<td>' + fmt80(dr.races, dr.participationPct) + '</td>' +
+    '<td>' + fmt80(dr.totalPoints, dr.participationPct) + '</td>' +
+    '<td>' + fmt80(avgPts, dr.participationPct) + '</td>' +
+    '<td>' + fmt80(dr.wins, dr.participationPct) + '</td>' +
+    '<td>' + fmt80(dr.podiums, dr.participationPct) + '</td>' +
+    '<td>' + fmt80(dr.fastRaceLaps, dr.participationPct) + '</td>' +
+    '<td>' + fmt80(dr.fastPoleLaps, dr.participationPct) + '</td>' +
+    '<td>' + fmt80(dr.bestChampPos, dr.participationPct) + '</td>' +
+    '<td>' + fmt80(cleanPct, dr.participationPct) + '</td>' +
+    '<td>' + fmt80(reliabPct, dr.participationPct) + '</td>';
+
+  driversTableBody.appendChild(tr);
+});
+
 
     const infoEl = document.getElementById('driverPageInfo');
     if (infoEl) {
