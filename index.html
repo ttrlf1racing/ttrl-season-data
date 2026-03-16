@@ -480,49 +480,54 @@
     <p class="click-note">Click on a driver row for more details.</p>
 
     <div class="filters">
-      <label>
-        Search:
-        <input type="text" id="driverSearch" placeholder="Name, nationality, race num">
-      </label>
-      <label>
-        Min seasons:
-        <input type="number" id="minSeasons" min="1" value="1" style="width:70px;">
-      </label>
-      <label>
-        Sort by:
-        <select id="driverSort">
-          <option value="points">Total points</option>
-          <option value="avgPoints">Avg pts</option>
-          <option value="wins">Wins</option>
-          <option value="podiums">Podiums</option>
-          <option value="fastRace">Fast race laps</option>
-          <option value="fastPole">Fast pole laps</option>
-          <option value="clean">Clean race %</option>
-        </select>
-      </label>
-    </div>
+
+  <label>
+    Driver:
+    <select id="driverFilter">
+      <option value="">All Drivers</option>
+    </select>
+  </label>
+
+  <label>
+    Nat:
+    <select id="natFilter">
+      <option value="">All</option>
+    </select>
+  </label>
+
+  <label>
+    Search:
+    <input type="text" id="driverSearch" placeholder="Search driver">
+  </label>
+
+  <label>
+    Min seasons:
+    <input type="number" id="minSeasons" min="1" value="1" style="width:70px;">
+  </label>
+
+</div>
 
     <div class="driver-layout">
       <div class="driver-layout-main">
         <div class="scroll-body">
-          <table id="driversTable">
-            <thead>
-              <tr>
-                <th>Driver</th>
-                <th>Nat.</th>
-                <th>Seasons</th>
-                <th>Races</th>
-                <th>Total pts</th>
-                <th>Avg pts</th>
-                <th>Wins</th>
-                <th>Podiums</th>
-                <th>Fast race laps</th>
-                <th>Fast pole laps</th>
-                <th>Best champ pos</th>
-                <th>Clean %</th>
-                <th>Reliab. %</th>
-              </tr>
-            </thead>
+ <table id="driversTable">
+  <thead>
+    <tr>
+      <th data-sort="name">Driver</th>
+      <th data-sort="nationality">Nat.</th>
+      <th data-sort="seasons">Seasons</th>
+      <th data-sort="races">Races</th>
+      <th data-sort="totalPoints">Total pts</th>
+      <th data-sort="avgPerMajor">Avg pts</th>
+      <th data-sort="wins">Wins</th>
+      <th data-sort="podiums">Podiums</th>
+      <th data-sort="fastRaceLaps">Fast race laps</th>
+      <th data-sort="fastPoleLaps">Fast pole laps</th>
+      <th data-sort="bestChampPos">Best champ pos</th>
+      <th data-sort="cleanPct">Clean %</th>
+      <th data-sort="reliabPct">Reliab. %</th>
+    </tr>
+  </thead>
             <tbody></tbody>
           </table>
         </div>
@@ -825,6 +830,95 @@ function buildPage(data) {
     d => (d.name || '').toLowerCase() === mainLower
   );
 
+  let currentSortColumn = "totalPoints";
+let sortDirection = "desc";
+
+function populateDriverFilters() {
+
+  const driverFilter = document.getElementById("driverFilter");
+  const natFilter = document.getElementById("natFilter");
+
+  const drivers = [...new Set(driverRowsAll.map(d => d.name))].sort();
+  const nats = [...new Set(driverRowsAll.map(d => d.nationality).filter(Boolean))].sort();
+
+  driverFilter.innerHTML = '<option value="">All Drivers</option>';
+  drivers.forEach(d=>{
+    const opt=document.createElement("option");
+    opt.value=d;
+    opt.textContent=d;
+    driverFilter.appendChild(opt);
+  });
+
+  natFilter.innerHTML = '<option value="">All</option>';
+  nats.forEach(n=>{
+    const opt=document.createElement("option");
+    opt.value=n;
+    opt.textContent=n;
+    natFilter.appendChild(opt);
+  });
+
+}
+
+function getFilteredDriverRows(){
+
+  const driverValue=document.getElementById("driverFilter").value;
+  const natValue=document.getElementById("natFilter").value;
+
+  return driverRowsAll.filter(d=>{
+
+    if(driverValue && d.name!==driverValue) return false;
+    if(natValue && d.nationality!==natValue) return false;
+
+    return true;
+
+  });
+
+}
+
+function sortDrivers(rows){
+
+  return rows.sort((a,b)=>{
+
+    let valA=a[currentSortColumn];
+    let valB=b[currentSortColumn];
+
+    if(typeof valA==="string") valA=valA.toLowerCase();
+    if(typeof valB==="string") valB=valB.toLowerCase();
+
+    if(valA<valB) return sortDirection==="asc"?-1:1;
+    if(valA>valB) return sortDirection==="asc"?1:-1;
+
+    return 0;
+
+  });
+
+}
+
+function setupColumnSorting(){
+
+  document.querySelectorAll("#driversTable th").forEach(th=>{
+
+    th.addEventListener("click",()=>{
+
+      const col=th.dataset.sort;
+      if(!col) return;
+
+      if(currentSortColumn===col){
+        sortDirection = sortDirection==="desc" ? "asc" : "desc";
+      }else{
+        currentSortColumn = col;
+        sortDirection = "desc";
+      }
+
+      driverCurrentPage=1;
+      renderDrivers();
+
+    });
+
+  });
+
+}
+
   if (!mainRow) {
     mainRow = {
       source: {},
@@ -888,6 +982,8 @@ function buildPage(data) {
     }
   }
 })();
+
+
 
 
   let selectedDriverName = null;
@@ -1087,7 +1183,9 @@ function buildPage(data) {
     renderDrivers();
   });
 
-  renderDrivers();
+  populateDriverFilters();
+setupColumnSorting();
+renderDrivers();
 
   // ----- TRACKS -----
   const trackSelect = document.getElementById('trackSelect');
