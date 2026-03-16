@@ -1061,35 +1061,6 @@ function getFilteredDriverRows() {
     return true;
   });
 
-  // existing sorters object and headerSortKey logic remain unchanged
-  const sorters = {
-    name: (a, b) => a.name.localeCompare(b.name),
-    nat: (a, b) => a.nationality.localeCompare(b.nationality),
-    seasons: (a, b) => b.seasons - a.seasons,
-    races: (a, b) => b.races - a.races,
-    points: (a, b) => b.totalPoints - a.totalPoints,
-    avgPoints: (a, b) => b.avgPerMajor - a.avgPerMajor,
-    wins: (a, b) => b.wins - a.wins,
-    podiums: (a, b) => b.podiums - a.podiums,
-    fastRace: (a, b) => b.fastRaceLaps - a.fastRaceLaps,
-    fastPole: (a, b) => b.fastPoleLaps - a.fastPoleLaps,
-    bestPos: (a, b) => {
-      const av = Number(a.bestChampPos || 9999);
-      const bv = Number(b.bestChampPos || 9999);
-      return av - bv;
-    },
-    clean: (a, b) => (b.cleanPct || 0) - (a.cleanPct || 0),
-    reliab: (a, b) => (b.reliabPct || 0) - (a.reliabPct || 0)
-  };
-
-  const effectiveSortKey = window.headerSortKey || sortKey;
-  const baseSorter = sorters[effectiveSortKey] || sorters.points;
-  const sorter = window.headerSortAscending
-    ? (a, b) => baseSorter(b, a)
-    : baseSorter;
-
-  rows.sort(sorter);
-
   return rows;
 }
 
@@ -1331,6 +1302,60 @@ if (f_nat) {
       if (e.target === driverModal) driverModal.classList.remove('open');
     });
   }
+
+  function renderDrivers() {
+  const rows = getFilteredDriverRows();  // already filtered + sorted
+
+  const total = rows.length;
+  const totalPages = Math.max(1, Math.ceil(total / driverPageSize));
+  if (driverCurrentPage > totalPages) driverCurrentPage = totalPages;
+  if (driverCurrentPage < 1) driverCurrentPage = 1;
+
+  const start = (driverCurrentPage - 1) * driverPageSize;
+  const pageRows = rows.slice(start, start + driverPageSize);
+
+  function fmt80(value, completionPct) {
+    if (completionPct < 80) return 'NC80';
+    return value;
+  }
+
+  driversTableBody.innerHTML = '';
+  pageRows.forEach(dr => {
+    const tr = document.createElement('tr');
+    tr.dataset.driverName = dr.name;
+    if (dr.name === selectedDriverName) tr.classList.add('driver-row-selected');
+
+    const avgPts = dr.avgPerMajor.toFixed ? dr.avgPerMajor.toFixed(1) : dr.avgPerMajor;
+    const cleanPct = (dr.cleanPct !== '' ?
+      (dr.cleanPct.toFixed ? dr.cleanPct.toFixed(1) : dr.cleanPct) : '');
+    const reliabPct = (dr.reliabPct !== '' ?
+      (dr.reliabPct.toFixed ? dr.reliabPct.toFixed(1) : dr.reliabPct) : '');
+
+    tr.innerHTML =
+      '<td>' + dr.name + '</td>' +
+      '<td>' + (dr.nationality || '') + '</td>' +
+      '<td>' + dr.seasons + '</td>' +
+      '<td>' + dr.races + '</td>' +
+      '<td>' + dr.totalPoints + '</td>' +
+      '<td>' + avgPts + '</td>' +
+      '<td>' + dr.wins + '</td>' +
+      '<td>' + dr.podiums + '</td>' +
+      '<td>' + dr.fastRaceLaps + '</td>' +
+      '<td>' + dr.fastPoleLaps + '</td>' +
+      '<td>' + (dr.bestChampPos || '') + '</td>' +
+      '<td>' + fmt80(cleanPct, dr.completionPct) + '</td>' +
+      '<td>' + reliabPct + '</td>';
+
+    driversTableBody.appendChild(tr);
+  });
+
+  const infoEl = document.getElementById('driverPageInfo');
+  if (infoEl) {
+    infoEl.textContent =
+      'Page ' + driverCurrentPage + ' of ' + totalPages + ' • ' + total + ' drivers';
+  }
+}
+
 
   document.getElementById('driverSearch').addEventListener('input', () => { driverCurrentPage = 1; renderDrivers(); });
   document.getElementById('minSeasons').addEventListener('change', () => { driverCurrentPage = 1; renderDrivers(); });
