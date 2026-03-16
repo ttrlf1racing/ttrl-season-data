@@ -24,6 +24,7 @@
       width:auto;
       display:block;
       filter:drop-shadow(0 0 8px rgba(0,0,0,0.8));
+      transition:transform 0.25s ease-out;
     }
     .header-left-text h1 { margin:0; font-size:22px; }
     .header-left-text p { margin:4px 0; color:#c5c6c7; font-size:13px; }
@@ -72,379 +73,6 @@
       color:#e5e7eb;
       opacity:0.9;
       text-align:center;
-    }
-
-    .header-meta {
-      font-size:12px;
-      text-align:right;
-      color:#9ca3af;
-      min-width:195px;
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-    }
-
-    main { padding:20px 24px 40px; max-width:1200px; margin:0 auto; }
-
-    .cards { display:flex; flex-wrap:wrap; gap:12px; margin-bottom:24px; }
-    .card { background:#10151f; padding:12px 16px; border-radius:6px; min-width:160px; border-top:3px solid #ffcf00; }
-    .card-title { font-size:13px; text-transform:uppercase; color:#c5c6c7; }
-    .card-value { font-size:20px; margin-top:4px; }
-
-    h2 { margin-top:24px; border-bottom:2px solid #007bff; padding-bottom:4px; font-size:18px; }
-
-    table { width:100%; border-collapse:collapse; margin-top:10px; font-size:13px; }
-    th, td { padding:6px 8px; text-align:left; border-bottom:1px solid #222831; }
-    th { background:#11151f; position:sticky; top:0; z-index:1; }
-    tr:nth-child(even) td { background:#0b0f18; }
-    tr:hover td { background:#151b26; }
-
-    /* Column Filter Styling */
-    .table-filter-select {
-      width: 100%;
-      margin-top: 6px;
-      font-size: 11px;
-      background: #1a1f2b;
-      color: #f5f5f5;
-      border: 1px solid #3b4252;
-      border-radius: 4px;
-      padding: 3px;
-      cursor: pointer;
-    }
-
-    .filters { display:flex; flex-wrap:wrap; gap:8px; margin:12px 0 6px; align-items:center; }
-    .filters input, .filters select, .filters button {
-      padding:4px 6px;
-      font-size:13px;
-      border-radius:4px;
-      border:1px solid #3b4252;
-      background:#050608;
-      color:#f5f5f5;
-    }
-    .filters label { font-size:13px; color:#c5c6c7; }
-
-    .scroll-body {
-      max-height:600px;
-      overflow-y:auto;
-      display:block;
-    }
-    .scroll-body thead, .scroll-body tbody, .scroll-body tr {
-      display:table;
-      width:100%;
-      table-layout:fixed;
-    }
-
-    /* Modals */
-    .driver-modal {
-      position:fixed;
-      inset:0;
-      display:none;
-      align-items:center;
-      justify-content:center;
-      z-index:50;
-    }
-    .driver-modal.open { display:flex; }
-    .driver-modal-backdrop {
-      position:absolute;
-      inset:0;
-      background:rgba(0,0,0,0.65);
-      backdrop-filter:blur(6px);
-    }
-    .driver-modal-card {
-      position:relative;
-      max-width:820px;
-      width:92%;
-      background:#10151f;
-      padding:24px;
-      border-radius:12px;
-      border:1px solid #3b82f6;
-    }
-    .driver-modal-close {
-      position:absolute;
-      top:10px;
-      right:10px;
-      background:none;
-      border:none;
-      color:white;
-      font-size:24px;
-      cursor:pointer;
-    }
-
-    .tab-btn {
-      background:#11151f;
-      border:1px solid #3b4252;
-      color:#f5f5f5;
-      padding:6px 12px;
-      border-radius:4px;
-      cursor:pointer;
-    }
-    .tab-btn.active { background:#007bff; border-color:#007bff; }
-    section[data-view] { display:none; }
-    section[data-view].active { display:block; }
-  </style>
-</head>
-<body>
-
-<header>
-  <div class="header-top">
-    <div class="logo-wrap">
-      <img src="ttrl-logo.png" alt="TTRL logo" class="logo-img">
-      <div class="header-left-text">
-        <h1 id="leagueTitle">TTRL Multi-Season Statistics</h1>
-        <p id="raceDayLine">Choose race day:</p>
-        <select id="fileSelect"><option value="">Select race day…</option></select>
-      </div>
-    </div>
-    <div class="header-centre">
-      <div class="header-title-row">
-        <span class="header-title-red">TTRL</span>
-        <span class="header-title-blue">MULTI‑SEASON</span>
-        <span class="header-title-yellow">INSIGHTS</span>
-      </div>
-      <div class="header-subline">CROSS‑ERA DRIVER & TRACK STATS</div>
-    </div>
-    <div class="header-meta"><div id="fileMeta">No file loaded</div></div>
-  </div>
-</header>
-
-<main>
-  <section id="overviewSection">
-    <h2>Overview</h2>
-    <div class="cards" id="overviewCards"></div>
-  </section>
-
-  <section id="viewSelector" class="filters">
-    <button class="tab-btn active" data-view="drivers">Drivers</button>
-    <button class="tab-btn" data-view="tracks">Tracks</button>
-  </section>
-
-  <section id="driversSection" data-view="drivers" class="active">
-    <h2>Drivers</h2>
-    <div class="filters">
-      <label>Search: <input type="text" id="driverSearch" placeholder="Name or Nat..."></label>
-      <label>Min seasons: <input type="number" id="minSeasons" min="1" value="1" style="width:60px;"></label>
-      <label>Sort Page By: 
-        <select id="driverSort">
-          <option value="totalPoints">Total points</option>
-          <option value="avgPerMajor">Avg pts</option>
-          <option value="wins">Wins</option>
-          <option value="podiums">Podiums</option>
-        </select>
-      </label>
-    </div>
-
-    <div class="scroll-body">
-      <table id="driversTable">
-        <thead>
-          <tr>
-            <th>Driver<br><select class="table-filter-select" data-col="name"><option value="">All</option></select></th>
-            <th>Nat.<br><select class="table-filter-select" data-col="nationality"><option value="">All</option></select></th>
-            <th>Seasons<br><select class="table-filter-select" data-col="seasons"><option value="">All</option></select></th>
-            <th>Races<br><select class="table-filter-select" data-col="races"><option value="">All</option></select></th>
-            <th>Total pts<br><select class="table-filter-select" data-col="totalPoints"><option value="">All</option></select></th>
-            <th>Avg pts<br><select class="table-filter-select" data-col="avgPerMajor"><option value="">All</option></select></th>
-            <th>Wins<br><select class="table-filter-select" data-col="wins"><option value="">All</option></select></th>
-            <th>Podiums<br><select class="table-filter-select" data-col="podiums"><option value="">All</option></select></th>
-            <th>Fast race laps<br><select class="table-filter-select" data-col="fastRaceLaps"><option value="">All</option></select></th>
-            <th>Fast pole laps<br><select class="table-filter-select" data-col="fastPoleLaps"><option value="">All</option></select></th>
-            <th>Best champ pos<br><select class="table-filter-select" data-col="bestChampPos"><option value="">All</option></select></th>
-            <th>Clean %<br><select class="table-filter-select" data-col="cleanPct"><option value="">All</option></select></th>
-            <th>Reliab. %<br><select class="table-filter-select" data-col="reliabPct"><option value="">All</option></select></th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
-
-    <div class="filters" style="justify-content: space-between; margin-top: 10px;">
-      <span id="driverPageInfo"></span>
-      <div>
-        <button id="driverPrevPage" class="tab-btn">&lt; Prev</button>
-        <button id="driverNextPage" class="tab-btn">Next &gt;</button>
-        <select id="driverPageSize">
-          <option value="10">10 / page</option>
-          <option value="25" selected>25 / page</option>
-          <option value="50">50 / page</option>
-        </select>
-      </div>
-    </div>
-  </section>
-</main>
-
-<div id="driverModal" class="driver-modal">
-  <div class="driver-modal-backdrop"></div>
-  <div class="driver-modal-card">
-    <button id="driverModalClose" class="driver-modal-close">&times;</button>
-    <h3 id="dcName"></h3>
-    <p id="dcMeta"></p>
-    <p id="dcSummary"></p>
-  </div>
-</div>
-
-<script>
-let driverRowsAll = [];
-let driverCurrentPage = 1;
-let driverPageSize = 25;
-
-const EXPORT_FILES = [
-  { value: 'export_data/sunday_races.json', label: 'Sunday races' },
-  { value: 'export_data/wed_races.json',    label: 'Wednesday races' }
-];
-
-// 1. Populate initial file selector
-const fileSelect = document.getElementById('fileSelect');
-EXPORT_FILES.forEach(f => {
-  const opt = document.createElement('option');
-  opt.value = f.value; opt.textContent = f.label;
-  fileSelect.appendChild(opt);
-});
-
-/**
- * CORE LOGIC: Populate the column dropdowns
- * Driver & Nat = Alphabetical
- * Others = Highest to Lowest
- */
-function populateTableFilters() {
-    const filters = document.querySelectorAll('.table-filter-select');
-    filters.forEach(select => {
-        const key = select.dataset.col;
-        
-        // Extract unique values
-        let uniqueValues = [...new Set(driverRowsAll.map(row => {
-            const val = row[key];
-            if (typeof val === 'number' && !Number.isInteger(val)) return val.toFixed(1);
-            return val;
-        }))].filter(v => v !== "" && v !== null && v !== undefined);
-
-        // SORTING LOGIC
-        if (key === 'name' || key === 'nationality') {
-            uniqueValues.sort((a, b) => String(a).localeCompare(String(b)));
-        } else {
-            uniqueValues.sort((a, b) => parseFloat(b) - parseFloat(a));
-        }
-
-        // Fill Select
-        select.innerHTML = '<option value="">All</option>';
-        uniqueValues.forEach(val => {
-            const opt = document.createElement('option');
-            opt.value = val; opt.textContent = val;
-            select.appendChild(opt);
-        });
-    });
-}
-
-function renderDrivers() {
-    const search = document.getElementById('driverSearch').value.toLowerCase();
-    const minSeasons = parseInt(document.getElementById('minSeasons').value) || 0;
-    const sortKey = document.getElementById('driverSort').value;
-
-    // Get active dropdown filters
-    const activeFilters = {};
-    document.querySelectorAll('.table-filter-select').forEach(s => {
-        if (s.value) activeFilters[s.dataset.col] = s.value;
-    });
-
-    // Filtering
-    const filtered = driverRowsAll.filter(dr => {
-        if (dr.seasons < minSeasons) return false;
-        if (search && !(dr.name.toLowerCase().includes(search) || dr.nationality.toLowerCase().includes(search))) return false;
-        
-        for (const key in activeFilters) {
-            let rowVal = dr[key];
-            if (typeof rowVal === 'number' && !Number.isInteger(rowVal)) rowVal = rowVal.toFixed(1);
-            if (String(rowVal) !== activeFilters[key]) return false;
-        }
-        return true;
-    });
-
-    // Sort the results for the current view
-    filtered.sort((a, b) => (parseFloat(b[sortKey]) || 0) - (parseFloat(a[sortKey]) || 0));
-
-    // Pagination
-    const totalPages = Math.ceil(filtered.length / driverPageSize) || 1;
-    if (driverCurrentPage > totalPages) driverCurrentPage = totalPages;
-    
-    const start = (driverCurrentPage - 1) * driverPageSize;
-    const pageRows = filtered.slice(start, start + driverPageSize);
-
-    // Render Table
-    const tbody = document.querySelector('#driversTable tbody');
-    tbody.innerHTML = '';
-    pageRows.forEach(dr => {
-        const tr = document.createElement('tr');
-        tr.onclick = () => openModal(dr);
-        tr.innerHTML = `
-            <td>${dr.name}</td><td>${dr.nationality}</td><td>${dr.seasons}</td>
-            <td>${dr.races}</td><td>${dr.totalPoints}</td><td>${dr.avgPerMajor.toFixed(1)}</td>
-            <td>${dr.wins}</td><td>${dr.podiums}</td><td>${dr.fastRaceLaps}</td>
-            <td>${dr.fastPoleLaps}</td><td>${dr.bestChampPos}</td>
-            <td>${dr.cleanPct.toFixed(1)}</td><td>${dr.reliabPct.toFixed(1)}</td>
-        `;
-        tbody.appendChild(tr);
-    });
-
-    document.getElementById('driverPageInfo').textContent = `Page ${driverCurrentPage} of ${totalPages} (${filtered.length} drivers)`;
-}
-
-function buildPage(data) {
-    const multi = data.multiSeasonStatistics || {};
-    const driversSrc = multi.drivers || [];
-    
-    // Process Data
-    driverRowsAll = driversSrc.map(d => ({
-        name: d.driverName || 'Unknown',
-        nationality: d.driverInfo?.nationality || '',
-        seasons: d.participation?.seasonsParticipated || 0,
-        races: d.participation?.totalRaces || 0,
-        totalPoints: d.points?.totalPoints || 0,
-        avgPerMajor: d.points?.averagePerMajorRace || 0,
-        wins: d.racePositions?.wins || 0,
-        podiums: d.racePositions?.podiums || 0,
-        fastRaceLaps: d.racePositions?.fastestRaceLaps || 0,
-        fastPoleLaps: d.qualPositions?.poles || 0,
-        bestChampPos: d.standings?.bestPosition || 'N/A',
-        cleanPct: d.discipline?.cleanRacePercent || 0,
-        reliabPct: d.discipline?.reliabilityPercent || 0
-    }));
-
-    populateTableFilters();
-    renderDrivers();
-}
-
-// Listeners
-document.getElementById('fileSelect').onchange = (e) => {
-    if (!e.target.value) return;
-    fetch(e.target.value).then(res => res.json()).then(buildPage);
-};
-
-document.querySelectorAll('.table-filter-select').forEach(sel => {
-    sel.onchange = () => { driverCurrentPage = 1; renderDrivers(); };
-});
-
-document.getElementById('driverSearch').oninput = () => { driverCurrentPage = 1; renderDrivers(); };
-document.getElementById('minSeasons').oninput = () => { driverCurrentPage = 1; renderDrivers(); };
-document.getElementById('driverSort').onchange = () => renderDrivers();
-document.getElementById('driverPrevPage').onclick = () => { if (driverCurrentPage > 1) { driverCurrentPage--; renderDrivers(); } };
-document.getElementById('driverNextPage').onclick = () => { driverCurrentPage++; renderDrivers(); };
-document.getElementById('driverPageSize').onchange = (e) => { driverPageSize = parseInt(e.target.value); renderDrivers(); };
-
-// Modal
-function openModal(dr) {
-    document.getElementById('dcName').textContent = dr.name;
-    document.getElementById('dcMeta').textContent = `${dr.nationality} | ${dr.seasons} Seasons`;
-    document.getElementById('dcSummary').textContent = `${dr.wins} Wins, ${dr.podiums} Podiums, ${dr.totalPoints} Points Total.`;
-    document.getElementById('driverModal').classList.add('open');
-}
-document.getElementById('driverModalClose').onclick = () => document.getElementById('driverModal').classList.remove('open');
-</script>
-
-</body>
-</html>      font-size:11px;
-      letter-spacing:0.14em;
-      text-transform:uppercase;
-      color:#e5e7eb;
-      opacity:0.9;
-      text-align:center;
       white-space:nowrap;
     }
 
@@ -477,18 +105,6 @@ document.getElementById('driverModalClose').onclick = () => document.getElementB
     #driversTable td { font-size:12px; white-space:normal; overflow:visible; text-overflow:clip; }
     #driversTable th:nth-child(1),
     #driversTable td:nth-child(1) { width:180px; }
-
-    /* NEW STYLES FOR COLUMN DROPDOWNS */
-    .table-filter-select {
-      width: 100%;
-      margin-top: 4px;
-      font-size: 10px;
-      background: #1a1f2b;
-      color: #f5f5f5;
-      border: 1px solid #3b4252;
-      border-radius: 3px;
-      padding: 2px;
-    }
 
     .filters { display:flex; flex-wrap:wrap; gap:8px; margin:12px 0 6px; align-items:center; }
     .filters input, .filters select, .filters button {
@@ -855,6 +471,7 @@ document.getElementById('driverModalClose').onclick = () => document.getElementB
     </div>
   </section>
 
+  <!-- Drivers -->
   <section id="driversSection" data-view="drivers" class="active">
     <h2>Drivers</h2>
     <p class="section-description">
@@ -891,19 +508,19 @@ document.getElementById('driverModalClose').onclick = () => document.getElementB
           <table id="driversTable">
             <thead>
               <tr>
-                <th>Driver<br><select class="table-filter-select" data-col="name"><option value="">All</option></select></th>
-                <th>Nat.<br><select class="table-filter-select" data-col="nationality"><option value="">All</option></select></th>
-                <th>Seasons<br><select class="table-filter-select" data-col="seasons"><option value="">All</option></select></th>
-                <th>Races<br><select class="table-filter-select" data-col="races"><option value="">All</option></select></th>
-                <th>Total pts<br><select class="table-filter-select" data-col="totalPoints"><option value="">All</option></select></th>
-                <th>Avg pts<br><select class="table-filter-select" data-col="avgPerMajor"><option value="">All</option></select></th>
-                <th>Wins<br><select class="table-filter-select" data-col="wins"><option value="">All</option></select></th>
-                <th>Podiums<br><select class="table-filter-select" data-col="podiums"><option value="">All</option></select></th>
-                <th>Fast race laps<br><select class="table-filter-select" data-col="fastRaceLaps"><option value="">All</option></select></th>
-                <th>Fast pole laps<br><select class="table-filter-select" data-col="fastPoleLaps"><option value="">All</option></select></th>
-                <th>Best champ pos<br><select class="table-filter-select" data-col="bestChampPos"><option value="">All</option></select></th>
-                <th>Clean %<br><select class="table-filter-select" data-col="cleanPct"><option value="">All</option></select></th>
-                <th>Reliab. %<br><select class="table-filter-select" data-col="reliabPct"><option value="">All</option></select></th>
+                <th>Driver</th>
+                <th>Nat.</th>
+                <th>Seasons</th>
+                <th>Races</th>
+                <th>Total pts</th>
+                <th>Avg pts</th>
+                <th>Wins</th>
+                <th>Podiums</th>
+                <th>Fast race laps</th>
+                <th>Fast pole laps</th>
+                <th>Best champ pos</th>
+                <th>Clean %</th>
+                <th>Reliab. %</th>
               </tr>
             </thead>
             <tbody></tbody>
@@ -927,6 +544,7 @@ document.getElementById('driverModalClose').onclick = () => document.getElementB
     </div>
   </section>
 
+  <!-- Driver modal -->
   <div id="driverModal" class="driver-modal">
     <div class="driver-modal-backdrop"></div>
     <div class="driver-modal-card">
@@ -972,6 +590,7 @@ document.getElementById('driverModalClose').onclick = () => document.getElementB
     </div>
   </div>
 
+  <!-- Tracks -->
   <section id="trackSection" data-view="tracks">
     <h2>Tracks</h2>
     <p class="section-description">
@@ -992,6 +611,7 @@ document.getElementById('driverModalClose').onclick = () => document.getElementB
       <button class="tab-btn track-subtab-btn" data-track-view="seasonCmp">Season Comparison</button>
     </div>
 
+    <!-- Track details view -->
     <div id="trackDetailsView" data-track-view="details">
       <div class="scroll-body">
         <table id="trackTable">
@@ -1013,6 +633,7 @@ document.getElementById('driverModalClose').onclick = () => document.getElementB
       </div>
     </div>
 
+    <!-- Track season comparison view -->
     <div id="trackSeasonCmpView" data-track-view="seasonCmp" style="display:none;">
       <div class="scroll-body">
         <table id="trackSeasonCmpTable">
@@ -1031,6 +652,7 @@ document.getElementById('driverModalClose').onclick = () => document.getElementB
     </div>
   </section>
 
+  <!-- Driver Times placeholder -->
   <section id="driverTimesSection" data-view="driverTimes">
     <h2>Driver Times</h2>
     <p class="muted">
@@ -1084,31 +706,6 @@ function formatLoadedMeta(meta) {
   }
 }
 
-// Global variable to hold driver rows for filtering
-let driverRowsAll = [];
-
-/** * NEW: Populates the dropdown filters in the table header based on unique values in data
- */
-function populateTableFilters() {
-    const filters = document.querySelectorAll('.table-filter-select');
-    filters.forEach(select => {
-        const key = select.dataset.col;
-        const uniqueValues = [...new Set(driverRowsAll.map(row => {
-            const val = row[key];
-            if (typeof val === 'number' && !Number.isInteger(val)) return val.toFixed(1);
-            return val;
-        }))].filter(v => v !== null && v !== undefined && v !== "").sort((a,b) => (a > b ? 1 : -1));
-
-        select.innerHTML = '<option value="">All</option>';
-        uniqueValues.forEach(val => {
-            const opt = document.createElement('option');
-            opt.value = val;
-            opt.textContent = val;
-            select.appendChild(opt);
-        });
-    });
-}
-
 function buildPage(data) {
   globalBaseData = data;
   const meta = data.metadata || {};
@@ -1117,6 +714,7 @@ function buildPage(data) {
   const driversSrc = multi.drivers || multi.driverStatistics || data.drivers || [];
   const tracksSrc = multi.tracks || multi.trackStatistics || data.tracks || [];
 
+  // Create season metadata lookup
   const seasonMetaByName = {};
   (multi.seasons || []).forEach(s => {
     seasonMetaByName[s.name] = {
@@ -1149,6 +747,29 @@ function buildPage(data) {
       '<div class="card-value">' + c.value + '</div>';
     cardsEl.appendChild(div);
   });
+
+  // ----- DRIVERS -----
+  const driversTableBody = document.querySelector('#driversTable tbody');
+  const dcName = document.getElementById('dcName');
+  const dcMeta = document.getElementById('dcMeta');
+  const dcCats = document.getElementById('dcCats');
+  const dcSummary = document.getElementById('dcSummary');
+  const dcPills = document.getElementById('dcPills');
+  const dcSeasonsTable = document.querySelector('#dcSeasonsTable tbody');
+  const driverModal = document.getElementById('driverModal');
+  const driverModalClose = document.getElementById('driverModalClose');
+  const driverAvatar = document.getElementById('driverAvatar');
+
+  function getDriverCategories(driverName) {
+    const d = driversSrc.find(
+      dr => (dr.driverName || '').toLowerCase() === String(driverName || '').toLowerCase()
+    );
+    if (!d) return [];
+    const cats = (d.driverInfo && d.driverInfo.categories) || d.categories;
+    if (!cats) return [];
+    if (Array.isArray(cats)) return cats.map(c => String(c).trim()).filter(Boolean);
+    return String(cats).split(',').map(c => c.trim()).filter(Boolean);
+  }
 
   function deriveDriverRow(d) {
     const infoD = d.driverInfo || {};
@@ -1190,74 +811,101 @@ function buildPage(data) {
     };
   }
 
-  driverRowsAll = driversSrc.map(deriveDriverRow);
-  
-  // MERGE LOGIC
-  (function mergeRichieChappell() {
-    const MAIN_NAME = 'RichieChappe11';
-    const ALIAS_NAME = 'richie chappell (dnu)';
-    const mainLower = MAIN_NAME.toLowerCase();
-    const aliasLower = ALIAS_NAME.toLowerCase();
+  const driverRowsAll = driversSrc.map(deriveDriverRow); 
+// Merge all "richie chappell (DNU)" rows into "RichieChappe11"
+(function mergeRichieChappell() {
+  const MAIN_NAME = 'RichieChappe11';
+  const ALIAS_NAME = 'richie chappell (dnu)';
 
-    let mainRow = driverRowsAll.find(d => (d.name || '').toLowerCase() === mainLower);
-    if (!mainRow) {
-      mainRow = { source: {}, name: MAIN_NAME, nationality: '', seasons: 0, races: 0, totalPoints: 0, avgPerMajor: 0, wins: 0, podiums: 0, fastRaceLaps: 0, fastPoleLaps: 0, bestChampPos: '', cleanPct: '', reliabPct: '' };
-      driverRowsAll.push(mainRow);
-    }
-    const aliasRows = driverRowsAll.filter(d => (d.name || '').toLowerCase() === aliasLower);
-    if (!aliasRows.length) return;
-    aliasRows.forEach(ar => {
-      mainRow.seasons += Number(ar.seasons || 0);
-      mainRow.races += Number(ar.races || 0);
-      mainRow.totalPoints += Number(ar.totalPoints || 0);
-      mainRow.wins += Number(ar.wins || 0);
-      mainRow.podiums += Number(ar.podiums || 0);
-      mainRow.fastRaceLaps += Number(ar.fastRaceLaps || 0);
-      mainRow.fastPoleLaps += Number(ar.fastPoleLaps || 0);
-      if (ar.bestChampPos) {
-        if (!mainRow.bestChampPos) mainRow.bestChampPos = ar.bestChampPos;
-        else {
-          const m = Number(mainRow.bestChampPos);
-          const a = Number(ar.bestChampPos);
-          if (!Number.isNaN(a) && (Number.isNaN(m) || a < m)) mainRow.bestChampPos = ar.bestChampPos;
+  const mainLower = MAIN_NAME.toLowerCase();
+  const aliasLower = ALIAS_NAME.toLowerCase();
+
+  // Find main row (or create empty one if not present)
+  let mainRow = driverRowsAll.find(
+    d => (d.name || '').toLowerCase() === mainLower
+  );
+
+  if (!mainRow) {
+    mainRow = {
+      source: {},
+      name: MAIN_NAME,
+      nationality: '',
+      seasons: 0,
+      races: 0,
+      totalPoints: 0,
+      avgPerMajor: 0,
+      wins: 0,
+      podiums: 0,
+      fastRaceLaps: 0,
+      fastPoleLaps: 0,
+      bestChampPos: '',
+      cleanPct: '',
+      reliabPct: ''
+    };
+    driverRowsAll.push(mainRow);
+  }
+
+  // Collect all alias rows
+  const aliasRows = driverRowsAll.filter(
+    d => (d.name || '').toLowerCase() === aliasLower
+  );
+
+  if (!aliasRows.length) return;
+
+  // Merge numeric fields by summing; seasons/races also summed
+  aliasRows.forEach(ar => {
+    mainRow.seasons += Number(ar.seasons || 0);
+    mainRow.races += Number(ar.races || 0);
+    mainRow.totalPoints += Number(ar.totalPoints || 0);
+    mainRow.wins += Number(ar.wins || 0);
+    mainRow.podiums += Number(ar.podiums || 0);
+    mainRow.fastRaceLaps += Number(ar.fastRaceLaps || 0);
+    mainRow.fastPoleLaps += Number(ar.fastPoleLaps || 0);
+    // keep best (smallest) champ position if both exist
+    if (ar.bestChampPos) {
+      if (!mainRow.bestChampPos) {
+        mainRow.bestChampPos = ar.bestChampPos;
+      } else {
+        const m = Number(mainRow.bestChampPos);
+        const a = Number(ar.bestChampPos);
+        if (!Number.isNaN(a) && (Number.isNaN(m) || a < m)) {
+          mainRow.bestChampPos = ar.bestChampPos;
         }
       }
-    });
-    if (mainRow.races > 0) mainRow.avgPerMajor = mainRow.totalPoints / mainRow.races;
-    for (let i = driverRowsAll.length - 1; i >= 0; i--) {
-      if ((driverRowsAll[i].name || '').toLowerCase() === aliasLower) driverRowsAll.splice(i, 1);
     }
-  })();
+  });
 
-  // Populate the new dropdown filters
-  populateTableFilters();
+  // Recompute avgPerMajor / cleanPct / reliabPct in whatever way makes sense
+  // Here: avgPerMajor from totalPoints / races if possible
+  if (mainRow.races > 0) {
+    mainRow.avgPerMajor = mainRow.totalPoints / mainRow.races;
+  }
+
+  // Remove alias rows from the array
+  for (let i = driverRowsAll.length - 1; i >= 0; i--) {
+    if ((driverRowsAll[i].name || '').toLowerCase() === aliasLower) {
+      driverRowsAll.splice(i, 1);
+    }
+  }
+})();
+
 
   let selectedDriverName = null;
   let driverCurrentPage = 1;
   let driverPageSize = 25;
+
+  function getFilteredDriverRows() { return driverRowsAll; }
 
   function renderDrivers() {
     const search = document.getElementById('driverSearch').value.toLowerCase();
     const minSeasons = Number(document.getElementById('minSeasons').value || 1);
     const sortKey = document.getElementById('driverSort').value;
 
-    // Get active column filters
-    const colFilters = {};
-    document.querySelectorAll('.table-filter-select').forEach(sel => {
-        if (sel.value) colFilters[sel.dataset.col] = sel.value;
-    });
-
-    const filtered = driverRowsAll.filter(dr => {
+    const rows = getFilteredDriverRows();
+    const filtered = rows.filter(dr => {
       if (dr.seasons < minSeasons) return false;
       const text = (dr.name + ' ' + dr.nationality).toLowerCase();
       if (search && !text.includes(search)) return false;
-
-      // Apply Column Filters
-      for (const key in colFilters) {
-          let rowVal = dr[key];
-          if (typeof rowVal === 'number' && !Number.isInteger(rowVal)) rowVal = rowVal.toFixed(1);
-          if (String(rowVal) !== colFilters[key]) return false;
-      }
       return true;
     });
 
@@ -1280,7 +928,6 @@ function buildPage(data) {
     const start = (driverCurrentPage - 1) * driverPageSize;
     const pageRows = filtered.slice(start, start + driverPageSize);
 
-    const driversTableBody = document.querySelector('#driversTable tbody');
     driversTableBody.innerHTML = '';
     pageRows.forEach(dr => {
       const tr = document.createElement('tr');
@@ -1292,126 +939,351 @@ function buildPage(data) {
         '<td>' + dr.seasons + '</td>' +
         '<td>' + dr.races + '</td>' +
         '<td>' + dr.totalPoints + '</td>' +
-        '<td>' + (dr.avgPerMajor.toFixed ? dr.avgPerMajor.toFixed(1) : dr.avgPerMajor) + '</td>' +
+        '<td>' +
+          (dr.avgPerMajor.toFixed ? dr.avgPerMajor.toFixed(1) : dr.avgPerMajor) +
+        '</td>' +
         '<td>' + dr.wins + '</td>' +
         '<td>' + dr.podiums + '</td>' +
         '<td>' + dr.fastRaceLaps + '</td>' +
         '<td>' + dr.fastPoleLaps + '</td>' +
         '<td>' + dr.bestChampPos + '</td>' +
-        '<td>' + (dr.cleanPct !== '' ? (dr.cleanPct.toFixed ? dr.cleanPct.toFixed(1) : dr.cleanPct) : '') + '</td>' +
-        '<td>' + (dr.reliabPct !== '' ? (dr.reliabPct.toFixed ? dr.reliabPct.toFixed(1) : dr.reliabPct) : '') + '</td>';
+        '<td>' +
+          (dr.cleanPct !== '' ?
+            (dr.cleanPct.toFixed ? dr.cleanPct.toFixed(1) : dr.cleanPct) : '') +
+        '</td>' +
+        '<td>' +
+          (dr.reliabPct !== '' ?
+            (dr.reliabPct.toFixed ? dr.reliabPct.toFixed(1) : dr.reliabPct) : '') +
+        '</td>';
       driversTableBody.appendChild(tr);
     });
 
     const infoEl = document.getElementById('driverPageInfo');
-    if (infoEl) infoEl.textContent = 'Page ' + driverCurrentPage + ' of ' + totalPages + ' • ' + total + ' drivers';
-    document.getElementById('driverPrevPage').disabled = driverCurrentPage <= 1;
-    document.getElementById('driverNextPage').disabled = driverCurrentPage >= totalPages;
+    if (infoEl) {
+      infoEl.textContent =
+        'Page ' + driverCurrentPage + ' of ' + totalPages + ' • ' + total + ' drivers';
+    }
+    const prevBtn = document.getElementById('driverPrevPage');
+    const nextBtn = document.getElementById('driverNextPage');
+    if (prevBtn) prevBtn.disabled = driverCurrentPage <= 1;
+    if (nextBtn) nextBtn.disabled = driverCurrentPage >= totalPages;
   }
 
-  // EVENT LISTENERS
+  function renderDriverCard(driverName) {
+    const rows = getFilteredDriverRows();
+    const row = rows.find(d => d.name === driverName);
+    if (!row) return;
+
+    selectedDriverName = row.name;
+    window.currentDriverName = row.name; // used by driver-summary.html
+
+    Array.from(driversTableBody.querySelectorAll('tr')).forEach(tr => {
+      tr.classList.toggle('driver-row-selected', tr.dataset.driverName === selectedDriverName);
+    });
+
+    const src = row.source;
+    const infoD = src.driverInfo || {};
+    const participation = src.participation || {};
+    const standings = src.standings || {};
+    let seasonsResults = (standings.seasonResults || []).slice();
+    seasonsResults.sort((a, b) =>
+      String(a.seasonName || '').localeCompare(String(b.seasonName || ''))
+    );
+    const cats = getDriverCategories(row.name);
+
+    dcName.textContent = row.name;
+    dcMeta.textContent =
+      (infoD.nationality || 'Nationality unknown') +
+      (participation.seasonsParticipated ?
+        ' • ' + participation.seasonsParticipated + ' seasons' : '');
+
+    if (driverAvatar) {
+      const avatarSrc = getDriverAvatarSrc(row.name);
+
+      driverAvatar.onerror = () => { if (driverAvatar.src.includes('.gif')) { driverAvatar.src = driverAvatar.src
+          .replace('.gif', '.png'); } else { driverAvatar.src = DRIVER_AVATAR_FOLDER + '/default.png'; } };  
+      driverAvatar.src = avatarSrc; 
+        }
+
+      dcCats.innerHTML = '';
+
+       if (cats.length) {
+        
+      cats.forEach((c, idx) => {
+        const span = document.createElement('span');
+        span.className = 'driver-chip' + (idx === 0 ? ' primary' : '');
+        span.textContent = c;
+        dcCats.appendChild(span);
+      });
+    }
+
+    dcSummary.textContent =
+      'Best championship position: ' + (standings.bestPosition || '–') +
+      ' • Championships won: ' + (standings.championshipsWon || 0) +
+      ' • Total points: ' + (row.totalPoints || 0);
+
+    const cardEl = document.getElementById('driverCard');
+    if (cardEl) {
+      cardEl.classList.remove('primary-champ');
+      if ((standings.championshipsWon || 0) > 0) cardEl.classList.add('primary-champ');
+    }
+
+    dcPills.innerHTML = '';
+    const makePill = (label, value) => {
+      const span = document.createElement('span');
+      span.className = 'driver-stat-pill';
+      span.textContent = label + ': ' + value;
+      dcPills.appendChild(span);
+    };
+    makePill('Wins', row.wins || 0);
+    makePill('Podiums', row.podiums || 0);
+    const avgPtsPerRace = row.races ? (row.totalPoints / row.races).toFixed(1) : '–';
+    makePill('Pts / race', avgPtsPerRace);
+    makePill(
+      'Clean %',
+      row.cleanPct !== '' ?
+        (row.cleanPct.toFixed ? row.cleanPct.toFixed(1) : row.cleanPct) : '–'
+    );
+
+    dcSeasonsTable.innerHTML = '';
+    seasonsResults.forEach(sr => {
+      const tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td>' + (sr.seasonName || '') + '</td>' +
+        '<td>' + ((window.seasonMetaByName || {})[sr.seasonName] || {}).startDate + '</td>' +
+        '<td>' + ((window.seasonMetaByName || {})[sr.seasonName] || {}).endDate + '</td>' +
+        '<td>' + ((window.seasonMetaByName || {})[sr.seasonName] || {}).status + '</td>' +
+        '<td>' + (sr.position || '') + '</td>' +
+        '<td>' + (sr.points || 0) + '</td>' +
+        '<td>' + (sr.racesCount || 0) + '</td>' +
+        '<td>' + (sr.wins || 0) + '</td>' +
+        '<td>' + (sr.podiums || 0) + '</td>';
+      dcSeasonsTable.appendChild(tr);
+    });
+
+    if (driverModal) driverModal.classList.add('open');
+  }
+
+  document.querySelector('#driversTable').addEventListener('click', e => {
+    const tr = e.target.closest('tr');
+    if (!tr || !tr.dataset.driverName) return;
+    renderDriverCard(tr.dataset.driverName);
+  });
+  if (driverModal && driverModalClose) {
+    driverModalClose.addEventListener('click', () => driverModal.classList.remove('open'));
+    driverModal.addEventListener('click', e => {
+      if (e.target === driverModal) driverModal.classList.remove('open');
+    });
+  }
+
   document.getElementById('driverSearch').addEventListener('input', () => { driverCurrentPage = 1; renderDrivers(); });
-  document.getElementById('minSeasons').addEventListener('input', () => { driverCurrentPage = 1; renderDrivers(); });
+  document.getElementById('minSeasons').addEventListener('change', () => { driverCurrentPage = 1; renderDrivers(); });
   document.getElementById('driverSort').addEventListener('change', () => { driverCurrentPage = 1; renderDrivers(); });
   document.getElementById('driverPrevPage').addEventListener('click', () => { driverCurrentPage--; renderDrivers(); });
   document.getElementById('driverNextPage').addEventListener('click', () => { driverCurrentPage++; renderDrivers(); });
-  document.getElementById('driverPageSize').addEventListener('change', (e) => { driverPageSize = Number(e.target.value); driverCurrentPage = 1; renderDrivers(); });
-  
-  // NEW: Dropdown change triggers render
-  document.querySelectorAll('.table-filter-select').forEach(sel => {
-      sel.addEventListener('change', () => { driverCurrentPage = 1; renderDrivers(); });
-  });
-
-  document.querySelector('#driversTable tbody').addEventListener('click', (e) => {
-    const tr = e.target.closest('tr');
-    if (!tr) return;
-    const name = tr.dataset.driverName;
-    openDriverModal(name);
+  document.getElementById('driverPageSize').addEventListener('change', e => {
+    driverPageSize = Number(e.target.value || 25);
+    driverCurrentPage = 1;
+    renderDrivers();
   });
 
   renderDrivers();
-  
-  // --- TRACKS (Simplified for example) ---
-  const trackTableBody = document.querySelector('#trackTable tbody');
+
+  // ----- TRACKS -----
   const trackSelect = document.getElementById('trackSelect');
-  trackSelect.innerHTML = '<option value="">All tracks</option>';
-  tracksSrc.forEach(t => {
-      const opt = document.createElement('option');
-      opt.value = t.trackName;
-      opt.textContent = t.trackName;
-      trackSelect.appendChild(opt);
+  const trackTableBody = document.querySelector('#trackTable tbody');
+
+  const allSeasonNames = (multi.seasons || []).map(s => s.name);
+
+  const trackRows = tracksSrc.map(t => {
+    const circuit = t.circuitName || t.trackName || '';
+    const gen = t.generalStats || {};
+    const raceStats = t.raceStats || {};
+    const qualStats = t.qualificationStats || {};
+
+    const fastestRaceLap = raceStats.fastestRaceLap || {};
+    const fastestQualLap = qualStats.fastestQualLap || {};
+
+    const seasonRaceMap = {};
+    if (fastestRaceLap && fastestRaceLap.time) {
+      const sName = fastestRaceLap.seasonName || 'All seasons';
+      const current = seasonRaceMap[sName];
+      if (!current || (fastestRaceLap.timeMs && fastestRaceLap.timeMs < current.timeMs)) {
+        seasonRaceMap[sName] = {
+          time: fastestRaceLap.time,
+          timeMs: fastestRaceLap.timeMs || null,
+          driverName: fastestRaceLap.driverName || ''
+        };
+      }
+    }
+
+    return {
+      circuit,
+      gen,
+      raceStats,
+      qualStats,
+      fastestRaceLap,
+      fastestQualLap,
+      seasonRaceMap
+    };
   });
-  
-  function renderTracks() {
-      const filter = trackSelect.value;
-      trackTableBody.innerHTML = '';
-      tracksSrc.filter(t => !filter || t.trackName === filter).forEach(t => {
-          const tr = document.createElement('tr');
-          tr.innerHTML = `<td>${t.trackName}</td><td>${t.racesCount || 0}</td><td>${t.fastestRaceLap?.driverName || '-'}</td><td>${t.fastestRaceLap?.lapTime || '-'}</td><td>${t.fastestQualLap?.driverName || '-'}</td><td>${t.fastestQualLap?.lapTime || '-'}</td><td>-</td><td>-</td><td>-</td>`;
-          trackTableBody.appendChild(tr);
+
+  const trackNames = Array.from(new Set(trackRows.map(r => r.circuit))).sort();
+  trackSelect.innerHTML = '<option value="">All tracks</option>';
+  trackNames.forEach(name => {
+    if (!name) return;
+    const opt = document.createElement('option');
+    opt.value = name;
+    opt.textContent = name;
+    trackSelect.appendChild(opt);
+  });
+
+  function formatSC(gen, raceStats) {
+    const totalSC = raceStats.totalSafetyCars != null ? raceStats.totalSafetyCars : 0;
+    const totalVSC = raceStats.totalVirtualSafetyCars != null ? raceStats.totalVirtualSafetyCars : 0;
+    return totalSC + ' / ' + totalVSC;
+  }
+
+  function renderTrackDetails() {
+    const filterName = trackSelect.value;
+    trackTableBody.innerHTML = '';
+    trackRows
+      .filter(r => !filterName || r.circuit === filterName)
+      .forEach(r => {
+        const gen = r.gen;
+        const rs = r.raceStats || {};
+        const qs = r.qualStats || {};
+        const tr = document.createElement('tr');
+        tr.innerHTML =
+          '<td>' + r.circuit + '</td>' +
+          '<td>' + (gen.totalRaces || '') + '</td>' +
+          '<td>' + ((rs.fastestRaceLap && rs.fastestRaceLap.driverName) || '') + '</td>' +
+          '<td>' + ((rs.fastestRaceLap && rs.fastestRaceLap.time) || '') + '</td>' +
+          '<td>' + ((qs.fastestQualLap && qs.fastestQualLap.driverName) || '') + '</td>' +
+          '<td>' + ((qs.fastestQualLap && qs.fastestQualLap.time) || '') + '</td>' +
+          '<td>' + (rs.maxSpeed != null ? rs.maxSpeed + ' km/h' : '') + '</td>' +
+          '<td>' + (rs.avgPitstops != null ? rs.avgPitstops : '') + '</td>' +
+          '<td>' + formatSC(gen, rs) + '</td>';
+        trackTableBody.appendChild(tr);
       });
   }
-  trackSelect.addEventListener('change', renderTracks);
-  renderTracks();
-}
 
-// MODAL LOGIC
-function openDriverModal(driverName) {
-    const modal = document.getElementById('driverModal');
-    const row = driverRowsAll.find(d => d.name === driverName);
-    if (!row) return;
+  const cmpHeaderRow = document.getElementById('trackSeasonCmpHeader');
+  const cmpBody = document.getElementById('trackSeasonCmpBody');
 
-    window.currentDriverName = row.name;
-    document.getElementById('dcName').textContent = row.name;
-    document.getElementById('dcMeta').textContent = row.nationality + ' • ' + row.seasons + ' seasons';
-    document.getElementById('dcSummary').textContent = `${row.wins} Wins • ${row.podiums} Podiums • ${row.totalPoints} Total Points`;
-    
-    // Avatar logic
-    const img = document.getElementById('driverAvatar');
-    img.src = getDriverAvatarSrc(row.name);
-    img.onerror = () => { img.src = DRIVER_AVATAR_FOLDER + '/default.png'; };
+  function renderTrackSeasonCmp() {
+    const filterName = trackSelect.value;
 
-    // Season table logic (simplified)
-    const tbody = document.querySelector('#dcSeasonsTable tbody');
-    tbody.innerHTML = '';
-    const results = row.source.standings?.seasonResults || [];
-    results.forEach(res => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${res.seasonName}</td><td>-</td><td>-</td><td>-</td><td>${res.position}</td><td>${res.points}</td><td>${res.races}</td><td>${res.wins}</td><td>${res.podiums}</td>`;
-        tbody.appendChild(tr);
+    cmpHeaderRow.innerHTML = '<th>Track</th>';
+    allSeasonNames.forEach(sn => {
+      const th = document.createElement('th');
+      th.textContent = sn;
+      cmpHeaderRow.appendChild(th);
     });
 
-    modal.classList.add('open');
+    cmpBody.innerHTML = '';
+    trackRows
+      .filter(r => !filterName || r.circuit === filterName)
+      .forEach(r => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = '<td>' + r.circuit + '</td>';
+
+        allSeasonNames.forEach(sn => {
+          const td = document.createElement('td');
+          const entry = r.seasonRaceMap[sn];
+
+          if (!entry) {
+            td.textContent = '';
+          } else {
+            td.classList.add('track-hover');
+            const span = document.createElement('span');
+            span.textContent = entry.time || '';
+            td.appendChild(span);
+
+            if (entry.driverName) {
+              const tip = document.createElement('div');
+              tip.className = 'track-hover-tooltip';
+              tip.textContent = entry.driverName;
+              td.appendChild(tip);
+            }
+          }
+
+          tr.appendChild(td);
+        });
+
+        cmpBody.appendChild(tr);
+      });
+  }
+
+  renderTrackDetails();
+  renderTrackSeasonCmp();
+
+  trackSelect.addEventListener('change', () => {
+    renderTrackDetails();
+    renderTrackSeasonCmp();
+  });
 }
 
-document.getElementById('driverModalClose').onclick = () => document.getElementById('driverModal').classList.remove('open');
-window.onclick = (e) => { if(e.target === document.querySelector('.driver-modal-backdrop')) document.getElementById('driverModal').classList.remove('open'); };
-
-function openDriverSummaryView() {
-    if (window.currentDriverName) {
-        alert("Redirecting to summary for: " + window.currentDriverName);
-        // window.location.href = `driver-summary.html?driver=${encodeURIComponent(window.currentDriverName)}`;
-    }
-}
-
-// TAB SELECTOR
-document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.onclick = () => {
-        if (btn.classList.contains('disabled')) return;
-        const view = btn.dataset.view;
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        document.querySelectorAll('section[data-view]').forEach(s => s.classList.remove('active'));
-        document.querySelector(`section[data-view="${view}"]`).classList.add('active');
-    };
+// top-level view switching
+document.querySelectorAll('#viewSelector .tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (btn.classList.contains('disabled')) return;
+    document.querySelectorAll('#viewSelector .tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const view = btn.getAttribute('data-view');
+    document.querySelectorAll('section[data-view]').forEach(sec => {
+      sec.classList.toggle('active', sec.getAttribute('data-view') === view);
+    });
+  });
 });
 
-// INITIAL LOAD
+// track subtabs
+document.querySelectorAll('.track-subtab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.track-subtab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const view = btn.getAttribute('data-track-view');
+    document.querySelectorAll('[data-track-view]').forEach(el => {
+      if (el.id === 'trackDetailsView' || el.id === 'trackSeasonCmpView') {
+        el.style.display = el.getAttribute('data-track-view') === view ? '' : 'none';
+      }
+    });
+  });
+});
+
+// file loading
 populateFileSelect();
-document.getElementById('fileSelect').onchange = (e) => {
-    if(!e.target.value) return;
-    fetch(e.target.value).then(r => r.json()).then(buildPage).catch(err => console.error("Error loading JSON:", err));
-};
+document.getElementById('fileSelect').addEventListener('change', async e => {
+  const path = e.target.value;
+  if (!path) return;
+
+  window.currentExportFilename = path.split('/').pop();
+
+  try {
+    const res = await fetch(path);
+    const json = await res.json();
+    buildPage(json);
+  } catch (err) {
+    console.error(err);
+    alert('Failed to load JSON: ' + err.message);
+  }
+});
+
+// open full summary page
+function openDriverSummaryView() {
+  const jsonFilename = window.currentExportFilename || '';
+  const driverName   = window.currentDriverName || '';
+
+  if (!jsonFilename || !driverName) {
+    alert('Pick a race date and select a driver first.');
+    return;
+  }
+
+  localStorage.setItem('ttrl_selected_json', jsonFilename);
+  localStorage.setItem('ttrl_selected_driver', driverName);
+
+  window.location.href = 'driver-summary.html?from=index';
+}
 </script>
 </body>
 </html>
