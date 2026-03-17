@@ -502,47 +502,57 @@
       </label>
     </div>
 
-    <div class="driver-layout">
-      <div class="driver-layout-main">
-        <div class="scroll-body">
-          <table id="driversTable">
-            <thead>
-              <tr>
-                <th>Driver</th>
-                <th>Nat.</th>
-                <th>Seasons</th>
-                <th>Races</th>
-                <th>Total pts</th>
-                <th>Avg pts</th>
-                <th>Wins</th>
-                <th>Podiums</th>
-                <th>Fast race laps</th>
-                <th>Fast pole laps</th>
-                <th>Best champ pos</th>
-                <th>Clean %</th>
-                <th>Reliab. %</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
+<div class="driver-layout">
+  <div class="driver-layout-main">
+    <div class="scroll-body">
+      <table id="driversTable">
+        <thead>
+          <tr>
+            <th>Driver</th>
+            <th>Nat.</th>
+            <th>Seasons</th>
+            <th>Races</th>
+            <th>Total pts</th>
+            <th>Avg pts</th>
+            <th>Wins</th>
+            <th>Podiums</th>
+            <th>Fast race laps</th>
+            <th>Fast pole laps</th>
+            <th>Best champ pos</th>
+            <th>Clean %</th>
+            <th>Reliab. %</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
 
-        <div id="driverPager" class="filters" style="justify-content:space-between; margin-top:6px;">
-          <div><span id="driverPageInfo">Page 1 of 1</span></div>
-          <div>
-            <button id="driverPrevPage" class="tab-btn" type="button">&lt; Prev</button>
-            <button id="driverNextPage" class="tab-btn" type="button">Next &gt;</button>
-            <select id="driverPageSize" style="margin-left:8px;">
-              <option value="10">10 / page</option>
-              <option value="25" selected>25 / page</option>
-              <option value="50">50 / page</option>
-              <option value="100">100 / page</option>
-            </select>
-          </div>
-        </div>
+    <div id="driverPager" class="filters" style="justify-content:space-between; margin-top:6px;">
+      <div><span id="driverPageInfo">Page 1 of 1</span></div>
+      <div>
+        <button id="driverPrevPage" class="tab-btn" type="button">&lt; Prev</button>
+        <button id="driverNextPage" class="tab-btn" type="button">Next &gt;</button>
+        <select id="driverPageSize" style="margin-left:8px;">
+          <option value="10">10 / page</option>
+          <option value="25" selected>25 / page</option>
+          <option value="50">50 / page</option>
+          <option value="100">100 / page</option>
+        </select>
       </div>
     </div>
-  </section>
+  </div>
+
+  <div class="driver-layout-side">
+    <div id="cleanestDriverBox" class="driver-statline" style="margin-bottom:8px;">
+      Cleanest driver: –
+    </div>
+
+    <div id="driverCard" class="driver-card">
+      <!-- existing driver card content (avatar, dcName, dcMeta, dcSummary, dcPills, seasons table, etc.) -->
+    </div>
+  </div>
+</div>
+
 
   <!-- Driver modal -->
   <div id="driverModal" class="driver-modal">
@@ -561,11 +571,6 @@
   <div class="driver-meta" id="dcMeta"></div>
   <div id="dcCats" style="margin-bottom:6px;"></div>
   <div class="driver-statline" id="dcSummary"></div>
-
-  <div id="cleanestDriverBox" class="driver-statline" style="margin-bottom:6px;">
-    Cleanest driver: –
-  </div>
-
   <div id="dcPills" style="margin-bottom:8px"></div>
   <!-- keep the rest of the card (button, seasons table, etc.) here -->
 </div>
