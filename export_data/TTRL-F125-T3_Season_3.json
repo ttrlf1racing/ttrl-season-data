@@ -1,0 +1,2194 @@
+{
+  "metadata": {
+    "formatVersion": 1,
+    "exportType": "MultiSeason",
+    "exportedAt": "2026-03-17T14:09:12Z",
+    "sourceApplication": "Racing League Tools",
+    "leagueName": "TTRL "
+  },
+  "multiSeasonStatistics": {
+    "multiSeasonInfo": {
+      "name": "TTLR - F125 - T3 Season 3 ",
+      "seasonsCount": 1,
+      "completedSeasonsCount": 0,
+      "isClassSpecific": false,
+      "totalDrivers": 20,
+      "totalTeams": 10,
+      "totalTracks": 12
+    },
+    "seasons": [
+      {
+        "name": "TTRL F125 SEASON 4 - T3",
+        "championshipName": "F1 2025 (1 - 15 points) NEW TTRL",
+        "totalRounds": 12,
+        "completedRounds": 2,
+        "isCompleted": false,
+        "isStarted": true,
+        "startDate": "2026-03-08",
+        "endDate": "2026-05-24"
+      }
+    ],
+    "drivers": [
+      {
+        "driverId": 176,
+        "driverName": "S3L8ZZ SAS",
+        "driverInfo": {
+          "nationality": "United Kingdom",
+          "raceNumber": 94,
+          "realName": "S3L8ZZ SAS",
+          "platform": "XboxSeriesXs",
+          "categories": [
+            "TTRL T2",
+            "TTRL T3"
+          ]
+        },
+        "participation": {
+          "seasonsParticipated": 1,
+          "totalEvents": 2,
+          "totalRaces": 3,
+          "totalMajorRaces": 2,
+          "totalQualifications": 5,
+          "totalRacesFinished": 3,
+          "eventCompletionRatePercent": 100,
+          "raceCompletionRatePercent": 100
+        },
+        "points": {
+          "totalPoints": "49",
+          "averagePerSeason": "49",
+          "averagePerMajorRace": "24.5",
+          "averagePerEvent": "24.5",
+          "bestSeasonPoints": "49",
+          "bestSeasonName": "TTRL F125 SEASON 4 - T3",
+          "scoringRacesCount": 2,
+          "scoringRatePercent": 100
+        },
+        "racePositions": {
+          "bestPosition": 1,
+          "averagePosition": 4,
+          "wins": 1,
+          "podiums": 1,
+          "top5": 1,
+          "top10": 2,
+          "totalFinishes": 2,
+          "averageGridPosition": 6,
+          "averagePositionChange": 2
+        },
+        "qualPositions": {
+          "bestPosition": 4,
+          "averagePosition": 0,
+          "poles": 0,
+          "frontRows": 0,
+          "top3": 0,
+          "top5": 1,
+          "top10": 1,
+          "totalQualifications": 1
+        },
+        "standings": {
+          "championshipsWon": 0,
+          "bestPosition": 1,
+          "averagePosition": 0,
+          "runnerUps": 0,
+          "top3Finishes": 0,
+          "top5Finishes": 0,
+          "seasonResults": [
+            {
+              "seasonName": "TTRL F125 SEASON 4 - T3",
+              "position": 1,
+              "points": "49",
+              "racesCount": 2,
+              "wins": 1,
+              "podiums": 1
+            }
+          ]
+        },
+        "discipline": {
+          "dnfCount": 0,
+          "dsqCount": 0,
+          "totalPenaltySeconds": 0,
+          "racesWithPenalties": 0,
+          "cleanRacesCount": 2,
+          "cleanRacePercent": 66.7,
+          "reliabilityPercent": 100
+        }
+      },
+      {
+        "driverId": 479,
+        "driverName": "RSF1 Invade",
+        "driverInfo": {
+          "nationality": "United Kingdom",
+          "raceNumber": 21,
+          "realName": "RSF1 Invade",
+          "categories": [
+            "TTRL T1",
+            "TTRL T3"
+          ]
+        },
+        "participation": {
+          "seasonsParticipated": 1,
+          "totalEvents": 2,
+          "totalRaces": 3,
+          "totalMajorRaces": 2,
+          "totalQualifications": 4,
+          "totalRacesFinished": 3,
+          "eventCompletionRatePercent": 100,
+          "raceCompletionRatePercent": 100
+        },
+        "points": {
+          "totalPoints": "45",
+          "averagePerSeason": "45",
+          "averagePerMajorRace": "22.5",
+          "averagePerEvent": "22.5",
+          "bestSeasonPoints": "45",
+          "bestSeasonName": "TTRL F125 SEASON 4 - T3",
+          "scoringRacesCount": 2,
+          "scoringRatePercent": 100
+        },
+        "racePositions": {
+          "bestPosition": 2,
+          "averagePosition": 6,
+          "wins": 0,
+          "podiums": 1,
+          "top5": 1,
+          "top10": 2,
+          "totalFinishes": 2,
+          "averageGridPosition": 9.5,
+          "averagePositionChange": 4
+        },
+        "qualPositions": {
+          "bestPosition": 15,
+          "averagePosition": 0,
+          "poles": 0,
+          "frontRows": 0,
+          "top3": 0,
+          "top5": 0,
+          "top10": 0,
+          "totalQualifications": 1
+        },
+        "standings": {
+          "championshipsWon": 0,
+          "bestPosition": 2,
+          "averagePosition": 0,
+          "runnerUps": 0,
+          "top3Finishes": 0,
+          "top5Finishes": 0,
+          "seasonResults": [
+            {
+              "seasonName": "TTRL F125 SEASON 4 - T3",
+              "position": 2,
+              "points": "45",
+              "racesCount": 2,
+              "wins": 0,
+              "podiums": 1
+            }
+          ]
+        },
+        "discipline": {
+          "dnfCount": 0,
+          "dsqCount": 0,
+          "totalPenaltySeconds": 6,
+          "racesWithPenalties": 2,
+          "cleanRacesCount": 0,
+          "cleanRacePercent": 0,
+          "reliabilityPercent": 100
+        }
+      },
+      {
+        "driverId": 836,
+        "driverName": "LRS-Karl",
+        "driverInfo": {
+          "nationality": "China",
+          "raceNumber": 69,
+          "categories": [
+            "TTRL T3"
+          ]
+        },
+        "participation": {
+          "seasonsParticipated": 1,
+          "totalEvents": 2,
+          "totalRaces": 3,
+          "totalMajorRaces": 2,
+          "totalQualifications": 5,
+          "totalRacesFinished": 3,
+          "eventCompletionRatePercent": 100,
+          "raceCompletionRatePercent": 100
+        },
+        "points": {
+          "totalPoints": "40",
+          "averagePerSeason": "40",
+          "averagePerMajorRace": "20",
+          "averagePerEvent": "20",
+          "bestSeasonPoints": "40",
+          "bestSeasonName": "TTRL F125 SEASON 4 - T3",
+          "scoringRacesCount": 2,
+          "scoringRatePercent": 100
+        },
+        "racePositions": {
+          "bestPosition": 3,
+          "averagePosition": 6.5,
+          "wins": 0,
+          "podiums": 1,
+          "top5": 1,
+          "top10": 2,
+          "totalFinishes": 2,
+          "averageGridPosition": 5,
+          "averagePositionChange": -2
+        },
+        "qualPositions": {
+          "bestPosition": 1,
+          "averagePosition": 0,
+          "poles": 1,
+          "frontRows": 1,
+          "top3": 1,
+          "top5": 1,
+          "top10": 1,
+          "totalQualifications": 1
+        },
+        "standings": {
+          "championshipsWon": 0,
+          "bestPosition": 3,
+          "averagePosition": 0,
+          "runnerUps": 0,
+          "top3Finishes": 0,
+          "top5Finishes": 0,
+          "seasonResults": [
+            {
+              "seasonName": "TTRL F125 SEASON 4 - T3",
+              "position": 3,
+              "points": "40",
+              "racesCount": 2,
+              "wins": 0,
+              "podiums": 1
+            }
+          ]
+        },
+        "discipline": {
+          "dnfCount": 0,
+          "dsqCount": 0,
+          "totalPenaltySeconds": 0,
+          "racesWithPenalties": 0,
+          "cleanRacesCount": 2,
+          "cleanRacePercent": 66.7,
+          "reliabilityPercent": 100
+        }
+      },
+      {
+        "driverId": 920,
+        "driverName": "Euanian_",
+        "driverInfo": {
+          "nationality": "United Nations",
+          "raceNumber": 2
+        },
+        "participation": {
+          "seasonsParticipated": 1,
+          "totalEvents": 2,
+          "totalRaces": 3,
+          "totalMajorRaces": 2,
+          "totalQualifications": 4,
+          "totalRacesFinished": 3,
+          "eventCompletionRatePercent": 100,
+          "raceCompletionRatePercent": 100
+        },
+        "points": {
+          "totalPoints": "36",
+          "averagePerSeason": "36",
+          "averagePerMajorRace": "18",
+          "averagePerEvent": "18",
+          "bestSeasonPoints": "36",
+          "bestSeasonName": "TTRL F125 SEASON 4 - T3",
+          "scoringRacesCount": 2,
+          "scoringRatePercent": 100
+        },
+        "racePositions": {
+          "bestPosition": 4,
+          "averagePosition": 5.5,
+          "wins": 0,
+          "podiums": 0,
+          "top5": 1,
+          "top10": 2,
+          "totalFinishes": 2,
+          "averageGridPosition": 9,
+          "averagePositionChange": 4
+        },
+        "qualPositions": {
+          "bestPosition": 11,
+          "averagePosition": 0,
+          "poles": 0,
+          "frontRows": 0,
+          "top3": 0,
+          "top5": 0,
+          "top10": 0,
+          "totalQualifications": 1
+        },
+        "standings": {
+          "championshipsWon": 0,
+          "bestPosition": 4,
+          "averagePosition": 0,
+          "runnerUps": 0,
+          "top3Finishes": 0,
+          "top5Finishes": 0,
+          "seasonResults": [
+            {
+              "seasonName": "TTRL F125 SEASON 4 - T3",
+              "position": 4,
+              "points": "36",
+              "racesCount": 2,
+              "wins": 0,
+              "podiums": 0
+            }
+          ]
+        },
+        "discipline": {
+          "dnfCount": 0,
+          "dsqCount": 0,
+          "totalPenaltySeconds": 9,
+          "racesWithPenalties": 2,
+          "cleanRacesCount": 0,
+          "cleanRacePercent": 0,
+          "reliabilityPercent": 100
+        }
+      },
+      {
+        "driverId": 797,
+        "driverName": "evthelegend46",
+        "driverInfo": {
+          "nationality": "Ireland",
+          "raceNumber": 19,
+          "realName": "evthelegend46"
+        },
+        "participation": {
+          "seasonsParticipated": 1,
+          "totalEvents": 1,
+          "totalRaces": 2,
+          "totalMajorRaces": 1,
+          "totalQualifications": 2,
+          "totalRacesFinished": 2,
+          "eventCompletionRatePercent": 50,
+          "raceCompletionRatePercent": 100
+        },
+        "points": {
+          "totalPoints": "31",
+          "averagePerSeason": "31",
+          "averagePerMajorRace": "31",
+          "averagePerEvent": "31",
+          "bestSeasonPoints": "31",
+          "bestSeasonName": "TTRL F125 SEASON 4 - T3",
+          "scoringRacesCount": 1,
+          "scoringRatePercent": 100
+        },
+        "racePositions": {
+          "bestPosition": 3,
+          "averagePosition": 0,
+          "wins": 0,
+          "podiums": 1,
+          "top5": 1,
+          "top10": 1,
+          "totalFinishes": 1,
+          "averageGridPosition": 5,
+          "averagePositionChange": 0
+        },
+        "qualPositions": {
+          "bestPosition": 0,
+          "averagePosition": 0,
+          "poles": 0,
+          "frontRows": 0,
+          "top3": 0,
+          "top5": 0,
+          "top10": 0,
+          "totalQualifications": 0
+        },
+        "standings": {
+          "championshipsWon": 0,
+          "bestPosition": 5,
+          "averagePosition": 0,
+          "runnerUps": 0,
+          "top3Finishes": 0,
+          "top5Finishes": 0,
+          "seasonResults": [
+            {
+              "seasonName": "TTRL F125 SEASON 4 - T3",
+              "position": 5,
+              "points": "31",
+              "racesCount": 1,
+              "wins": 0,
+              "podiums": 1
+            }
+          ]
+        },
+        "discipline": {
+          "dnfCount": 0,
+          "dsqCount": 0,
+          "totalPenaltySeconds": 0,
+          "racesWithPenalties": 0,
+          "cleanRacesCount": 1,
+          "cleanRacePercent": 50,
+          "reliabilityPercent": 100
+        }
+      },
+      {
+        "driverId": 936,
+        "driverName": "DezMucky",
+        "driverInfo": {
+          "nationality": "Netherlands",
+          "raceNumber": 21
+        },
+        "participation": {
+          "seasonsParticipated": 1,
+          "totalEvents": 1,
+          "totalRaces": 2,
+          "totalMajorRaces": 1,
+          "totalQualifications": 2,
+          "totalRacesFinished": 1,
+          "eventCompletionRatePercent": 50,
+          "raceCompletionRatePercent": 50
+        },
+        "points": {
+          "totalPoints": "30",
+          "averagePerSeason": "30",
+          "averagePerMajorRace": "30",
+          "averagePerEvent": "30",
+          "bestSeasonPoints": "30",
+          "bestSeasonName": "TTRL F125 SEASON 4 - T3",
+          "scoringRacesCount": 1,
+          "scoringRatePercent": 100
+        },
+        "racePositions": {
+          "bestPosition": 1,
+          "averagePosition": 0,
+          "wins": 1,
+          "podiums": 1,
+          "top5": 1,
+          "top10": 1,
+          "totalFinishes": 1,
+          "averageGridPosition": 2,
+          "averagePositionChange": 0
+        },
+        "qualPositions": {
+          "bestPosition": 0,
+          "averagePosition": 0,
+          "poles": 0,
+          "frontRows": 0,
+          "top3": 0,
+          "top5": 0,
+          "top10": 0,
+          "totalQualifications": 0
+        },
+        "standings": {
+          "championshipsWon": 0,
+          "bestPosition": 6,
+          "averagePosition": 0,
+          "runnerUps": 0,
+          "top3Finishes": 0,
+          "top5Finishes": 0,
+          "seasonResults": [
+            {
+              "seasonName": "TTRL F125 SEASON 4 - T3",
+              "position": 6,
+              "points": "30",
+              "racesCount": 1,
+              "wins": 1,
+              "podiums": 1
+            }
+          ]
+        },
+        "discipline": {
+          "dnfCount": 1,
+          "dsqCount": 0,
+          "totalPenaltySeconds": 0,
+          "racesWithPenalties": 0,
+          "cleanRacesCount": 1,
+          "cleanRacePercent": 50,
+          "reliabilityPercent": 50
+        }
+      },
+      {
+        "driverId": 636,
+        "driverName": "AndrewPipSmith",
+        "driverInfo": {
+          "nationality": "United Kingdom",
+          "raceNumber": 60,
+          "realName": "AndrewPipSmith",
+          "categories": [
+            "TTRL T3"
+          ]
+        },
+        "participation": {
+          "seasonsParticipated": 1,
+          "totalEvents": 2,
+          "totalRaces": 3,
+          "totalMajorRaces": 2,
+          "totalQualifications": 3,
+          "totalRacesFinished": 3,
+          "eventCompletionRatePercent": 100,
+          "raceCompletionRatePercent": 100
+        },
+        "points": {
+          "totalPoints": "30",
+          "averagePerSeason": "30",
+          "averagePerMajorRace": "15",
+          "averagePerEvent": "15",
+          "bestSeasonPoints": "30",
+          "bestSeasonName": "TTRL F125 SEASON 4 - T3",
+          "scoringRacesCount": 2,
+          "scoringRatePercent": 100
+        },
+        "racePositions": {
+          "bestPosition": 6,
+          "averagePosition": 7,
+          "wins": 0,
+          "podiums": 0,
+          "top5": 0,
+          "top10": 2,
+          "totalFinishes": 2,
+          "averageGridPosition": 17.5,
+          "averagePositionChange": 10
+        },
+        "qualPositions": {
+          "bestPosition": 20,
+          "averagePosition": 0,
+          "poles": 0,
+          "frontRows": 0,
+          "top3": 0,
+          "top5": 0,
+          "top10": 0,
+          "totalQualifications": 1
+        },
+        "standings": {
+          "championshipsWon": 0,
+          "bestPosition": 7,
+          "averagePosition": 0,
+          "runnerUps": 0,
+          "top3Finishes": 0,
+          "top5Finishes": 0,
+          "seasonResults": [
+            {
+              "seasonName": "TTRL F125 SEASON 4 - T3",
+              "position": 7,
+              "points": "30",
+              "racesCount": 2,
+              "wins": 0,
+              "podiums": 0
+            }
+          ]
+        },
+        "discipline": {
+          "dnfCount": 0,
+          "dsqCount": 1,
+          "totalPenaltySeconds": 3,
+          "racesWithPenalties": 1,
+          "cleanRacesCount": 1,
+          "cleanRacePercent": 33.3,
+          "reliabilityPercent": 100
+        }
+      },
+      {
+        "driverId": 795,
+        "driverName": "ocean_blade235",
+        "driverInfo": {
+          "nationality": "United Kingdom",
+          "raceNumber": 8,
+          "categories": [
+            "TTRL T3"
+          ]
+        },
+        "participation": {
+          "seasonsParticipated": 1,
+          "totalEvents": 2,
+          "totalRaces": 3,
+          "totalMajorRaces": 2,
+          "totalQualifications": 5,
+          "totalRacesFinished": 3,
+          "eventCompletionRatePercent": 100,
+          "raceCompletionRatePercent": 100
+        },
+        "points": {
+          "totalPoints": "27",
+          "averagePerSeason": "27",
+          "averagePerMajorRace": "13.5",
+          "averagePerEvent": "13.5",
+          "bestSeasonPoints": "27",
+          "bestSeasonName": "TTRL F125 SEASON 4 - T3",
+          "scoringRacesCount": 2,
+          "scoringRatePercent": 100
+        },
+        "racePositions": {
+          "bestPosition": 8,
+          "averagePosition": 10,
+          "wins": 0,
+          "podiums": 0,
+          "top5": 0,
+          "top10": 1,
+          "totalFinishes": 2,
+          "averageGridPosition": 13.5,
+          "averagePositionChange": 4
+        },
+        "qualPositions": {
+          "bestPosition": 8,
+          "averagePosition": 0,
+          "poles": 0,
+          "frontRows": 0,
+          "top3": 0,
+          "top5": 0,
+          "top10": 1,
+          "totalQualifications": 1
+        },
+        "standings": {
+          "championshipsWon": 0,
+          "bestPosition": 9,
+          "averagePosition": 0,
+          "runnerUps": 0,
+          "top3Finishes": 0,
+          "top5Finishes": 0,
+          "seasonResults": [
+            {
+              "seasonName": "TTRL F125 SEASON 4 - T3",
+              "position": 9,
+              "points": "27",
+              "racesCount": 2,
+              "wins": 0,
+              "podiums": 0
+            }
+          ]
+        },
+        "discipline": {
+          "dnfCount": 0,
+          "dsqCount": 0,
+          "totalPenaltySeconds": 6,
+          "racesWithPenalties": 2,
+          "cleanRacesCount": 0,
+          "cleanRacePercent": 0,
+          "reliabilityPercent": 100
+        }
+      },
+      {
+        "driverId": 334,
+        "driverName": "Stev1eMac",
+        "driverInfo": {
+          "nationality": "Scotland",
+          "raceNumber": 40,
+          "categories": [
+            "TTRL T2",
+            "SRC",
+            "TTRL T3"
+          ]
+        },
+        "participation": {
+          "seasonsParticipated": 1,
+          "totalEvents": 2,
+          "totalRaces": 3,
+          "totalMajorRaces": 2,
+          "totalQualifications": 5,
+          "totalRacesFinished": 3,
+          "eventCompletionRatePercent": 100,
+          "raceCompletionRatePercent": 100
+        },
+        "points": {
+          "totalPoints": "27",
+          "averagePerSeason": "27",
+          "averagePerMajorRace": "13.5",
+          "averagePerEvent": "13.5",
+          "bestSeasonPoints": "27",
+          "bestSeasonName": "TTRL F125 SEASON 4 - T3",
+          "scoringRacesCount": 2,
+          "scoringRatePercent": 100
+        },
+        "racePositions": {
+          "bestPosition": 5,
+          "averagePosition": 8,
+          "wins": 0,
+          "podiums": 0,
+          "top5": 1,
+          "top10": 1,
+          "totalFinishes": 2,
+          "averageGridPosition": 10.5,
+          "averagePositionChange": 2
+        },
+        "qualPositions": {
+          "bestPosition": 9,
+          "averagePosition": 0,
+          "poles": 0,
+          "frontRows": 0,
+          "top3": 0,
+          "top5": 0,
+          "top10": 1,
+          "totalQualifications": 1
+        },
+        "standings": {
+          "championshipsWon": 0,
+          "bestPosition": 8,
+          "averagePosition": 0,
+          "runnerUps": 0,
+          "top3Finishes": 0,
+          "top5Finishes": 0,
+          "seasonResults": [
+            {
+              "seasonName": "TTRL F125 SEASON 4 - T3",
+              "position": 8,
+              "points": "27",
+              "racesCount": 2,
+              "wins": 0,
+              "podiums": 0
+            }
+          ]
+        },
+        "discipline": {
+          "dnfCount": 0,
+          "dsqCount": 0,
+          "totalPenaltySeconds": 6,
+          "racesWithPenalties": 2,
+          "cleanRacesCount": 0,
+          "cleanRacePercent": 0,
+          "reliabilityPercent": 100
+        }
+      },
+      {
+        "driverId": 553,
+        "driverName": "Jordanhillier97-",
+        "driverInfo": {
+          "nationality": "United Kingdom",
+          "raceNumber": 8,
+          "realName": "Jordanhillier97-",
+          "categories": [
+            "TTRL T3"
+          ]
+        },
+        "participation": {
+          "seasonsParticipated": 1,
+          "totalEvents": 1,
+          "totalRaces": 1,
+          "totalMajorRaces": 1,
+          "totalQualifications": 3,
+          "totalRacesFinished": 1,
+          "eventCompletionRatePercent": 50,
+          "raceCompletionRatePercent": 100
+        },
+        "points": {
+          "totalPoints": "25",
+          "averagePerSeason": "25",
+          "averagePerMajorRace": "25",
+          "averagePerEvent": "25",
+          "bestSeasonPoints": "25",
+          "bestSeasonName": "TTRL F125 SEASON 4 - T3",
+          "scoringRacesCount": 1,
+          "scoringRatePercent": 100
+        },
+        "racePositions": {
+          "bestPosition": 2,
+          "averagePosition": 0,
+          "wins": 0,
+          "podiums": 1,
+          "top5": 1,
+          "top10": 1,
+          "totalFinishes": 1,
+          "averageGridPosition": 6,
+          "averagePositionChange": 0
+        },
+        "qualPositions": {
+          "bestPosition": 6,
+          "averagePosition": 0,
+          "poles": 0,
+          "frontRows": 0,
+          "top3": 0,
+          "top5": 0,
+          "top10": 1,
+          "totalQualifications": 1
+        },
+        "standings": {
+          "championshipsWon": 0,
+          "bestPosition": 10,
+          "averagePosition": 0,
+          "runnerUps": 0,
+          "top3Finishes": 0,
+          "top5Finishes": 0,
+          "seasonResults": [
+            {
+              "seasonName": "TTRL F125 SEASON 4 - T3",
+              "position": 10,
+              "points": "25",
+              "racesCount": 1,
+              "wins": 0,
+              "podiums": 1
+            }
+          ]
+        },
+        "discipline": {
+          "dnfCount": 0,
+          "dsqCount": 0,
+          "totalPenaltySeconds": 0,
+          "racesWithPenalties": 0,
+          "cleanRacesCount": 1,
+          "cleanRacePercent": 100,
+          "reliabilityPercent": 100
+        }
+      },
+      {
+        "driverId": 597,
+        "driverName": "BurzaJr",
+        "driverInfo": {
+          "nationality": "Poland",
+          "raceNumber": 45,
+          "realName": "BurzaJr",
+          "categories": [
+            "TTRL T3"
+          ]
+        },
+        "participation": {
+          "seasonsParticipated": 1,
+          "totalEvents": 2,
+          "totalRaces": 3,
+          "totalMajorRaces": 2,
+          "totalQualifications": 5,
+          "totalRacesFinished": 3,
+          "eventCompletionRatePercent": 100,
+          "raceCompletionRatePercent": 100
+        },
+        "points": {
+          "totalPoints": "23",
+          "averagePerSeason": "23",
+          "averagePerMajorRace": "11.5",
+          "averagePerEvent": "11.5",
+          "bestSeasonPoints": "23",
+          "bestSeasonName": "TTRL F125 SEASON 4 - T3",
+          "scoringRacesCount": 2,
+          "scoringRatePercent": 100
+        },
+        "racePositions": {
+          "bestPosition": 4,
+          "averagePosition": 9.5,
+          "wins": 0,
+          "podiums": 0,
+          "top5": 1,
+          "top10": 1,
+          "totalFinishes": 2,
+          "averageGridPosition": 1.5,
+          "averagePositionChange": -8
+        },
+        "qualPositions": {
+          "bestPosition": 2,
+          "averagePosition": 0,
+          "poles": 0,
+          "frontRows": 1,
+          "top3": 1,
+          "top5": 1,
+          "top10": 1,
+          "totalQualifications": 1
+        },
+        "standings": {
+          "championshipsWon": 0,
+          "bestPosition": 11,
+          "averagePosition": 0,
+          "runnerUps": 0,
+          "top3Finishes": 0,
+          "top5Finishes": 0,
+          "seasonResults": [
+            {
+              "seasonName": "TTRL F125 SEASON 4 - T3",
+              "position": 11,
+              "points": "23",
+              "racesCount": 2,
+              "wins": 0,
+              "podiums": 0
+            }
+          ]
+        },
+        "discipline": {
+          "dnfCount": 0,
+          "dsqCount": 0,
+          "totalPenaltySeconds": 9,
+          "racesWithPenalties": 2,
+          "cleanRacesCount": 0,
+          "cleanRacePercent": 0,
+          "reliabilityPercent": 100
+        }
+      },
+      {
+        "driverId": 845,
+        "driverName": "DavesDevs",
+        "driverInfo": {
+          "nationality": "Barbados",
+          "raceNumber": 19,
+          "categories": [
+            "TTRL T3"
+          ]
+        },
+        "participation": {
+          "seasonsParticipated": 1,
+          "totalEvents": 2,
+          "totalRaces": 3,
+          "totalMajorRaces": 2,
+          "totalQualifications": 4,
+          "totalRacesFinished": 3,
+          "eventCompletionRatePercent": 100,
+          "raceCompletionRatePercent": 100
+        },
+        "points": {
+          "totalPoints": "20",
+          "averagePerSeason": "20",
+          "averagePerMajorRace": "10",
+          "averagePerEvent": "10",
+          "bestSeasonPoints": "20",
+          "bestSeasonName": "TTRL F125 SEASON 4 - T3",
+          "scoringRacesCount": 2,
+          "scoringRatePercent": 100
+        },
+        "racePositions": {
+          "bestPosition": 9,
+          "averagePosition": 11,
+          "wins": 0,
+          "podiums": 0,
+          "top5": 0,
+          "top10": 1,
+          "totalFinishes": 2,
+          "averageGridPosition": 15,
+          "averagePositionChange": 4
+        },
+        "qualPositions": {
+          "bestPosition": 14,
+          "averagePosition": 0,
+          "poles": 0,
+          "frontRows": 0,
+          "top3": 0,
+          "top5": 0,
+          "top10": 0,
+          "totalQualifications": 1
+        },
+        "standings": {
+          "championshipsWon": 0,
+          "bestPosition": 12,
+          "averagePosition": 0,
+          "runnerUps": 0,
+          "top3Finishes": 0,
+          "top5Finishes": 0,
+          "seasonResults": [
+            {
+              "seasonName": "TTRL F125 SEASON 4 - T3",
+              "position": 12,
+              "points": "20",
+              "racesCount": 2,
+              "wins": 0,
+              "podiums": 0
+            }
+          ]
+        },
+        "discipline": {
+          "dnfCount": 0,
+          "dsqCount": 0,
+          "totalPenaltySeconds": 6,
+          "racesWithPenalties": 2,
+          "cleanRacesCount": 0,
+          "cleanRacePercent": 0,
+          "reliabilityPercent": 100
+        }
+      },
+      {
+        "driverId": 895,
+        "driverName": "DesGaming14",
+        "driverInfo": {
+          "nationality": "United States Of America",
+          "raceNumber": 11
+        },
+        "participation": {
+          "seasonsParticipated": 1,
+          "totalEvents": 2,
+          "totalRaces": 3,
+          "totalMajorRaces": 2,
+          "totalQualifications": 5,
+          "totalRacesFinished": 2,
+          "eventCompletionRatePercent": 100,
+          "raceCompletionRatePercent": 66.7
+        },
+        "points": {
+          "totalPoints": "15",
+          "averagePerSeason": "15",
+          "averagePerMajorRace": "7.5",
+          "averagePerEvent": "7.5",
+          "bestSeasonPoints": "15",
+          "bestSeasonName": "TTRL F125 SEASON 4 - T3",
+          "scoringRacesCount": 1,
+          "scoringRatePercent": 50
+        },
+        "racePositions": {
+          "bestPosition": 6,
+          "averagePosition": 0,
+          "wins": 0,
+          "podiums": 0,
+          "top5": 0,
+          "top10": 1,
+          "totalFinishes": 1,
+          "averageGridPosition": 6.5,
+          "averagePositionChange": 0
+        },
+        "qualPositions": {
+          "bestPosition": 3,
+          "averagePosition": 0,
+          "poles": 0,
+          "frontRows": 0,
+          "top3": 1,
+          "top5": 1,
+          "top10": 1,
+          "totalQualifications": 1
+        },
+        "standings": {
+          "championshipsWon": 0,
+          "bestPosition": 14,
+          "averagePosition": 0,
+          "runnerUps": 0,
+          "top3Finishes": 0,
+          "top5Finishes": 0,
+          "seasonResults": [
+            {
+              "seasonName": "TTRL F125 SEASON 4 - T3",
+              "position": 14,
+              "points": "15",
+              "racesCount": 2,
+              "wins": 0,
+              "podiums": 0
+            }
+          ]
+        },
+        "discipline": {
+          "dnfCount": 1,
+          "dsqCount": 0,
+          "totalPenaltySeconds": 3,
+          "racesWithPenalties": 1,
+          "cleanRacesCount": 1,
+          "cleanRacePercent": 33.3,
+          "reliabilityPercent": 66.7
+        }
+      },
+      {
+        "driverId": 928,
+        "driverName": "erniestr8mingin",
+        "driverInfo": {
+          "nationality": "United States Of America",
+          "raceNumber": 92
+        },
+        "participation": {
+          "seasonsParticipated": 1,
+          "totalEvents": 1,
+          "totalRaces": 2,
+          "totalMajorRaces": 1,
+          "totalQualifications": 2,
+          "totalRacesFinished": 1,
+          "eventCompletionRatePercent": 50,
+          "raceCompletionRatePercent": 50
+        },
+        "points": {
+          "totalPoints": "15",
+          "averagePerSeason": "15",
+          "averagePerMajorRace": "15",
+          "averagePerEvent": "15",
+          "bestSeasonPoints": "15",
+          "bestSeasonName": "TTRL F125 SEASON 4 - T3",
+          "scoringRacesCount": 1,
+          "scoringRatePercent": 100
+        },
+        "racePositions": {
+          "bestPosition": 5,
+          "averagePosition": 0,
+          "wins": 0,
+          "podiums": 0,
+          "top5": 1,
+          "top10": 1,
+          "totalFinishes": 1,
+          "averageGridPosition": 14,
+          "averagePositionChange": 0
+        },
+        "qualPositions": {
+          "bestPosition": 0,
+          "averagePosition": 0,
+          "poles": 0,
+          "frontRows": 0,
+          "top3": 0,
+          "top5": 0,
+          "top10": 0,
+          "totalQualifications": 0
+        },
+        "standings": {
+          "championshipsWon": 0,
+          "bestPosition": 13,
+          "averagePosition": 0,
+          "runnerUps": 0,
+          "top3Finishes": 0,
+          "top5Finishes": 0,
+          "seasonResults": [
+            {
+              "seasonName": "TTRL F125 SEASON 4 - T3",
+              "position": 13,
+              "points": "15",
+              "racesCount": 1,
+              "wins": 0,
+              "podiums": 0
+            }
+          ]
+        },
+        "discipline": {
+          "dnfCount": 1,
+          "dsqCount": 0,
+          "totalPenaltySeconds": 3,
+          "racesWithPenalties": 1,
+          "cleanRacesCount": 0,
+          "cleanRacePercent": 0,
+          "reliabilityPercent": 50
+        }
+      },
+      {
+        "driverId": 274,
+        "driverName": "ApexJoe",
+        "driverInfo": {
+          "nationality": "Denmark",
+          "raceNumber": 38,
+          "categories": [
+            "TTRL T3"
+          ]
+        },
+        "participation": {
+          "seasonsParticipated": 1,
+          "totalEvents": 2,
+          "totalRaces": 3,
+          "totalMajorRaces": 2,
+          "totalQualifications": 5,
+          "totalRacesFinished": 3,
+          "eventCompletionRatePercent": 100,
+          "raceCompletionRatePercent": 100
+        },
+        "points": {
+          "totalPoints": "13",
+          "averagePerSeason": "13",
+          "averagePerMajorRace": "6.5",
+          "averagePerEvent": "6.5",
+          "bestSeasonPoints": "13",
+          "bestSeasonName": "TTRL F125 SEASON 4 - T3",
+          "scoringRacesCount": 2,
+          "scoringRatePercent": 100
+        },
+        "racePositions": {
+          "bestPosition": 13,
+          "averagePosition": 13.5,
+          "wins": 0,
+          "podiums": 0,
+          "top5": 0,
+          "top10": 0,
+          "totalFinishes": 2,
+          "averageGridPosition": 13.5,
+          "averagePositionChange": 0
+        },
+        "qualPositions": {
+          "bestPosition": 10,
+          "averagePosition": 0,
+          "poles": 0,
+          "frontRows": 0,
+          "top3": 0,
+          "top5": 0,
+          "top10": 1,
+          "totalQualifications": 1
+        },
+        "standings": {
+          "championshipsWon": 0,
+          "bestPosition": 15,
+          "averagePosition": 0,
+          "runnerUps": 0,
+          "top3Finishes": 0,
+          "top5Finishes": 0,
+          "seasonResults": [
+            {
+              "seasonName": "TTRL F125 SEASON 4 - T3",
+              "position": 15,
+              "points": "13",
+              "racesCount": 2,
+              "wins": 0,
+              "podiums": 0
+            }
+          ]
+        },
+        "discipline": {
+          "dnfCount": 0,
+          "dsqCount": 0,
+          "totalPenaltySeconds": 3,
+          "racesWithPenalties": 1,
+          "cleanRacesCount": 1,
+          "cleanRacePercent": 33.3,
+          "reliabilityPercent": 100
+        }
+      },
+      {
+        "driverId": 858,
+        "driverName": "clen14",
+        "driverInfo": {
+          "nationality": "England",
+          "raceNumber": 19,
+          "realName": "clen14"
+        },
+        "participation": {
+          "seasonsParticipated": 1,
+          "totalEvents": 2,
+          "totalRaces": 3,
+          "totalMajorRaces": 2,
+          "totalQualifications": 3,
+          "totalRacesFinished": 1,
+          "eventCompletionRatePercent": 100,
+          "raceCompletionRatePercent": 33.3
+        },
+        "points": {
+          "totalPoints": "11",
+          "averagePerSeason": "11",
+          "averagePerMajorRace": "5.5",
+          "averagePerEvent": "5.5",
+          "bestSeasonPoints": "11",
+          "bestSeasonName": "TTRL F125 SEASON 4 - T3",
+          "scoringRacesCount": 1,
+          "scoringRatePercent": 50
+        },
+        "racePositions": {
+          "bestPosition": 9,
+          "averagePosition": 0,
+          "wins": 0,
+          "podiums": 0,
+          "top5": 0,
+          "top10": 1,
+          "totalFinishes": 1,
+          "averageGridPosition": 13.5,
+          "averagePositionChange": 0
+        },
+        "qualPositions": {
+          "bestPosition": 16,
+          "averagePosition": 0,
+          "poles": 0,
+          "frontRows": 0,
+          "top3": 0,
+          "top5": 0,
+          "top10": 0,
+          "totalQualifications": 1
+        },
+        "standings": {
+          "championshipsWon": 0,
+          "bestPosition": 16,
+          "averagePosition": 0,
+          "runnerUps": 0,
+          "top3Finishes": 0,
+          "top5Finishes": 0,
+          "seasonResults": [
+            {
+              "seasonName": "TTRL F125 SEASON 4 - T3",
+              "position": 16,
+              "points": "11",
+              "racesCount": 2,
+              "wins": 0,
+              "podiums": 0
+            }
+          ]
+        },
+        "discipline": {
+          "dnfCount": 2,
+          "dsqCount": 0,
+          "totalPenaltySeconds": 6,
+          "racesWithPenalties": 2,
+          "cleanRacesCount": 0,
+          "cleanRacePercent": 0,
+          "reliabilityPercent": 33.3
+        }
+      },
+      {
+        "driverId": 821,
+        "driverName": "Element\u00A0Snow7",
+        "driverInfo": {
+          "nationality": "Uruguay",
+          "raceNumber": 93,
+          "categories": [
+            "TTRL T4"
+          ]
+        },
+        "participation": {
+          "seasonsParticipated": 1,
+          "totalEvents": 1,
+          "totalRaces": 1,
+          "totalMajorRaces": 1,
+          "totalQualifications": 1,
+          "totalRacesFinished": 1,
+          "eventCompletionRatePercent": 50,
+          "raceCompletionRatePercent": 100
+        },
+        "points": {
+          "totalPoints": "9",
+          "averagePerSeason": "9",
+          "averagePerMajorRace": "9",
+          "averagePerEvent": "9",
+          "bestSeasonPoints": "9",
+          "bestSeasonName": "TTRL F125 SEASON 4 - T3",
+          "scoringRacesCount": 1,
+          "scoringRatePercent": 100
+        },
+        "racePositions": {
+          "bestPosition": 11,
+          "averagePosition": 0,
+          "wins": 0,
+          "podiums": 0,
+          "top5": 0,
+          "top10": 0,
+          "totalFinishes": 1,
+          "averageGridPosition": 19,
+          "averagePositionChange": 0
+        },
+        "qualPositions": {
+          "bestPosition": 19,
+          "averagePosition": 0,
+          "poles": 0,
+          "frontRows": 0,
+          "top3": 0,
+          "top5": 0,
+          "top10": 0,
+          "totalQualifications": 1
+        },
+        "standings": {
+          "championshipsWon": 0,
+          "bestPosition": 17,
+          "averagePosition": 0,
+          "runnerUps": 0,
+          "top3Finishes": 0,
+          "top5Finishes": 0,
+          "seasonResults": [
+            {
+              "seasonName": "TTRL F125 SEASON 4 - T3",
+              "position": 17,
+              "points": "9",
+              "racesCount": 1,
+              "wins": 0,
+              "podiums": 0
+            }
+          ]
+        },
+        "discipline": {
+          "dnfCount": 0,
+          "dsqCount": 0,
+          "totalPenaltySeconds": 3,
+          "racesWithPenalties": 1,
+          "cleanRacesCount": 0,
+          "cleanRacePercent": 0,
+          "reliabilityPercent": 100
+        }
+      },
+      {
+        "driverId": 860,
+        "driverName": "ctsouri",
+        "driverInfo": {
+          "nationality": "Cyprus",
+          "raceNumber": 99,
+          "categories": [
+            "TTRL T3"
+          ]
+        },
+        "participation": {
+          "seasonsParticipated": 1,
+          "totalEvents": 2,
+          "totalRaces": 3,
+          "totalMajorRaces": 2,
+          "totalQualifications": 5,
+          "totalRacesFinished": 2,
+          "eventCompletionRatePercent": 100,
+          "raceCompletionRatePercent": 66.7
+        },
+        "points": {
+          "totalPoints": "8",
+          "averagePerSeason": "8",
+          "averagePerMajorRace": "4",
+          "averagePerEvent": "4",
+          "bestSeasonPoints": "8",
+          "bestSeasonName": "TTRL F125 SEASON 4 - T3",
+          "scoringRacesCount": 1,
+          "scoringRatePercent": 50
+        },
+        "racePositions": {
+          "bestPosition": 12,
+          "averagePosition": 0,
+          "wins": 0,
+          "podiums": 0,
+          "top5": 0,
+          "top10": 0,
+          "totalFinishes": 1,
+          "averageGridPosition": 10,
+          "averagePositionChange": 0
+        },
+        "qualPositions": {
+          "bestPosition": 7,
+          "averagePosition": 0,
+          "poles": 0,
+          "frontRows": 0,
+          "top3": 0,
+          "top5": 0,
+          "top10": 1,
+          "totalQualifications": 1
+        },
+        "standings": {
+          "championshipsWon": 0,
+          "bestPosition": 18,
+          "averagePosition": 0,
+          "runnerUps": 0,
+          "top3Finishes": 0,
+          "top5Finishes": 0,
+          "seasonResults": [
+            {
+              "seasonName": "TTRL F125 SEASON 4 - T3",
+              "position": 18,
+              "points": "8",
+              "racesCount": 2,
+              "wins": 0,
+              "podiums": 0
+            }
+          ]
+        },
+        "discipline": {
+          "dnfCount": 1,
+          "dsqCount": 0,
+          "totalPenaltySeconds": 6,
+          "racesWithPenalties": 2,
+          "cleanRacesCount": 0,
+          "cleanRacePercent": 0,
+          "reliabilityPercent": 66.7
+        }
+      },
+      {
+        "driverId": 935,
+        "driverName": "J_bizzz__",
+        "driverInfo": {
+          "nationality": "United Nations",
+          "raceNumber": 84
+        },
+        "participation": {
+          "seasonsParticipated": 1,
+          "totalEvents": 1,
+          "totalRaces": 2,
+          "totalMajorRaces": 1,
+          "totalQualifications": 2,
+          "totalRacesFinished": 0,
+          "eventCompletionRatePercent": 50,
+          "raceCompletionRatePercent": 0
+        },
+        "points": {
+          "totalPoints": "0",
+          "averagePerSeason": "0",
+          "averagePerMajorRace": "0",
+          "averagePerEvent": "0",
+          "bestSeasonPoints": "0",
+          "bestSeasonName": "TTRL F125 SEASON 4 - T3",
+          "scoringRacesCount": 0,
+          "scoringRatePercent": 0
+        },
+        "racePositions": {
+          "bestPosition": 0,
+          "averagePosition": 0,
+          "wins": 0,
+          "podiums": 0,
+          "top5": 0,
+          "top10": 0,
+          "totalFinishes": 0,
+          "averageGridPosition": 3,
+          "averagePositionChange": 0
+        },
+        "qualPositions": {
+          "bestPosition": 0,
+          "averagePosition": 0,
+          "poles": 0,
+          "frontRows": 0,
+          "top3": 0,
+          "top5": 0,
+          "top10": 0,
+          "totalQualifications": 0
+        },
+        "standings": {
+          "championshipsWon": 0,
+          "bestPosition": 0,
+          "averagePosition": 0,
+          "runnerUps": 0,
+          "top3Finishes": 0,
+          "top5Finishes": 0,
+          "seasonResults": [
+            {
+              "seasonName": "TTRL F125 SEASON 4 - T3",
+              "position": 0,
+              "points": "0",
+              "racesCount": 1,
+              "wins": 0,
+              "podiums": 0
+            }
+          ]
+        },
+        "discipline": {
+          "dnfCount": 2,
+          "dsqCount": 0,
+          "totalPenaltySeconds": 3,
+          "racesWithPenalties": 1,
+          "cleanRacesCount": 0,
+          "cleanRacePercent": 0,
+          "reliabilityPercent": 0
+        }
+      },
+      {
+        "driverId": 321,
+        "driverName": "Jolouis1234",
+        "driverInfo": {
+          "nationality": "Canada",
+          "raceNumber": 19,
+          "realName": "Jolouis1234",
+          "categories": [
+            "TTRL T2",
+            "TTRL T3"
+          ]
+        },
+        "participation": {
+          "seasonsParticipated": 1,
+          "totalEvents": 2,
+          "totalRaces": 3,
+          "totalMajorRaces": 2,
+          "totalQualifications": 3,
+          "totalRacesFinished": 0,
+          "eventCompletionRatePercent": 100,
+          "raceCompletionRatePercent": 0
+        },
+        "points": {
+          "totalPoints": "0",
+          "averagePerSeason": "0",
+          "averagePerMajorRace": "0",
+          "averagePerEvent": "0",
+          "bestSeasonPoints": "0",
+          "bestSeasonName": "TTRL F125 SEASON 4 - T3",
+          "scoringRacesCount": 0,
+          "scoringRatePercent": 0
+        },
+        "racePositions": {
+          "bestPosition": 0,
+          "averagePosition": 0,
+          "wins": 0,
+          "podiums": 0,
+          "top5": 0,
+          "top10": 0,
+          "totalFinishes": 0,
+          "averageGridPosition": 12,
+          "averagePositionChange": 0
+        },
+        "qualPositions": {
+          "bestPosition": 18,
+          "averagePosition": 0,
+          "poles": 0,
+          "frontRows": 0,
+          "top3": 0,
+          "top5": 0,
+          "top10": 0,
+          "totalQualifications": 1
+        },
+        "standings": {
+          "championshipsWon": 0,
+          "bestPosition": 0,
+          "averagePosition": 0,
+          "runnerUps": 0,
+          "top3Finishes": 0,
+          "top5Finishes": 0,
+          "seasonResults": [
+            {
+              "seasonName": "TTRL F125 SEASON 4 - T3",
+              "position": 0,
+              "points": "0",
+              "racesCount": 2,
+              "wins": 0,
+              "podiums": 0
+            }
+          ]
+        },
+        "discipline": {
+          "dnfCount": 3,
+          "dsqCount": 0,
+          "totalPenaltySeconds": 6,
+          "racesWithPenalties": 1,
+          "cleanRacesCount": 0,
+          "cleanRacePercent": 0,
+          "reliabilityPercent": 0
+        }
+      }
+    ],
+    "teams": [
+      {
+        "teamId": 83,
+        "teamName": "McLaren",
+        "teamInfo": {
+          "uniqueId": "mclaren.2025",
+          "fullName": "McLaren Formula 1 Team",
+          "abbreviation": "MCL",
+          "primaryColor": "#FFFF8000",
+          "secondaryColor": "#FF00B5FF",
+          "country": "United Kingdom",
+          "car": "McLaren MCL39"
+        },
+        "position": 1,
+        "totalPoints": "76",
+        "participation": {
+          "seasonsParticipated": 1,
+          "totalEntries": 6,
+          "totalRaces": 6,
+          "totalRacesFinished": 4
+        },
+        "racePositions": {
+          "bestPosition": 3,
+          "wins": 0,
+          "podiums": 1,
+          "top5": 2,
+          "top10": 4,
+          "totalFinishes": 4
+        }
+      },
+      {
+        "teamId": 84,
+        "teamName": "Mercedes",
+        "teamInfo": {
+          "uniqueId": "mercedes.2025",
+          "fullName": "Mercedes-AMG Petronas F1 Team",
+          "abbreviation": "MER",
+          "primaryColor": "#FF27F4D2",
+          "secondaryColor": "#FF005FFF",
+          "tertiaryColor": "#FF000000",
+          "country": "Germany",
+          "car": "Mercedes-AMG F1 W16"
+        },
+        "position": 2,
+        "totalPoints": "62",
+        "participation": {
+          "seasonsParticipated": 1,
+          "totalEntries": 6,
+          "totalRaces": 6,
+          "totalRacesFinished": 3
+        },
+        "racePositions": {
+          "bestPosition": 2,
+          "wins": 0,
+          "podiums": 1,
+          "top5": 1,
+          "top10": 2,
+          "totalFinishes": 3
+        }
+      },
+      {
+        "teamId": 80,
+        "teamName": "Aston Martin",
+        "teamInfo": {
+          "uniqueId": "aston.martin.2025",
+          "fullName": "Aston Martin Aramco F1 Team",
+          "abbreviation": "AMR",
+          "primaryColor": "#FF229971",
+          "secondaryColor": "#FF0060FF",
+          "country": "United Kingdom",
+          "car": "Aston Martin AMR25"
+        },
+        "position": 3,
+        "totalPoints": "58",
+        "participation": {
+          "seasonsParticipated": 1,
+          "totalEntries": 6,
+          "totalRaces": 6,
+          "totalRacesFinished": 3
+        },
+        "racePositions": {
+          "bestPosition": 1,
+          "wins": 1,
+          "podiums": 1,
+          "top5": 1,
+          "top10": 2,
+          "totalFinishes": 3
+        }
+      },
+      {
+        "teamId": 77,
+        "teamName": "Sauber",
+        "teamInfo": {
+          "uniqueId": "sauber.2025",
+          "fullName": "Stake F1 Team Kick Sauber",
+          "abbreviation": "SAU",
+          "primaryColor": "#FF52E252",
+          "secondaryColor": "#FF0387FB",
+          "country": "Switzerland",
+          "car": "Sauber C45"
+        },
+        "position": 4,
+        "totalPoints": "47",
+        "participation": {
+          "seasonsParticipated": 1,
+          "totalEntries": 6,
+          "totalRaces": 6,
+          "totalRacesFinished": 4
+        },
+        "racePositions": {
+          "bestPosition": 5,
+          "wins": 0,
+          "podiums": 0,
+          "top5": 1,
+          "top10": 2,
+          "totalFinishes": 4
+        }
+      },
+      {
+        "teamId": 86,
+        "teamName": "Williams",
+        "teamInfo": {
+          "uniqueId": "williams.2025",
+          "fullName": "Williams Racing",
+          "abbreviation": "WIL",
+          "primaryColor": "#FF64C4FF",
+          "secondaryColor": "#FF0061FF",
+          "country": "United Kingdom",
+          "car": "Williams FW47"
+        },
+        "position": 5,
+        "totalPoints": "45",
+        "participation": {
+          "seasonsParticipated": 1,
+          "totalEntries": 7,
+          "totalRaces": 6,
+          "totalRacesFinished": 3
+        },
+        "racePositions": {
+          "bestPosition": 5,
+          "wins": 0,
+          "podiums": 0,
+          "top5": 1,
+          "top10": 3,
+          "totalFinishes": 3
+        }
+      },
+      {
+        "teamId": 81,
+        "teamName": "Ferrari",
+        "teamInfo": {
+          "uniqueId": "ferrari.2025",
+          "fullName": "Scuderia Ferrari",
+          "abbreviation": "FER",
+          "primaryColor": "#FFE80020",
+          "secondaryColor": "#FF008BFF",
+          "country": "Italy",
+          "car": "Ferrari SF-25"
+        },
+        "position": 6,
+        "totalPoints": "42",
+        "participation": {
+          "seasonsParticipated": 1,
+          "totalEntries": 6,
+          "totalRaces": 6,
+          "totalRacesFinished": 2
+        },
+        "racePositions": {
+          "bestPosition": 3,
+          "wins": 0,
+          "podiums": 1,
+          "top5": 1,
+          "top10": 2,
+          "totalFinishes": 2
+        }
+      },
+      {
+        "teamId": 82,
+        "teamName": "Haas",
+        "teamInfo": {
+          "uniqueId": "haas.2025",
+          "fullName": "MoneyGram Haas F1 Team",
+          "abbreviation": "HAS",
+          "primaryColor": "#FFB6BABD",
+          "secondaryColor": "#FF005EFF",
+          "country": "United States Of America",
+          "car": "Haas VF-25"
+        },
+        "position": 7,
+        "totalPoints": "40",
+        "participation": {
+          "seasonsParticipated": 1,
+          "totalEntries": 6,
+          "totalRaces": 6,
+          "totalRacesFinished": 2
+        },
+        "racePositions": {
+          "bestPosition": 1,
+          "wins": 1,
+          "podiums": 1,
+          "top5": 1,
+          "top10": 2,
+          "totalFinishes": 2
+        }
+      },
+      {
+        "teamId": 85,
+        "teamName": "Red Bull",
+        "teamInfo": {
+          "uniqueId": "red.bull.2025",
+          "fullName": "Oracle Red Bull Racing",
+          "abbreviation": "RB",
+          "primaryColor": "#FF3671C6",
+          "secondaryColor": "#FF0A6BF4",
+          "country": "Austria",
+          "car": "Red Bull RB21"
+        },
+        "position": 8,
+        "totalPoints": "38",
+        "participation": {
+          "seasonsParticipated": 1,
+          "totalEntries": 4,
+          "totalRaces": 4,
+          "totalRacesFinished": 3
+        },
+        "racePositions": {
+          "bestPosition": 2,
+          "wins": 0,
+          "podiums": 1,
+          "top5": 1,
+          "top10": 1,
+          "totalFinishes": 3
+        }
+      },
+      {
+        "teamId": 78,
+        "teamName": "VCarb",
+        "teamInfo": {
+          "uniqueId": "VCarb.2025",
+          "fullName": "Visa Cash App RB F1 Team",
+          "abbreviation": "VRB",
+          "primaryColor": "#FF3FABFF",
+          "secondaryColor": "#FF0075FF",
+          "tertiaryColor": "#FF000000",
+          "country": "Italy",
+          "car": "VCARB 02"
+        },
+        "position": 9,
+        "totalPoints": "38",
+        "participation": {
+          "seasonsParticipated": 1,
+          "totalEntries": 6,
+          "totalRaces": 6,
+          "totalRacesFinished": 3
+        },
+        "racePositions": {
+          "bestPosition": 4,
+          "wins": 0,
+          "podiums": 0,
+          "top5": 1,
+          "top10": 2,
+          "totalFinishes": 3
+        }
+      },
+      {
+        "teamId": 79,
+        "teamName": "Alpine",
+        "teamInfo": {
+          "uniqueId": "alpine.2025",
+          "fullName": "BWT Alpine F1 Team",
+          "abbreviation": "ALP",
+          "primaryColor": "#FF07A5F7",
+          "secondaryColor": "#FF045FFA",
+          "tertiaryColor": "#FF000000",
+          "country": "France",
+          "car": "Alpine A525"
+        },
+        "position": 10,
+        "totalPoints": "8",
+        "participation": {
+          "seasonsParticipated": 1,
+          "totalEntries": 6,
+          "totalRaces": 6,
+          "totalRacesFinished": 1
+        },
+        "racePositions": {
+          "bestPosition": 12,
+          "wins": 0,
+          "podiums": 0,
+          "top5": 0,
+          "top10": 0,
+          "totalFinishes": 1
+        }
+      }
+    ],
+    "tracks": [
+      {
+        "trackName": "",
+        "circuitName": "Baku",
+        "country": "Azerbaijan",
+        "generalStats": {
+          "totalEvents": 0,
+          "totalSeasons": 0,
+          "totalRaces": 0,
+          "totalMajorRaces": 0,
+          "totalQualifications": 0
+        },
+        "raceStats": {},
+        "qualificationStats": {}
+      },
+      {
+        "trackName": "",
+        "circuitName": "Interlagos",
+        "country": "Brazil",
+        "generalStats": {
+          "totalEvents": 0,
+          "totalSeasons": 0,
+          "totalRaces": 0,
+          "totalMajorRaces": 0,
+          "totalQualifications": 0
+        },
+        "raceStats": {},
+        "qualificationStats": {}
+      },
+      {
+        "trackName": "",
+        "circuitName": "Las Vegas",
+        "country": "United States Of America",
+        "generalStats": {
+          "totalEvents": 0,
+          "totalSeasons": 0,
+          "totalRaces": 0,
+          "totalMajorRaces": 0,
+          "totalQualifications": 0
+        },
+        "raceStats": {},
+        "qualificationStats": {}
+      },
+      {
+        "trackName": "",
+        "circuitName": "Losail",
+        "country": "Qatar",
+        "generalStats": {
+          "totalEvents": 0,
+          "totalSeasons": 0,
+          "totalRaces": 0,
+          "totalMajorRaces": 0,
+          "totalQualifications": 0
+        },
+        "raceStats": {},
+        "qualificationStats": {}
+      },
+      {
+        "trackName": "",
+        "circuitName": "Mystery Track",
+        "country": "United Nations",
+        "generalStats": {
+          "totalEvents": 0,
+          "totalSeasons": 0,
+          "totalRaces": 0,
+          "totalMajorRaces": 0,
+          "totalQualifications": 0
+        },
+        "raceStats": {},
+        "qualificationStats": {}
+      },
+      {
+        "trackName": "",
+        "circuitName": "Shanghai",
+        "country": "China",
+        "generalStats": {
+          "totalEvents": 0,
+          "totalSeasons": 0,
+          "totalRaces": 0,
+          "totalMajorRaces": 0,
+          "totalQualifications": 0
+        },
+        "raceStats": {},
+        "qualificationStats": {}
+      },
+      {
+        "trackName": "",
+        "circuitName": "Silverstone",
+        "country": "United Kingdom",
+        "generalStats": {
+          "totalEvents": 0,
+          "totalSeasons": 0,
+          "totalRaces": 0,
+          "totalMajorRaces": 0,
+          "totalQualifications": 0
+        },
+        "raceStats": {},
+        "qualificationStats": {}
+      },
+      {
+        "trackName": "",
+        "circuitName": "Singapore",
+        "country": "Singapore",
+        "generalStats": {
+          "totalEvents": 0,
+          "totalSeasons": 0,
+          "totalRaces": 0,
+          "totalMajorRaces": 0,
+          "totalQualifications": 0
+        },
+        "raceStats": {},
+        "qualificationStats": {}
+      },
+      {
+        "trackName": "",
+        "circuitName": "Spa-Francorchamps",
+        "country": "Belgium",
+        "generalStats": {
+          "totalEvents": 1,
+          "totalSeasons": 1,
+          "totalRaces": 2,
+          "totalMajorRaces": 1,
+          "totalQualifications": 2,
+          "firstVisitDate": "2026-03-15",
+          "lastVisitDate": "2026-03-15",
+          "absoluteTrackRecord": {
+            "time": "1:41.971",
+            "timeMs": 101971,
+            "driverName": "BurzaJr",
+            "teamName": "VCarb",
+            "seasonName": "TTRL F125 SEASON 4 - T3",
+            "sessionType": "Qualification"
+          }
+        },
+        "raceStats": {
+          "fastestRaceLap": {
+            "time": "1:45.349",
+            "timeMs": 105349,
+            "driverName": "RSF1 Invade",
+            "teamName": "Mercedes",
+            "seasonName": "TTRL F125 SEASON 4 - T3",
+            "sessionType": "Race"
+          },
+          "mostWinsDriver": {
+            "driverName": "DezMucky",
+            "count": 1
+          },
+          "mostWinsTeam": {
+            "teamName": "Haas",
+            "count": 1
+          },
+          "mostPodiumsDriver": {
+            "driverName": "DezMucky",
+            "count": 1
+          },
+          "mostPodiumsTeam": {
+            "teamName": "Haas",
+            "count": 1
+          },
+          "avgPitstops": 1.07,
+          "maxSpeed": 348,
+          "races": [
+            {
+              "date": "2026-03-15",
+              "seasonName": "TTRL F125 SEASON 4 - T3",
+              "roundNumber": 2,
+              "sessionCaption": "Race",
+              "winnerDriverName": "DezMucky",
+              "winnerTeamName": "Haas",
+              "lapsCount": 22,
+              "totalTime": "42:25.502",
+              "fastestLapTime": "1:46.907",
+              "fastestLapTyres": "Medium"
+            }
+          ]
+        },
+        "qualificationStats": {
+          "fastestQualLap": {
+            "time": "1:41.971",
+            "timeMs": 101971,
+            "driverName": "BurzaJr",
+            "teamName": "VCarb",
+            "seasonName": "TTRL F125 SEASON 4 - T3",
+            "sessionType": "Qualification"
+          }
+        }
+      },
+      {
+        "trackName": "",
+        "circuitName": "Spielberg (R)",
+        "country": "Austria",
+        "generalStats": {
+          "totalEvents": 0,
+          "totalSeasons": 0,
+          "totalRaces": 0,
+          "totalMajorRaces": 0,
+          "totalQualifications": 0
+        },
+        "raceStats": {},
+        "qualificationStats": {}
+      },
+      {
+        "trackName": "",
+        "circuitName": "Yas Marina",
+        "country": "United Arab Emirates",
+        "generalStats": {
+          "totalEvents": 1,
+          "totalSeasons": 1,
+          "totalRaces": 1,
+          "totalMajorRaces": 1,
+          "totalQualifications": 3,
+          "firstVisitDate": "2026-03-08",
+          "lastVisitDate": "2026-03-08",
+          "absoluteTrackRecord": {
+            "time": "1:22.671",
+            "timeMs": 82671,
+            "driverName": "LRS-Karl",
+            "teamName": "McLaren",
+            "seasonName": "TTRL F125 SEASON 4 - T3",
+            "sessionType": "Qualification"
+          }
+        },
+        "raceStats": {
+          "fastestRaceLap": {
+            "time": "1:25.193",
+            "timeMs": 85193,
+            "driverName": "S3L8ZZ SAS",
+            "teamName": "Aston Martin",
+            "seasonName": "TTRL F125 SEASON 4 - T3",
+            "sessionType": "Race"
+          },
+          "mostWinsDriver": {
+            "driverName": "S3L8ZZ SAS",
+            "count": 1
+          },
+          "mostWinsTeam": {
+            "teamName": "Aston Martin",
+            "count": 1
+          },
+          "mostPodiumsDriver": {
+            "driverName": "S3L8ZZ SAS",
+            "count": 1
+          },
+          "mostPodiumsTeam": {
+            "teamName": "Aston Martin",
+            "count": 1
+          },
+          "avgPitstops": 2.46,
+          "maxSpeed": 342,
+          "totalSafetyCars": 2,
+          "totalVirtualSafetyCars": 1,
+          "races": [
+            {
+              "date": "2026-03-08",
+              "seasonName": "TTRL F125 SEASON 4 - T3",
+              "roundNumber": 1,
+              "sessionCaption": "Race",
+              "winnerDriverName": "S3L8ZZ SAS",
+              "winnerTeamName": "Aston Martin",
+              "lapsCount": 29,
+              "totalTime": "46:08.841",
+              "fastestLapTime": "1:25.193",
+              "fastestLapTyres": "Medium"
+            }
+          ]
+        },
+        "qualificationStats": {
+          "fastestQualLap": {
+            "time": "1:22.671",
+            "timeMs": 82671,
+            "driverName": "LRS-Karl",
+            "teamName": "McLaren",
+            "seasonName": "TTRL F125 SEASON 4 - T3",
+            "sessionType": "Qualification"
+          }
+        }
+      },
+      {
+        "trackName": "",
+        "circuitName": "Zandvoort",
+        "country": "Netherlands",
+        "generalStats": {
+          "totalEvents": 0,
+          "totalSeasons": 0,
+          "totalRaces": 0,
+          "totalMajorRaces": 0,
+          "totalQualifications": 0
+        },
+        "raceStats": {},
+        "qualificationStats": {}
+      }
+    ]
+  }
+}
