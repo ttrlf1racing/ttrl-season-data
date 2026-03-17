@@ -985,12 +985,6 @@ function buildPage(data) {
 
   function getFilteredDriverRows() { return driverRowsAll; }
 
-  let selectedDriverName = null;
-  let driverCurrentPage = 1;
-  let driverPageSize = 25;
-
-  function getFilteredDriverRows() { return driverRowsAll; }
-
   function renderDrivers() {
     const search = document.getElementById('driverSearch').value.toLowerCase();
     const minSeasons = Number(document.getElementById('minSeasons').value || 1);
