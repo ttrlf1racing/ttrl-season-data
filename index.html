@@ -173,6 +173,10 @@
       box-shadow:0 0 18px rgba(59,130,246,0.45);
       overflow:hidden;
     }
+    .cleanest-card {
+  border-top:3px solid #22c55e;
+  margin-bottom:8px;
+}
     .driver-card.primary-champ { border-left-color:#22c55e; }
     .driver-card::before {
       content:'';
@@ -542,12 +546,24 @@
         </div>
       </div>
 
-      <div class="driver-layout-side">
-        <div id="cleanestDriverBox" class="driver-statline" style="margin-bottom:8px;">
-          Cleanest driver: –
-        </div>
+   <div class="driver-layout-side">
+  <div id="cleanestDriverBox" class="driver-card cleanest-card">
+    <div class="driver-card-header">
+      <img id="cleanestDriverAvatar"
+           src="Drivers Avatars/default.png"
+           alt="Driver avatar"
+           class="driver-card-logo">
+      <div>
+        <div class="driver-handle">CLEANEST DRIVER</div>
+        <h3 id="cleanestDriverName">Not enough race data yet</h3>
       </div>
     </div>
+    <div class="driver-meta" id="cleanestDriverMeta">
+      This stat appears once at least 10 races have been completed.
+    </div>
+  </div>
+</div>
+
   </section>
 
   <!-- Driver modal -->
@@ -969,6 +985,12 @@ function buildPage(data) {
 
   function getFilteredDriverRows() { return driverRowsAll; }
 
+  let selectedDriverName = null;
+  let driverCurrentPage = 1;
+  let driverPageSize = 25;
+
+  function getFilteredDriverRows() { return driverRowsAll; }
+
   function renderDrivers() {
     const search = document.getElementById('driverSearch').value.toLowerCase();
     const minSeasons = Number(document.getElementById('minSeasons').value || 1);
@@ -1040,6 +1062,54 @@ function buildPage(data) {
     const nextBtn = document.getElementById('driverNextPage');
     if (prevBtn) prevBtn.disabled = driverCurrentPage <= 1;
     if (nextBtn) nextBtn.disabled = driverCurrentPage >= totalPages;
+
+    // keep box in sync with current data/filters
+    renderCleanestDriverBox();
+  }
+
+  function renderCleanestDriverBox() {
+    const box = document.getElementById('cleanestDriverBox');
+    const nameEl = document.getElementById('cleanestDriverName');
+    const metaEl = document.getElementById('cleanestDriverMeta');
+    const avatarEl = document.getElementById('cleanestDriverAvatar');
+    if (!box || !nameEl || !metaEl) return;
+
+    const rows = getFilteredDriverRows();
+    const eligible = rows.filter(d => d.races >= 10 && d.cleanPct !== '' && d.cleanPct != null);
+
+    if (!eligible.length) {
+      nameEl.textContent = 'Not enough race data yet';
+      metaEl.textContent = 'This stat appears once at least 10 races have been completed.';
+      if (avatarEl) avatarEl.src = DRIVER_AVATAR_FOLDER + '/default.png';
+      return;
+    }
+
+    eligible.sort((a, b) => {
+      const byClean = (b.cleanPct || 0) - (a.cleanPct || 0);
+      if (byClean !== 0) return byClean;
+      const byRaces = (b.races || 0) - (a.races || 0);
+      if (byRaces !== 0) return byRaces;
+      return (b.totalPoints || 0) - (a.totalPoints || 0);
+    });
+
+    const best = eligible[0];
+    const pct = best.cleanPct.toFixed ? best.cleanPct.toFixed(1) : best.cleanPct;
+
+    nameEl.textContent = best.name;
+    metaEl.textContent =
+      `Cleanest driver across this export • ${pct}% clean over ${best.races} races`;
+
+    if (avatarEl) {
+      const avatarSrc = getDriverAvatarSrc(best.name);
+      avatarEl.onerror = () => {
+        if (avatarEl.src.includes('.gif')) {
+          avatarEl.src = avatarEl.src.replace('.gif', '.png');
+        } else {
+          avatarEl.src = DRIVER_AVATAR_FOLDER + '/default.png';
+        }
+      };
+      avatarEl.src = avatarSrc;
+    }
   }
 
   function renderDriverCard(driverName) {
@@ -1173,7 +1243,8 @@ function buildPage(data) {
   });
 
   renderDrivers();
-  renderCleanestDriver();
+  renderCleanestDriverBox();
+
 
   // ----- TRACKS -----
   const trackSelect = document.getElementById('trackSelect');
