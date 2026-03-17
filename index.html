@@ -882,6 +882,24 @@ function buildPage(data) {
     );
 
     if (!mainRow) {
+      // ... rest of merge code ...
+    }
+
+    // ... rest of IIFE ...
+  })();
+
+  // ADD THESE AFTER the closing })();
+  let selectedDriverName = null;
+  let driverCurrentPage = 1;
+  let driverPageSize = 25;
+
+  function getFilteredDriverRows() {
+    return driverRowsAll;
+  }
+
+
+
+    if (!mainRow) {
       mainRow = {
         source: {},
         name: MAIN_NAME,
