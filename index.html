@@ -546,7 +546,7 @@
         </div>
       </div>
 
-   <div class="driver-layout-side">
+<div class="driver-layout-side">
   <div id="cleanestDriverBox" class="driver-card cleanest-card">
     <div class="driver-card-header">
       <img id="cleanestDriverAvatar"
@@ -558,11 +558,15 @@
         <h3 id="cleanestDriverName">Not enough race data yet</h3>
       </div>
     </div>
-    <div class="driver-meta" id="cleanestDriverMeta">
+    <div class="driver-meta track-hover" id="cleanestDriverMeta">
       This stat appears once at least 10 races have been completed.
+      <span class="track-hover-tooltip" id="cleanestDriverTooltip">
+        Waiting for more race data…
+      </span>
     </div>
   </div>
 </div>
+
 
   </section>
 
@@ -1066,17 +1070,17 @@ function buildPage(data) {
   const nameEl = document.getElementById('cleanestDriverName');
   const metaEl = document.getElementById('cleanestDriverMeta');
   const avatarEl = document.getElementById('cleanestDriverAvatar');
+  const tooltipEl = document.getElementById('cleanestDriverTooltip');
   if (!box || !nameEl || !metaEl) return;
 
   const rows = getFilteredDriverRows();
 
-  // find max races in this export
   const maxRaces = rows.reduce((max, d) => Math.max(max, d.races || 0), 0);
 
-  // if nobody has 10+ races yet, keep default message
   if (maxRaces < 10) {
     nameEl.textContent = 'Not enough race data yet';
     metaEl.textContent = 'This stat appears once at least 10 races have been completed.';
+    if (tooltipEl) tooltipEl.textContent = 'Waiting for more race data…';
     if (avatarEl) avatarEl.src = DRIVER_AVATAR_FOLDER + '/default.png';
     return;
   }
@@ -1093,6 +1097,7 @@ function buildPage(data) {
     nameEl.textContent = 'Not enough race data yet';
     metaEl.textContent =
       `This stat appears once a driver has at least ${minRaces} races in this export.`;
+    if (tooltipEl) tooltipEl.textContent = 'No driver meets the race threshold yet.';
     if (avatarEl) avatarEl.src = DRIVER_AVATAR_FOLDER + '/default.png';
     return;
   }
@@ -1112,6 +1117,16 @@ function buildPage(data) {
   metaEl.textContent =
     `Cleanest driver across this export • ${pct}% clean over ${best.races} races (min ${minRaces} races)`;
 
+  // top 3 for tooltip
+  if (tooltipEl) {
+    const top = eligible.slice(0, 3);
+    const lines = top.map((d, i) => {
+      const p = d.cleanPct.toFixed ? d.cleanPct.toFixed(1) : d.cleanPct;
+      return `${i + 1}. ${d.name} – ${p}% (${d.races} races)`;
+    });
+    tooltipEl.textContent = lines.join('  •  ');
+  }
+
   if (avatarEl) {
     const avatarSrc = getDriverAvatarSrc(best.name);
     avatarEl.onerror = () => {
@@ -1125,46 +1140,7 @@ function buildPage(data) {
   }
 }
 
-
-  function renderDriverCard(driverName) {
-    const rows = getFilteredDriverRows();
-    const row = rows.find(d => d.name === driverName);
-    if (!row) return;
-
-    selectedDriverName = row.name;
-    window.currentDriverName = row.name; // used by driver-summary.html
-
-    Array.from(driversTableBody.querySelectorAll('tr')).forEach(tr => {
-      tr.classList.toggle('driver-row-selected', tr.dataset.driverName === selectedDriverName);
-    });
-
-    const src = row.source;
-    const infoD = src.driverInfo || {};
-    const participation = src.participation || {};
-    const standings = src.standings || {};
-    let seasonsResults = (standings.seasonResults || []).slice();
-    seasonsResults.sort((a, b) =>
-      String(a.seasonName || '').localeCompare(String(b.seasonName || ''))
-    );
-    const cats = getDriverCategories(row.name);
-
-    dcName.textContent = row.name;
-    dcMeta.textContent =
-      (infoD.nationality || 'Nationality unknown') +
-      (participation.seasonsParticipated ?
-        ' • ' + participation.seasonsParticipated + ' seasons' : '');
-
-    if (driverAvatar) {
-      const avatarSrc = getDriverAvatarSrc(row.name);
-      driverAvatar.onerror = () => {
-        if (driverAvatar.src.includes('.gif')) {
-          driverAvatar.src = driverAvatar.src.replace('.gif', '.png');
-        } else {
-          driverAvatar.src = DRIVER_AVATAR_FOLDER + '/default.png';
-        }
-      };
-      driverAvatar.src = avatarSrc;
-    }
+  
 
     dcCats.innerHTML = '';
     if (cats.length) {
