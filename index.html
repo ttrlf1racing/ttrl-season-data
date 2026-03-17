@@ -560,6 +560,14 @@
         <div class="driver-meta" id="dcMeta"></div>
         <div id="dcCats" style="margin-bottom:6px;"></div>
         <div class="driver-statline" id="dcSummary"></div>
+          <div class="driver-statline" id="dcSummary"></div>
+
+  <div id="cleanestDriverBox" class="driver-statline" style="margin-bottom:6px;">
+    Cleanest driver: –
+  </div>
+
+  <div id="dcPills" style="margin-bottom:8px"></div>
+
         <div id="dcPills" style="margin-bottom:8px;"></div>
 
         <button type="button" class="driver-cta-inline" onclick="openDriverSummaryView()">
@@ -899,6 +907,52 @@ function buildPage(data) {
         }
       }
     });
+      function findCleanestDriver() {
+    if (!driverRowsAll.length) return null;
+
+    const maxRaces = driverRowsAll.reduce(
+      (max, d) => Math.max(max, Number(d.races || 0)),
+      0
+    );
+
+    let candidates = driverRowsAll;
+
+    if (maxRaces >= 10) {
+      const minRaces = maxRaces * 0.8;
+      candidates = driverRowsAll.filter(d => Number(d.races || 0) >= minRaces);
+    }
+
+    candidates = candidates.filter(d => d.cleanPct !== '' && d.cleanPct != null);
+
+    if (!candidates.length) return null;
+
+    return candidates.reduce((best, d) => {
+      const v = Number(d.cleanPct);
+      const b = Number(best.cleanPct);
+      if (Number.isNaN(v)) return best;
+      if (Number.isNaN(b)) return d;
+      return v > b ? d : best;
+    }, candidates[0]);
+  }
+
+  function renderCleanestDriver() {
+    const box = document.getElementById('cleanestDriverBox');
+    if (!box) return;
+
+    const best = findCleanestDriver();
+    if (!best) {
+      box.textContent = 'Cleanest driver: –';
+      return;
+    }
+
+    const val = best.cleanPct;
+    const txt = (val !== '' && val != null && val.toFixed)
+      ? val.toFixed(1)
+      : val;
+
+    box.textContent = 'Cleanest driver: ' + best.name + ' – ' + txt + '%';
+  }
+
 
     if (mainRow.races > 0) {
       mainRow.avgPerMajor = mainRow.totalPoints / mainRow.races;
@@ -1120,7 +1174,9 @@ function buildPage(data) {
     renderDrivers();
   });
 
-  renderDrivers();
+   renderDrivers();
+  renderCleanestDriver();
+ 
 
   // ----- TRACKS -----
   const trackSelect = document.getElementById('trackSelect');
