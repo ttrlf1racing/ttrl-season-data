@@ -697,12 +697,19 @@ async function populateFileSelect() {
         item.name.toLowerCase().endsWith('.json')
     );
 
-    jsonFiles.forEach(file => {
-      const opt = document.createElement('option');
-      opt.value = file.path;      // "export_data/xxx.json"
-      opt.textContent = file.name;
-      select.appendChild(opt);
-    });
+jsonFiles.forEach(file => {
+  const opt = document.createElement('option');
+  opt.value = file.path;      // keep full path for loading
+
+  // strip .json from the visible text
+  const baseName = file.name.endsWith('.json')
+    ? file.name.slice(0, -5)
+    : file.name;
+  opt.textContent = baseName;
+
+  select.appendChild(opt);
+});
+
   } catch (err) {
     console.error('populateFileSelect error', err);
   }
