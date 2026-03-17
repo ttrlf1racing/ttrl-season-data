@@ -1339,16 +1339,6 @@ document.querySelectorAll('.track-subtab-btn').forEach(btn => {
   });
 });
 
-// top-level view switching
-document.querySelectorAll('#viewSelector .tab-btn').forEach(btn => {
-  // ...
-});
-
-// track subtabs
-document.querySelectorAll('.track-subtab-btn').forEach(btn => {
-  // ...
-});
-
 // file loading
 populateFileSelect();
 document.getElementById('fileSelect').addEventListener('change', async e => {
@@ -1370,7 +1360,7 @@ document.getElementById('fileSelect').addEventListener('change', async e => {
     }
 
     const json = await res.json();
-    buildPage(json);          // now definitely in scope
+    buildPage(json);
   } catch (err) {
     console.error(err);
     alert('Failed to load JSON: ' + err.message);
