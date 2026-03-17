@@ -652,7 +652,7 @@
     </div>
   </section>
 
-  <!-- Driver Times placeholder -->
+    <!-- Driver Times placeholder -->
   <section id="driverTimesSection" data-view="driverTimes">
     <h2>Driver Times</h2>
     <p class="muted">
@@ -669,79 +669,12 @@ const DRIVER_AVATAR_FOLDER = 'Drivers Avatars';
 window.currentExportFilename = '';
 window.currentDriverName = '';
 
-// New populateFileSelect using GitHub API (browser-safe)
-async function populateFileSelect() {
-  const select = document.getElementById('fileSelect');
-  if (!select) return;
-
-  // keep the first "Select race day…" option
-  while (select.options.length > 1) select.remove(1);
-
-  try {
-    const apiUrl =
-      'https://api.github.com/repos/ttrlf1racing/ttrl-season-data/contents/export_data';
-
-    const res = await fetch(apiUrl);
-    if (!res.ok) throw new Error('GitHub API error: ' + res.status);
-
-    const items = await res.json();   // this should now be valid JSON
-
-    const jsonFiles = items.filter(
-      item =>
-        item.type === 'file' &&
-        item.name.toLowerCase().endsWith('.json')
-    );
-
-    jsonFiles.forEach(file => {
-      const opt = document.createElement('option');
-      // IMPORTANT: value must be a path that GitHub Pages can serve as JSON
-      // e.g. "export_data/Sunday_races2.json"
-      opt.value = file.path;
-      opt.textContent = file.name;
-      select.appendChild(opt);
-    });
-  } catch (err) {
-    console.error('populateFileSelect error', err);
-  }
-}
-
-// file loader
-document.getElementById('fileSelect').addEventListener('change', async e => {
-  const path = e.target.value;
-  if (!path) return;
-
-  window.currentExportFilename = path.split('/').pop();
-
-  try {
-    const res = await fetch(path);
-
-    const ct = res.headers.get('content-type') || '';
-    if (ct.includes('text/html')) {
-      const text = await res.text();
-      console.error('Expected JSON but got HTML. URL:', res.url);
-      console.error('First 200 chars:', text.slice(0, 200));
-      alert('Selected file is not a JSON export (HTML page returned).');
-      return;
-    }
-
-    const json = await res.json();   // now safely parse JSON
-    buildPage(json);
-  } catch (err) {
-    console.error(err);
-    alert('Failed to load JSON: ' + err.message);
-  }
-});
-
-// call this once on load
-populateFileSelect();
-
-</script>
-
+// avatar helper
 function getDriverAvatarSrc(driverName) {
   return DRIVER_AVATAR_FOLDER + '/' + driverName + '.gif';
 }
 
-// New populateFileSelect using GitHub API
+// ---- DROPDOWN: GitHub API ----
 async function populateFileSelect() {
   const select = document.getElementById('fileSelect');
   if (!select) return;
@@ -756,7 +689,7 @@ async function populateFileSelect() {
     const res = await fetch(apiUrl);
     if (!res.ok) throw new Error('GitHub API error: ' + res.status);
 
-    const items = await res.json();   // GitHub returns JSON array
+    const items = await res.json();   // array from GitHub
 
     const jsonFiles = items.filter(
       item =>
@@ -766,7 +699,7 @@ async function populateFileSelect() {
 
     jsonFiles.forEach(file => {
       const opt = document.createElement('option');
-      opt.value = file.path;      // "export_data/Sunday_races2.json"
+      opt.value = file.path;      // "export_data/xxx.json"
       opt.textContent = file.name;
       select.appendChild(opt);
     });
@@ -775,9 +708,7 @@ async function populateFileSelect() {
   }
 }
 
-
-
-
+// ---- EXISTING META + PAGE BUILD ----
 function formatLoadedMeta(meta) {
   const fileMetaEl = document.getElementById('fileMeta');
   if (!fileMetaEl) return;
@@ -808,7 +739,9 @@ function buildPage(data) {
     seasonMetaByName[s.name] = {
       startDate: s.startDate || '',
       endDate: s.endDate || '',
-      status: s.isCompleted ? 'Completed' : (s.isStarted ? 'In Progress' : 'Not Started')    };
+      status: s.isCompleted ? 'Completed'
+        : (s.isStarted ? 'In Progress' : 'Not Started')
+    };
   });
   window.seasonMetaByName = seasonMetaByName;
 
@@ -816,7 +749,8 @@ function buildPage(data) {
 
   const leagueName = (meta.leagueName || '').trim() || 'TTRL';
   const msName = info.name || 'All Seasons';
-  document.getElementById('leagueTitle').textContent = leagueName + ' – ' + msName;
+  document.getElementById('leagueTitle').textContent =
+    leagueName + ' – ' + msName;
 
   const cardsEl = document.getElementById('overviewCards');
   cardsEl.innerHTML = '';
@@ -899,84 +833,76 @@ function buildPage(data) {
     };
   }
 
-  const driverRowsAll = driversSrc.map(deriveDriverRow); 
-// Merge all "richie chappell (DNU)" rows into "RichieChappe11"
-(function mergeRichieChappell() {
-  const MAIN_NAME = 'RichieChappe11';
-  const ALIAS_NAME = 'richie chappell (dnu)';
+  const driverRowsAll = driversSrc.map(deriveDriverRow);
 
-  const mainLower = MAIN_NAME.toLowerCase();
-  const aliasLower = ALIAS_NAME.toLowerCase();
+  // Merge RichieChappe11 alias
+  (function mergeRichieChappell() {
+    const MAIN_NAME = 'RichieChappe11';
+    const ALIAS_NAME = 'richie chappell (dnu)';
 
-  // Find main row (or create empty one if not present)
-  let mainRow = driverRowsAll.find(
-    d => (d.name || '').toLowerCase() === mainLower
-  );
+    const mainLower = MAIN_NAME.toLowerCase();
+    const aliasLower = ALIAS_NAME.toLowerCase();
 
-  if (!mainRow) {
-    mainRow = {
-      source: {},
-      name: MAIN_NAME,
-      nationality: '',
-      seasons: 0,
-      races: 0,
-      totalPoints: 0,
-      avgPerMajor: 0,
-      wins: 0,
-      podiums: 0,
-      fastRaceLaps: 0,
-      fastPoleLaps: 0,
-      bestChampPos: '',
-      cleanPct: '',
-      reliabPct: ''
-    };
-    driverRowsAll.push(mainRow);
-  }
+    let mainRow = driverRowsAll.find(
+      d => (d.name || '').toLowerCase() === mainLower
+    );
 
-  // Collect all alias rows
-  const aliasRows = driverRowsAll.filter(
-    d => (d.name || '').toLowerCase() === aliasLower
-  );
+    if (!mainRow) {
+      mainRow = {
+        source: {},
+        name: MAIN_NAME,
+        nationality: '',
+        seasons: 0,
+        races: 0,
+        totalPoints: 0,
+        avgPerMajor: 0,
+        wins: 0,
+        podiums: 0,
+        fastRaceLaps: 0,
+        fastPoleLaps: 0,
+        bestChampPos: '',
+        cleanPct: '',
+        reliabPct: ''
+      };
+      driverRowsAll.push(mainRow);
+    }
 
-  if (!aliasRows.length) return;
+    const aliasRows = driverRowsAll.filter(
+      d => (d.name || '').toLowerCase() === aliasLower
+    );
+    if (!aliasRows.length) return;
 
-  // Merge numeric fields by summing; seasons/races also summed
-  aliasRows.forEach(ar => {
-    mainRow.seasons += Number(ar.seasons || 0);
-    mainRow.races += Number(ar.races || 0);
-    mainRow.totalPoints += Number(ar.totalPoints || 0);
-    mainRow.wins += Number(ar.wins || 0);
-    mainRow.podiums += Number(ar.podiums || 0);
-    mainRow.fastRaceLaps += Number(ar.fastRaceLaps || 0);
-    mainRow.fastPoleLaps += Number(ar.fastPoleLaps || 0);
-    // keep best (smallest) champ position if both exist
-    if (ar.bestChampPos) {
-      if (!mainRow.bestChampPos) {
-        mainRow.bestChampPos = ar.bestChampPos;
-      } else {
-        const m = Number(mainRow.bestChampPos);
-        const a = Number(ar.bestChampPos);
-        if (!Number.isNaN(a) && (Number.isNaN(m) || a < m)) {
+    aliasRows.forEach(ar => {
+      mainRow.seasons += Number(ar.seasons || 0);
+      mainRow.races += Number(ar.races || 0);
+      mainRow.totalPoints += Number(ar.totalPoints || 0);
+      mainRow.wins += Number(ar.wins || 0);
+      mainRow.podiums += Number(ar.podiums || 0);
+      mainRow.fastRaceLaps += Number(ar.fastRaceLaps || 0);
+      mainRow.fastPoleLaps += Number(ar.fastPoleLaps || 0);
+      if (ar.bestChampPos) {
+        if (!mainRow.bestChampPos) {
           mainRow.bestChampPos = ar.bestChampPos;
+        } else {
+          const m = Number(mainRow.bestChampPos);
+          const a = Number(ar.bestChampPos);
+          if (!Number.isNaN(a) && (Number.isNaN(m) || a < m)) {
+            mainRow.bestChampPos = ar.bestChampPos;
+          }
         }
       }
+    });
+
+    if (mainRow.races > 0) {
+      mainRow.avgPerMajor = mainRow.totalPoints / mainRow.races;
     }
-  });
 
-  // Recompute avgPerMajor / cleanPct / reliabPct in whatever way makes sense
-  // Here: avgPerMajor from totalPoints / races if possible
-  if (mainRow.races > 0) {
-    mainRow.avgPerMajor = mainRow.totalPoints / mainRow.races;
-  }
-
-  // Remove alias rows from the array
-  for (let i = driverRowsAll.length - 1; i >= 0; i--) {
-    if ((driverRowsAll[i].name || '').toLowerCase() === aliasLower) {
-      driverRowsAll.splice(i, 1);
+    for (let i = driverRowsAll.length - 1; i >= 0; i--) {
+      if ((driverRowsAll[i].name || '').toLowerCase() === aliasLower) {
+        driverRowsAll.splice(i, 1);
+      }
     }
-  }
-})();
-
+  })();
 
   let selectedDriverName = null;
   let driverCurrentPage = 1;
@@ -1087,16 +1013,18 @@ function buildPage(data) {
 
     if (driverAvatar) {
       const avatarSrc = getDriverAvatarSrc(row.name);
-
-      driverAvatar.onerror = () => { if (driverAvatar.src.includes('.gif')) { driverAvatar.src = driverAvatar.src
-          .replace('.gif', '.png'); } else { driverAvatar.src = DRIVER_AVATAR_FOLDER + '/default.png'; } };  
-      driverAvatar.src = avatarSrc; 
+      driverAvatar.onerror = () => {
+        if (driverAvatar.src.includes('.gif')) {
+          driverAvatar.src = driverAvatar.src.replace('.gif', '.png');
+        } else {
+          driverAvatar.src = DRIVER_AVATAR_FOLDER + '/default.png';
         }
+      };
+      driverAvatar.src = avatarSrc;
+    }
 
-      dcCats.innerHTML = '';
-
-       if (cats.length) {
-        
+    dcCats.innerHTML = '';
+    if (cats.length) {
       cats.forEach((c, idx) => {
         const span = document.createElement('span');
         span.className = 'driver-chip' + (idx === 0 ? ' primary' : '');
@@ -1164,11 +1092,21 @@ function buildPage(data) {
     });
   }
 
-  document.getElementById('driverSearch').addEventListener('input', () => { driverCurrentPage = 1; renderDrivers(); });
-  document.getElementById('minSeasons').addEventListener('change', () => { driverCurrentPage = 1; renderDrivers(); });
-  document.getElementById('driverSort').addEventListener('change', () => { driverCurrentPage = 1; renderDrivers(); });
-  document.getElementById('driverPrevPage').addEventListener('click', () => { driverCurrentPage--; renderDrivers(); });
-  document.getElementById('driverNextPage').addEventListener('click', () => { driverCurrentPage++; renderDrivers(); });
+  document.getElementById('driverSearch').addEventListener('input', () => {
+    driverCurrentPage = 1; renderDrivers();
+  });
+  document.getElementById('minSeasons').addEventListener('change', () => {
+    driverCurrentPage = 1; renderDrivers();
+  });
+  document.getElementById('driverSort').addEventListener('change', () => {
+    driverCurrentPage = 1; renderDrivers();
+  });
+  document.getElementById('driverPrevPage').addEventListener('click', () => {
+    driverCurrentPage--; renderDrivers();
+  });
+  document.getElementById('driverNextPage').addEventListener('click', () => {
+    driverCurrentPage++; renderDrivers();
+  });
   document.getElementById('driverPageSize').addEventListener('change', e => {
     driverPageSize = Number(e.target.value || 25);
     driverCurrentPage = 1;
@@ -1316,7 +1254,9 @@ function buildPage(data) {
 document.querySelectorAll('#viewSelector .tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     if (btn.classList.contains('disabled')) return;
-    document.querySelectorAll('#viewSelector .tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('#viewSelector .tab-btn').forEach(b =>
+      b.classList.remove('active')
+    );
     btn.classList.add('active');
     const view = btn.getAttribute('data-view');
     document.querySelectorAll('section[data-view]').forEach(sec => {
@@ -1328,7 +1268,9 @@ document.querySelectorAll('#viewSelector .tab-btn').forEach(btn => {
 // track subtabs
 document.querySelectorAll('.track-subtab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('.track-subtab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.track-subtab-btn').forEach(b =>
+      b.classList.remove('active')
+    );
     btn.classList.add('active');
     const view = btn.getAttribute('data-track-view');
     document.querySelectorAll('[data-track-view]').forEach(el => {
