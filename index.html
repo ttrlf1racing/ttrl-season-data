@@ -804,7 +804,7 @@ function buildPage(data) {
     cardsEl.appendChild(div);
   });
 
-  // ----- DRIVERS -----
+   // ----- DRIVERS -----
   const driversTableBody = document.querySelector('#driversTable tbody');
   const dcName = document.getElementById('dcName');
   const dcMeta = document.getElementById('dcMeta');
@@ -946,63 +946,6 @@ function buildPage(data) {
     return driverRowsAll;
   }
 
-
-    if (!mainRow) {
-      mainRow = {
-        source: {},
-        name: MAIN_NAME,
-        nationality: '',
-        seasons: 0,
-        races: 0,
-        totalPoints: 0,
-        avgPerMajor: 0,
-        wins: 0,
-        podiums: 0,
-        fastRaceLaps: 0,
-        fastPoleLaps: 0,
-        bestChampPos: '',
-        cleanPct: '',
-        reliabPct: ''
-      };
-      driverRowsAll.push(mainRow);
-    }
-
-    const aliasRows = driverRowsAll.filter(
-      d => (d.name || '').toLowerCase() === aliasLower
-    );
-    if (!aliasRows.length) return;
-
-    aliasRows.forEach(ar => {
-      mainRow.seasons += Number(ar.seasons || 0);
-      mainRow.races += Number(ar.races || 0);
-      mainRow.totalPoints += Number(ar.totalPoints || 0);
-      mainRow.wins += Number(ar.wins || 0);
-      mainRow.podiums += Number(ar.podiums || 0);
-      mainRow.fastRaceLaps += Number(ar.fastRaceLaps || 0);
-      mainRow.fastPoleLaps += Number(ar.fastPoleLaps || 0);
-      if (ar.bestChampPos) {
-        if (!mainRow.bestChampPos) {
-          mainRow.bestChampPos = ar.bestChampPos;
-        } else {
-          const m = Number(mainRow.bestChampPos);
-          const a = Number(ar.bestChampPos);
-          if (!Number.isNaN(a) && (Number.isNaN(m) || a < m)) {
-            mainRow.bestChampPos = ar.bestChampPos;
-          }
-        }
-      }
-    });
-
-    if (mainRow.races > 0) {
-      mainRow.avgPerMajor = mainRow.totalPoints / mainRow.races;
-    }
-
-    for (let i = driverRowsAll.length - 1; i >= 0; i--) {
-      if ((driverRowsAll[i].name || '').toLowerCase() === aliasLower) {
-        driverRowsAll.splice(i, 1);
-      }
-    }
-  })();
 
   function findCleanestDriver() {
     if (!driverRowsAll.length) return null;
