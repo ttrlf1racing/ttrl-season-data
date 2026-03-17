@@ -1322,6 +1322,7 @@ document.getElementById('fileSelect').addEventListener('change', async e => {
   try {
     const res = await fetch(path);
     const json = await res.json();
+    console.log('GitHub items:', items);
     buildPage(json);
   } catch (err) {
     console.error(err);
