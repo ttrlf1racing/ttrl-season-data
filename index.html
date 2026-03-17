@@ -907,7 +907,19 @@ function buildPage(data) {
         }
       }
     });
-      function findCleanestDriver() {
+
+    if (mainRow.races > 0) {
+      mainRow.avgPerMajor = mainRow.totalPoints / mainRow.races;
+    }
+
+    for (let i = driverRowsAll.length - 1; i >= 0; i--) {
+      if ((driverRowsAll[i].name || '').toLowerCase() === aliasLower) {
+        driverRowsAll.splice(i, 1);
+      }
+    }
+  })();
+
+  function findCleanestDriver() {
     if (!driverRowsAll.length) return null;
 
     const maxRaces = driverRowsAll.reduce(
@@ -923,7 +935,6 @@ function buildPage(data) {
     }
 
     candidates = candidates.filter(d => d.cleanPct !== '' && d.cleanPct != null);
-
     if (!candidates.length) return null;
 
     return candidates.reduce((best, d) => {
@@ -952,18 +963,6 @@ function buildPage(data) {
 
     box.textContent = 'Cleanest driver: ' + best.name + ' – ' + txt + '%';
   }
-
-
-    if (mainRow.races > 0) {
-      mainRow.avgPerMajor = mainRow.totalPoints / mainRow.races;
-    }
-
-    for (let i = driverRowsAll.length - 1; i >= 0; i--) {
-      if ((driverRowsAll[i].name || '').toLowerCase() === aliasLower) {
-        driverRowsAll.splice(i, 1);
-      }
-    }
-  })();
 
   let selectedDriverName = null;
   let driverCurrentPage = 1;
@@ -1174,9 +1173,8 @@ function buildPage(data) {
     renderDrivers();
   });
 
-   renderDrivers();
+  renderDrivers();
   renderCleanestDriver();
- 
 
   // ----- TRACKS -----
   const trackSelect = document.getElementById('trackSelect');
@@ -1313,36 +1311,6 @@ function buildPage(data) {
   });
 }
 
-// top-level view switching
-document.querySelectorAll('#viewSelector .tab-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    if (btn.classList.contains('disabled')) return;
-    document.querySelectorAll('#viewSelector .tab-btn').forEach(b =>
-      b.classList.remove('active')
-    );
-    btn.classList.add('active');
-    const view = btn.getAttribute('data-view');
-    document.querySelectorAll('section[data-view]').forEach(sec => {
-      sec.classList.toggle('active', sec.getAttribute('data-view') === view);
-    });
-  });
-});
-
-// track subtabs
-document.querySelectorAll('.track-subtab-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.track-subtab-btn').forEach(b =>
-      b.classList.remove('active')
-    );
-    btn.classList.add('active');
-    const view = btn.getAttribute('data-track-view');
-    document.querySelectorAll('[data-track-view]').forEach(el => {
-      if (el.id === 'trackDetailsView' || el.id === 'trackSeasonCmpView') {
-        el.style.display = el.getAttribute('data-track-view') === view ? '' : 'none';
-      }
-    });
-  });
-});
 
 // file loading
 populateFileSelect();
