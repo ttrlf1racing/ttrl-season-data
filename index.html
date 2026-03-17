@@ -1394,6 +1394,38 @@ function buildPage(data) {
     renderTrackSeasonCmp();
   });
 }
+// top-level view tabs: Drivers / Tracks / Driver Times
+(function setupMainViewTabs() {
+  const tabButtons = Array.from(document.querySelectorAll('#viewSelector .tab-btn'))
+    .filter(btn => !btn.classList.contains('disabled'));
+
+  const sections = Array.from(document.querySelectorAll('section[data-view]'));
+
+  function activateView(viewName) {
+    // buttons
+    tabButtons.forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.view === viewName);
+    });
+    // sections
+    sections.forEach(sec => {
+      sec.classList.toggle('active', sec.dataset.view === viewName);
+    });
+  }
+
+  tabButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const view = btn.dataset.view;
+      if (!view) return;
+      activateView(view);
+    });
+  });
+
+  // ensure initial state is consistent with existing markup
+  const initial =
+    (document.querySelector('#viewSelector .tab-btn.active') || {}).dataset?.view
+    || 'drivers';
+  activateView(initial);
+})();
 
 
 // file loading
