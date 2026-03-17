@@ -678,14 +678,22 @@ async function populateFileSelect() {
   // keep the first "Select race day…" option
   while (select.options.length > 1) select.remove(1);
 
-  try {
+   try {
     const apiUrl =
       'https://api.github.com/repos/ttrlf1racing/ttrl-season-data/contents/export_data';
 
-    const res = await fetch(apiUrl);
-    if (!res.ok) throw new Error('GitHub API error: ' + res.status);
+const res = await fetch(apiUrl);
+console.log('GitHub API status', res.status, res.url);
+const text = await res.text();
+console.log('GitHub API body (first 200):', text.slice(0, 200));
 
-    const items = await res.json();
+
+    const jsonFiles = items.filter(
+      item =>
+        item.type === 'file' &&
+        item.name.toLowerCase().endsWith('.json')
+    );
+
 
     const jsonFiles = items.filter(
       item =>
