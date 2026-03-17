@@ -678,22 +678,14 @@ async function populateFileSelect() {
   // keep the first "Select race day…" option
   while (select.options.length > 1) select.remove(1);
 
-   try {
+  try {
     const apiUrl =
       'https://api.github.com/repos/ttrlf1racing/ttrl-season-data/contents/export_data';
 
-const res = await fetch(apiUrl);
-console.log('GitHub API status', res.status, res.url);
-const text = await res.text();
-console.log('GitHub API body (first 200):', text.slice(0, 200));
+    const res = await fetch(apiUrl);
+    if (!res.ok) throw new Error('GitHub API error: ' + res.status);
 
-
-    const jsonFiles = items.filter(
-      item =>
-        item.type === 'file' &&
-        item.name.toLowerCase().endsWith('.json')
-    );
-
+    const items = await res.json();   // this should now be valid JSON
 
     const jsonFiles = items.filter(
       item =>
@@ -703,28 +695,40 @@ console.log('GitHub API body (first 200):', text.slice(0, 200));
 
     jsonFiles.forEach(file => {
       const opt = document.createElement('option');
-      opt.value = file.path;      // "export_data/Sunday_races2.json"
+      // IMPORTANT: value must be a path that GitHub Pages can serve as JSON
+      // e.g. "export_data/Sunday_races2.json"
+      opt.value = file.path;
       opt.textContent = file.name;
       select.appendChild(opt);
     });
-
-    if (jsonFiles.length === 0) {
-      const opt = document.createElement('option');
-      opt.disabled = true;
-      opt.textContent = 'No JSON exports found';
-      select.appendChild(opt);
-    }
   } catch (err) {
     console.error('populateFileSelect error', err);
-    const opt = document.createElement('option');
-    opt.disabled = true;
-    opt.textContent = 'Failed to load exports';
-    select.appendChild(opt);
   }
 }
 
-// call it on load
+// file loader
+document.getElementById('fileSelect').addEventListener('change', async e => {
+  const path = e.target.value;
+  if (!path) return;
+  window.currentExportFilename = path.split('/').pop();
+
+  try {
+    console.log('Selected path', path);
+    const res = await fetch(path);
+    console.log('File status', res.status, res.url);
+    const text = await res.text();
+    console.log('File body first 60:', text.slice(0, 60));
+    // stop here for now to avoid the JSON parse error
+    // const json = await res.json();
+    // buildPage(json);
+  } catch (err) {
+    console.error('load file error', err);
+  }
+});
+
+// call this once on load
 populateFileSelect();
+
 </script>
 
 
