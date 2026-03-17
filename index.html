@@ -804,6 +804,82 @@ function buildPage(data) {
     cardsEl.appendChild(div);
   });
 
+    function renderDrivers() {
+    const search = document.getElementById('driverSearch').value.toLowerCase();
+    const minSeasons = Number(document.getElementById('minSeasons').value || 1);
+    const sortKey = document.getElementById('driverSort').value;
+
+    const rows = getFilteredDriverRows();
+    const filtered = rows.filter(dr => {
+      if (dr.seasons < minSeasons) return false;
+      const text = (dr.name + ' ' + dr.nationality).toLowerCase();
+      if (search && !text.includes(search)) return false;
+      return true;
+    });
+
+    const sorters = {
+      points: (a, b) => b.totalPoints - a.totalPoints,
+      avgPoints: (a, b) => b.avgPerMajor - a.avgPerMajor,
+      wins: (a, b) => b.wins - a.wins,
+      podiums: (a, b) => b.podiums - a.podiums,
+      fastRace: (a, b) => b.fastRaceLaps - a.fastRaceLaps,
+      fastPole: (a, b) => b.fastPoleLaps - a.fastPoleLaps,
+      clean: (a, b) => (b.cleanPct || 0) - (a.cleanPct || 0)
+    };
+    filtered.sort(sorters[sortKey] || sorters.points);
+
+    const total = filtered.length;
+    const totalPages = Math.max(1, Math.ceil(total / driverPageSize));
+    if (driverCurrentPage > totalPages) driverCurrentPage = totalPages;
+    if (driverCurrentPage < 1) driverCurrentPage = 1;
+
+    const start = (driverCurrentPage - 1) * driverPageSize;
+    const pageRows = filtered.slice(start, start + driverPageSize);
+
+    driversTableBody.innerHTML = '';
+    pageRows.forEach(dr => {
+      const tr = document.createElement('tr');
+      tr.dataset.driverName = dr.name;
+      if (dr.name === selectedDriverName) tr.classList.add('driver-row-selected');
+      tr.innerHTML =
+        '<td>' + dr.name + '</td>' +
+        '<td>' + dr.nationality + '</td>' +
+        '<td>' + dr.seasons + '</td>' +
+        '<td>' + dr.races + '</td>' +
+        '<td>' + dr.totalPoints + '</td>' +
+        '<td>' +
+          (dr.avgPerMajor.toFixed ? dr.avgPerMajor.toFixed(1) : dr.avgPerMajor) +
+        '</td>' +
+        '<td>' + dr.wins + '</td>' +
+        '<td>' + dr.podiums + '</td>' +
+        '<td>' + dr.fastRaceLaps + '</td>' +
+        '<td>' + dr.fastPoleLaps + '</td>' +
+        '<td>' + dr.bestChampPos + '</td>' +
+        '<td>' +
+          (dr.cleanPct !== '' ?
+            (dr.cleanPct.toFixed ? dr.cleanPct.toFixed(1) : dr.cleanPct) : '') +
+        '</td>' +
+        '<td>' +
+          (dr.reliabPct !== '' ?
+            (dr.reliabPct.toFixed ? dr.reliabPct.toFixed(1) : dr.reliabPct) : '') +
+        '</td>';
+      driversTableBody.appendChild(tr);
+    });
+
+    const infoEl = document.getElementById('driverPageInfo');
+    if (infoEl) {
+      infoEl.textContent =
+        'Page ' + driverCurrentPage + ' of ' + totalPages + ' • ' + total + ' drivers';
+    }
+    const prevBtn = document.getElementById('driverPrevPage');
+    const nextBtn = document.getElementById('driverNextPage');
+    if (prevBtn) prevBtn.disabled = driverCurrentPage <= 1;
+    if (nextBtn) nextBtn.disabled = driverCurrentPage >= totalPages;
+
+    renderCleanestDriverBox();
+  }
+
+
    // ----- DRIVERS -----
   const driversTableBody = document.querySelector('#driversTable tbody');
   const dcName = document.getElementById('dcName');
