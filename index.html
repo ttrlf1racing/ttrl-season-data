@@ -662,39 +662,62 @@
 </main>
 
 <script>
+<script>
 let globalBaseData = null;
 const DRIVER_AVATAR_FOLDER = 'Drivers Avatars';
 
 // state for driver-summary.html
 window.currentExportFilename = '';
 window.currentDriverName = '';
-// e.g. server.js
 
-import express from 'express';
+// New populateFileSelect using GitHub API (browser-safe)
+async function populateFileSelect() {
+  const select = document.getElementById('fileSelect');
+  if (!select) return;
 
-const app = express();
-const EXPORT_DIR = path.join(process.cwd(), 'export_data');
+  // keep the first "Select race day…" option
+  while (select.options.length > 1) select.remove(1);
 
-app.get('/api/exports', (req, res) => {
-  fs.readdir(EXPORT_DIR, (err, files) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({ error: 'Failed to read export folder' });
+  try {
+    const apiUrl =
+      'https://api.github.com/repos/ttrlf1racing/ttrl-season-data/contents/export_data';
+
+    const res = await fetch(apiUrl);
+    if (!res.ok) throw new Error('GitHub API error: ' + res.status);
+
+    const items = await res.json();
+
+    const jsonFiles = items.filter(
+      item =>
+        item.type === 'file' &&
+        item.name.toLowerCase().endsWith('.json')
+    );
+
+    jsonFiles.forEach(file => {
+      const opt = document.createElement('option');
+      opt.value = file.path;      // "export_data/Sunday_races2.json"
+      opt.textContent = file.name;
+      select.appendChild(opt);
+    });
+
+    if (jsonFiles.length === 0) {
+      const opt = document.createElement('option');
+      opt.disabled = true;
+      opt.textContent = 'No JSON exports found';
+      select.appendChild(opt);
     }
+  } catch (err) {
+    console.error('populateFileSelect error', err);
+    const opt = document.createElement('option');
+    opt.disabled = true;
+    opt.textContent = 'Failed to load exports';
+    select.appendChild(opt);
+  }
+}
 
-    const jsonFiles = files.filter(f => f.toLowerCase().endsWith('.json'));
-
-    const result = jsonFiles.map(f => ({
-      value: `export_data/${f}`,
-      label: path.basename(f, '.json').replace(/[_-]/g, ' ')
-    }));
-
-    res.json(result);
-  });
-});
-
-app.listen(3000);
-
+// call it on load
+populateFileSelect();
+</script>
 
 
 function getDriverAvatarSrc(driverName) {
