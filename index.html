@@ -703,24 +703,56 @@ function getDriverAvatarSrc(driverName) {
 }
 
 // AFTER – fetch list of JSON files from server
+// Remove the old const EXPORT_FILES = [...] block completely
+
+// New populateFileSelect using GitHub API
 async function populateFileSelect() {
   const select = document.getElementById('fileSelect');
   if (!select) return;
 
-  // Keep the first "Select race day…" option
+  // keep the first "Select race day…" option
   while (select.options.length > 1) select.remove(1);
 
   try {
-    const res = await fetch('/api/exports');   // your new endpoint
-    if (!res.ok) throw new Error('Failed to fetch export list');
-    const files = await res.json();           // [{ value, label }, ...]
+    // GitHub API: list contents of export_data folder
+    const apiUrl =
+      'https://api.github.com/repos/ttrlf1racing/ttrl-season-data/contents/export_data';
 
-    files.forEach(f => {
+    const res = await fetch(apiUrl);
+    if (!res.ok) throw new Error('GitHub API error: ' + res.status);
+
+    const items = await res.json(); // array of { name, path, type, ... }
+
+    // keep only .json files
+    const jsonFiles = items.filter(
+      item =>
+        item.type === 'file' &&
+        item.name.toLowerCase().endsWith('.json')
+    );
+
+    // helper to turn filename into a nicer label
+    const makeLabel = (name) => {
+      // e.g. "sunday_races_2026-03-10.json"
+      const base = name.replace(/\.json$/i, '');
+      // swap _ and - for spaces
+      return base.replace(/[_-]/g, ' ');
+    };
+
+    jsonFiles.forEach(file => {
       const opt = document.createElement('option');
-      opt.value = f.value;        // e.g. "export_data/sunday_races_2026-03-10.json"
-      opt.textContent = f.label;  // e.g. "Sunday races – 10 Mar 2026"
+      // this matches the path your change handler already fetches:
+      // fetch(path) where path is e.g. "export_data/sunday_races.json"
+      opt.value = file.path;          // "export_data/filename.json"
+      opt.textContent = makeLabel(file.name);
       select.appendChild(opt);
     });
+
+    if (jsonFiles.length === 0) {
+      const opt = document.createElement('option');
+      opt.disabled = true;
+      opt.textContent = 'No JSON exports found';
+      select.appendChild(opt);
+    }
   } catch (err) {
     console.error(err);
     const opt = document.createElement('option');
