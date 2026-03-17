@@ -471,7 +471,7 @@
     </div>
   </section>
 
-  <!-- Drivers -->
+   <!-- Drivers -->
   <section id="driversSection" data-view="drivers" class="active">
     <h2>Drivers</h2>
     <p class="section-description">
@@ -502,80 +502,71 @@
       </label>
     </div>
 
-<div class="driver-layout">
-  <div class="driver-layout-main">
-    <div class="scroll-body">
-      <table id="driversTable">
-        <thead>
-          <tr>
-            <th>Driver</th>
-            <th>Nat.</th>
-            <th>Seasons</th>
-            <th>Races</th>
-            <th>Total pts</th>
-            <th>Avg pts</th>
-            <th>Wins</th>
-            <th>Podiums</th>
-            <th>Fast race laps</th>
-            <th>Fast pole laps</th>
-            <th>Best champ pos</th>
-            <th>Clean %</th>
-            <th>Reliab. %</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
+    <div class="driver-layout">
+      <div class="driver-layout-main">
+        <div class="scroll-body">
+          <table id="driversTable">
+            <thead>
+              <tr>
+                <th>Driver</th>
+                <th>Nat.</th>
+                <th>Seasons</th>
+                <th>Races</th>
+                <th>Total pts</th>
+                <th>Avg pts</th>
+                <th>Wins</th>
+                <th>Podiums</th>
+                <th>Fast race laps</th>
+                <th>Fast pole laps</th>
+                <th>Best champ pos</th>
+                <th>Clean %</th>
+                <th>Reliab. %</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
 
-    <div id="driverPager" class="filters" style="justify-content:space-between; margin-top:6px;">
-      <div><span id="driverPageInfo">Page 1 of 1</span></div>
-      <div>
-        <button id="driverPrevPage" class="tab-btn" type="button">&lt; Prev</button>
-        <button id="driverNextPage" class="tab-btn" type="button">Next &gt;</button>
-        <select id="driverPageSize" style="margin-left:8px;">
-          <option value="10">10 / page</option>
-          <option value="25" selected>25 / page</option>
-          <option value="50">50 / page</option>
-          <option value="100">100 / page</option>
-        </select>
+        <div id="driverPager" class="filters" style="justify-content:space-between; margin-top:6px;">
+          <div><span id="driverPageInfo">Page 1 of 1</span></div>
+          <div>
+            <button id="driverPrevPage" class="tab-btn" type="button">&lt; Prev</button>
+            <button id="driverNextPage" class="tab-btn" type="button">Next &gt;</button>
+            <select id="driverPageSize" style="margin-left:8px;">
+              <option value="10">10 / page</option>
+              <option value="25" selected>25 / page</option>
+              <option value="50">50 / page</option>
+              <option value="100">100 / page</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="driver-layout-side">
+        <div id="cleanestDriverBox" class="driver-statline" style="margin-bottom:8px;">
+          Cleanest driver: –
+        </div>
       </div>
     </div>
-  </div>
-
-  <div class="driver-layout-side">
-    <div id="cleanestDriverBox" class="driver-statline" style="margin-bottom:8px;">
-      Cleanest driver: –
-    </div>
-
-    <div id="driverCard" class="driver-card">
-      <!-- existing driver card content (avatar, dcName, dcMeta, dcSummary, dcPills, seasons table, etc.) -->
-    </div>
-  </div>
-</div>
-
+  </section>
 
   <!-- Driver modal -->
   <div id="driverModal" class="driver-modal">
     <div class="driver-modal-backdrop"></div>
     <div class="driver-modal-card">
       <button id="driverModalClose" class="driver-modal-close">&times;</button>
-<div id="driverCard" class="driver-card">
-  <div class="driver-card-header">
-    <img id="driverAvatar" src="Drivers Avatars/default.png" alt="Driver avatar" class="driver-card-logo">
-    <div>
-      <div class="driver-handle">TTRL DRIVER PROFILE</div>
-      <h3 id="dcName"></h3>
-    </div>
-  </div>
+      <div id="driverCard" class="driver-card">
+        <div class="driver-card-header">
+          <img id="driverAvatar" src="Drivers Avatars/default.png" alt="Driver avatar" class="driver-card-logo">
+          <div>
+            <div class="driver-handle">TTRL DRIVER PROFILE</div>
+            <h3 id="dcName"></h3>
+          </div>
+        </div>
 
-  <div class="driver-meta" id="dcMeta"></div>
-  <div id="dcCats" style="margin-bottom:6px;"></div>
-  <div class="driver-statline" id="dcSummary"></div>
-  <div id="dcPills" style="margin-bottom:8px"></div>
-  <!-- keep the rest of the card (button, seasons table, etc.) here -->
-</div>
-
-
+        <div class="driver-meta" id="dcMeta"></div>
+        <div id="dcCats" style="margin-bottom:6px;"></div>
+        <div class="driver-statline" id="dcSummary"></div>
         <div id="dcPills" style="margin-bottom:8px;"></div>
 
         <button type="button" class="driver-cta-inline" onclick="openDriverSummaryView()">
@@ -589,9 +580,9 @@
             <thead>
               <tr>
                 <th>Season</th>
-              <th>Start</th>
-              <th>End</th>
-              <th>Status</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Status</th>
                 <th>Pos</th>
                 <th>Pts</th>
                 <th>Races</th>
