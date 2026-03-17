@@ -171,7 +171,7 @@
       border:1px solid #3b82f6;
       border-left:4px solid #ef4444;
       box-shadow:0 0 18px rgba(59,130,246,0.45);
-      overflow:visible;
+      overflow:hidden;
     }
     .cleanest-card {
   border-top:3px solid #22c55e;
@@ -546,7 +546,7 @@
         </div>
       </div>
 
-<div class="driver-layout-side">
+   <div class="driver-layout-side">
   <div id="cleanestDriverBox" class="driver-card cleanest-card">
     <div class="driver-card-header">
       <img id="cleanestDriverAvatar"
@@ -558,15 +558,11 @@
         <h3 id="cleanestDriverName">Not enough race data yet</h3>
       </div>
     </div>
-    <div class="driver-meta track-hover" id="cleanestDriverMeta">
+    <div class="driver-meta" id="cleanestDriverMeta">
       This stat appears once at least 10 races have been completed.
-      <div class="track-hover-tooltip" id="cleanestDriverTooltip">
-        Waiting for more race data…
-      </div>
     </div>
   </div>
 </div>
-
 
   </section>
 
@@ -804,83 +800,7 @@ function buildPage(data) {
     cardsEl.appendChild(div);
   });
 
-    function renderDrivers() {
-    const search = document.getElementById('driverSearch').value.toLowerCase();
-    const minSeasons = Number(document.getElementById('minSeasons').value || 1);
-    const sortKey = document.getElementById('driverSort').value;
-
-    const rows = getFilteredDriverRows();
-    const filtered = rows.filter(dr => {
-      if (dr.seasons < minSeasons) return false;
-      const text = (dr.name + ' ' + dr.nationality).toLowerCase();
-      if (search && !text.includes(search)) return false;
-      return true;
-    });
-
-    const sorters = {
-      points: (a, b) => b.totalPoints - a.totalPoints,
-      avgPoints: (a, b) => b.avgPerMajor - a.avgPerMajor,
-      wins: (a, b) => b.wins - a.wins,
-      podiums: (a, b) => b.podiums - a.podiums,
-      fastRace: (a, b) => b.fastRaceLaps - a.fastRaceLaps,
-      fastPole: (a, b) => b.fastPoleLaps - a.fastPoleLaps,
-      clean: (a, b) => (b.cleanPct || 0) - (a.cleanPct || 0)
-    };
-    filtered.sort(sorters[sortKey] || sorters.points);
-
-    const total = filtered.length;
-    const totalPages = Math.max(1, Math.ceil(total / driverPageSize));
-    if (driverCurrentPage > totalPages) driverCurrentPage = totalPages;
-    if (driverCurrentPage < 1) driverCurrentPage = 1;
-
-    const start = (driverCurrentPage - 1) * driverPageSize;
-    const pageRows = filtered.slice(start, start + driverPageSize);
-
-    driversTableBody.innerHTML = '';
-    pageRows.forEach(dr => {
-      const tr = document.createElement('tr');
-      tr.dataset.driverName = dr.name;
-      if (dr.name === selectedDriverName) tr.classList.add('driver-row-selected');
-      tr.innerHTML =
-        '<td>' + dr.name + '</td>' +
-        '<td>' + dr.nationality + '</td>' +
-        '<td>' + dr.seasons + '</td>' +
-        '<td>' + dr.races + '</td>' +
-        '<td>' + dr.totalPoints + '</td>' +
-        '<td>' +
-          (dr.avgPerMajor.toFixed ? dr.avgPerMajor.toFixed(1) : dr.avgPerMajor) +
-        '</td>' +
-        '<td>' + dr.wins + '</td>' +
-        '<td>' + dr.podiums + '</td>' +
-        '<td>' + dr.fastRaceLaps + '</td>' +
-        '<td>' + dr.fastPoleLaps + '</td>' +
-        '<td>' + dr.bestChampPos + '</td>' +
-        '<td>' +
-          (dr.cleanPct !== '' ?
-            (dr.cleanPct.toFixed ? dr.cleanPct.toFixed(1) : dr.cleanPct) : '') +
-        '</td>' +
-        '<td>' +
-          (dr.reliabPct !== '' ?
-            (dr.reliabPct.toFixed ? dr.reliabPct.toFixed(1) : dr.reliabPct) : '') +
-        '</td>';
-      driversTableBody.appendChild(tr);
-    });
-
-    const infoEl = document.getElementById('driverPageInfo');
-    if (infoEl) {
-      infoEl.textContent =
-        'Page ' + driverCurrentPage + ' of ' + totalPages + ' • ' + total + ' drivers';
-    }
-    const prevBtn = document.getElementById('driverPrevPage');
-    const nextBtn = document.getElementById('driverNextPage');
-    if (prevBtn) prevBtn.disabled = driverCurrentPage <= 1;
-    if (nextBtn) nextBtn.disabled = driverCurrentPage >= totalPages;
-
-    renderCleanestDriverBox();
-  }
-
-
-   // ----- DRIVERS -----
+  // ----- DRIVERS -----
   const driversTableBody = document.querySelector('#driversTable tbody');
   const dcName = document.getElementById('dcName');
   const dcMeta = document.getElementById('dcMeta');
@@ -1014,15 +934,6 @@ function buildPage(data) {
     }
   })();
 
-  let selectedDriverName = null;
-  let driverCurrentPage = 1;
-  let driverPageSize = 25;
-
-  function getFilteredDriverRows() {
-    return driverRowsAll;
-  }
-
-
   function findCleanestDriver() {
     if (!driverRowsAll.length) return null;
 
@@ -1050,31 +961,122 @@ function buildPage(data) {
     }, candidates[0]);
   }
 
-function renderCleanestDriverBox() {
+  function renderCleanestDriver() {
+    const box = document.getElementById('cleanestDriverBox');
+    if (!box) return;
+
+    const best = findCleanestDriver();
+    if (!best) {
+      box.textContent = 'Cleanest driver: –';
+      return;
+    }
+
+    const val = best.cleanPct;
+    const txt = (val !== '' && val != null && val.toFixed)
+      ? val.toFixed(1)
+      : val;
+
+    box.textContent = 'Cleanest driver: ' + best.name + ' – ' + txt + '%';
+  }
+
+  let selectedDriverName = null;
+  let driverCurrentPage = 1;
+  let driverPageSize = 25;
+
+  function getFilteredDriverRows() { return driverRowsAll; }
+
+  function renderDrivers() {
+    const search = document.getElementById('driverSearch').value.toLowerCase();
+    const minSeasons = Number(document.getElementById('minSeasons').value || 1);
+    const sortKey = document.getElementById('driverSort').value;
+
+    const rows = getFilteredDriverRows();
+    const filtered = rows.filter(dr => {
+      if (dr.seasons < minSeasons) return false;
+      const text = (dr.name + ' ' + dr.nationality).toLowerCase();
+      if (search && !text.includes(search)) return false;
+      return true;
+    });
+
+    const sorters = {
+      points: (a, b) => b.totalPoints - a.totalPoints,
+      avgPoints: (a, b) => b.avgPerMajor - a.avgPerMajor,
+      wins: (a, b) => b.wins - a.wins,
+      podiums: (a, b) => b.podiums - a.podiums,
+      fastRace: (a, b) => b.fastRaceLaps - a.fastRaceLaps,
+      fastPole: (a, b) => b.fastPoleLaps - a.fastPoleLaps,
+      clean: (a, b) => (b.cleanPct || 0) - (a.cleanPct || 0)
+    };
+    filtered.sort(sorters[sortKey] || sorters.points);
+
+    const total = filtered.length;
+    const totalPages = Math.max(1, Math.ceil(total / driverPageSize));
+    if (driverCurrentPage > totalPages) driverCurrentPage = totalPages;
+    if (driverCurrentPage < 1) driverCurrentPage = 1;
+
+    const start = (driverCurrentPage - 1) * driverPageSize;
+    const pageRows = filtered.slice(start, start + driverPageSize);
+
+    driversTableBody.innerHTML = '';
+    pageRows.forEach(dr => {
+      const tr = document.createElement('tr');
+      tr.dataset.driverName = dr.name;
+      if (dr.name === selectedDriverName) tr.classList.add('driver-row-selected');
+      tr.innerHTML =
+        '<td>' + dr.name + '</td>' +
+        '<td>' + dr.nationality + '</td>' +
+        '<td>' + dr.seasons + '</td>' +
+        '<td>' + dr.races + '</td>' +
+        '<td>' + dr.totalPoints + '</td>' +
+        '<td>' +
+          (dr.avgPerMajor.toFixed ? dr.avgPerMajor.toFixed(1) : dr.avgPerMajor) +
+        '</td>' +
+        '<td>' + dr.wins + '</td>' +
+        '<td>' + dr.podiums + '</td>' +
+        '<td>' + dr.fastRaceLaps + '</td>' +
+        '<td>' + dr.fastPoleLaps + '</td>' +
+        '<td>' + dr.bestChampPos + '</td>' +
+        '<td>' +
+          (dr.cleanPct !== '' ?
+            (dr.cleanPct.toFixed ? dr.cleanPct.toFixed(1) : dr.cleanPct) : '') +
+        '</td>' +
+        '<td>' +
+          (dr.reliabPct !== '' ?
+            (dr.reliabPct.toFixed ? dr.reliabPct.toFixed(1) : dr.reliabPct) : '') +
+        '</td>';
+      driversTableBody.appendChild(tr);
+    });
+
+    const infoEl = document.getElementById('driverPageInfo');
+    if (infoEl) {
+      infoEl.textContent =
+        'Page ' + driverCurrentPage + ' of ' + totalPages + ' • ' + total + ' drivers';
+    }
+    const prevBtn = document.getElementById('driverPrevPage');
+    const nextBtn = document.getElementById('driverNextPage');
+    if (prevBtn) prevBtn.disabled = driverCurrentPage <= 1;
+    if (nextBtn) nextBtn.disabled = driverCurrentPage >= totalPages;
+
+    // keep box in sync with current data/filters
+    renderCleanestDriverBox();
+  }
+
+  function renderCleanestDriverBox() {
   const box = document.getElementById('cleanestDriverBox');
   const nameEl = document.getElementById('cleanestDriverName');
   const metaEl = document.getElementById('cleanestDriverMeta');
   const avatarEl = document.getElementById('cleanestDriverAvatar');
-  const tooltipEl = document.getElementById('cleanestDriverTooltip');
   if (!box || !nameEl || !metaEl) return;
 
   const rows = getFilteredDriverRows();
 
+  // find max races in this export
   const maxRaces = rows.reduce((max, d) => Math.max(max, d.races || 0), 0);
 
-  const setMetaText = txt => {
-    const firstNode = metaEl.firstChild;
-    if (firstNode && firstNode.nodeType === Node.TEXT_NODE) {
-      firstNode.textContent = ' ' + txt + ' ';
-    } else {
-      metaEl.insertBefore(document.createTextNode(txt + ' '), metaEl.firstChild);
-    }
-  };
-
+  // if nobody has 10+ races yet, keep default message
   if (maxRaces < 10) {
     nameEl.textContent = 'Not enough race data yet';
-    setMetaText('This stat appears once at least 10 races have been completed.');
-    if (tooltipEl) tooltipEl.textContent = 'Waiting for more race data…';
+    metaEl.textContent = 'This stat appears once at least 10 races have been completed.';
     if (avatarEl) avatarEl.src = DRIVER_AVATAR_FOLDER + '/default.png';
     return;
   }
@@ -1089,8 +1091,8 @@ function renderCleanestDriverBox() {
 
   if (!eligible.length) {
     nameEl.textContent = 'Not enough race data yet';
-    setMetaText(`This stat appears once a driver has at least ${minRaces} races in this export.`);
-    if (tooltipEl) tooltipEl.textContent = 'No driver meets the race threshold yet.';
+    metaEl.textContent =
+      `This stat appears once a driver has at least ${minRaces} races in this export.`;
     if (avatarEl) avatarEl.src = DRIVER_AVATAR_FOLDER + '/default.png';
     return;
   }
@@ -1107,18 +1109,8 @@ function renderCleanestDriverBox() {
   const pct = best.cleanPct.toFixed ? best.cleanPct.toFixed(1) : best.cleanPct;
 
   nameEl.textContent = best.name;
-  setMetaText(
-    `Cleanest driver across this export • ${pct}% clean over ${best.races} races (min ${minRaces} races)`
-  );
-
-  if (tooltipEl) {
-    const top = eligible.slice(0, 3);
-    const lines = top.map((d, i) => {
-      const p = d.cleanPct.toFixed ? d.cleanPct.toFixed(1) : d.cleanPct;
-      return `${i + 1}. ${d.name} – ${p}% (${d.races} races)`;
-    });
-    tooltipEl.textContent = lines.join('  •  ');
-  }
+  metaEl.textContent =
+    `Cleanest driver across this export • ${pct}% clean over ${best.races} races (min ${minRaces} races)`;
 
   if (avatarEl) {
     const avatarSrc = getDriverAvatarSrc(best.name);
@@ -1266,7 +1258,6 @@ function renderCleanestDriverBox() {
 
   renderDrivers();
   renderCleanestDriverBox();
-
 
 
   // ----- TRACKS -----
