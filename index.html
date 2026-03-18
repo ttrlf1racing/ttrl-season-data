@@ -985,6 +985,23 @@ function buildPage(data) {
 
   function getFilteredDriverRows() { return driverRowsAll; }
 
+    function getFilteredDriverRows() { return driverRowsAll; }
+
+  function countryToFlagEmoji(nationality) {
+    if (!nationality) return '';
+    const map = {
+      'United Kingdom': 'GB',
+      Wales: 'GB',
+      England: 'GB',
+      Scotland: 'GB',
+      Ireland: 'IE'
+    };
+    const code = (map[nationality] || nationality).toUpperCase();
+    return code.replace(/./g, c =>
+      String.fromCodePoint(127397 + c.charCodeAt(0))
+    );
+  }
+
   function renderDrivers() {
     const search = document.getElementById('driverSearch').value.toLowerCase();
     const minSeasons = Number(document.getElementById('minSeasons').value || 1);
@@ -1017,14 +1034,15 @@ function buildPage(data) {
     const start = (driverCurrentPage - 1) * driverPageSize;
     const pageRows = filtered.slice(start, start + driverPageSize);
 
-    driversTableBody.innerHTML = '';
+      driversTableBody.innerHTML = '';
     pageRows.forEach(dr => {
       const tr = document.createElement('tr');
       tr.dataset.driverName = dr.name;
       if (dr.name === selectedDriverName) tr.classList.add('driver-row-selected');
+
       tr.innerHTML =
         '<td>' + dr.name + '</td>' +
-        '<td>' + dr.nationality + '</td>' +
+        '<td>' + countryToFlagEmoji(dr.nationality) + '</td>' +
         '<td>' + dr.seasons + '</td>' +
         '<td>' + dr.races + '</td>' +
         '<td>' + dr.totalPoints + '</td>' +
@@ -1044,8 +1062,10 @@ function buildPage(data) {
           (dr.reliabPct !== '' ?
             (dr.reliabPct.toFixed ? dr.reliabPct.toFixed(1) : dr.reliabPct) : '') +
         '</td>';
+
       driversTableBody.appendChild(tr);
     });
+
 
     const infoEl = document.getElementById('driverPageInfo');
     if (infoEl) {
