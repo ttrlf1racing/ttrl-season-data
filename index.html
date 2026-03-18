@@ -987,16 +987,24 @@ function buildPage(data) {
 
     function getFilteredDriverRows() { return driverRowsAll; }
 
- function countryToFlagEmoji(nationality) {
+function countryToFlagHTML(nationality) {
   if (!nationality) return '';
 
   const n = nationality.trim();
 
-  // Special UK home nations – use own flags
-  if (n === 'England') return '🏴';
-  if (n === 'Scotland') return '🏴';
-  if (n === 'Wales') return '🏴';
-  if (n === 'Northern Ireland') return '🇬🇧'; // or custom asset; emoji is limited here
+  // Home nations – use your PNGs in /Flags
+  if (n === 'England') {
+    return '<img src="Flags/england-flag-icon.png" alt="England" style="height:14px;vertical-align:middle;">';
+  }
+  if (n === 'Scotland') {
+    return '<img src="Flags/scotland-flag-icon.png" alt="Scotland" style="height:14px;vertical-align:middle;">';
+  }
+  if (n === 'Wales') {
+    return '<img src="Flags/wales-flag-icon.png" alt="Wales" style="height:14px;vertical-align:middle;">';
+  }
+  if (n === 'Northern Ireland') {
+    return '<img src="Flags/northern_ireland.png" alt="Northern Ireland" style="height:14px;vertical-align:middle;">';
+  }
 
   // Full-name → ISO alpha‑2
   const map = {
