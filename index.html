@@ -1251,11 +1251,11 @@ function countryToFlagHTML(nationality) {
       tr.dataset.driverName = dr.name;
       if (dr.name === selectedDriverName) tr.classList.add('driver-row-selected');
 
-      tr.innerHTML =
-        '<td>' + dr.name + '</td>' +
-        '<td>' + countryToFlagEmoji(dr.nationality) + '</td>' +
-        '<td>' + dr.seasons + '</td>' +
-        '<td>' + dr.races + '</td>' +
+  tr.innerHTML =
+  '<td>' + dr.name + '</td>' +
+  '<td>' + countryToFlagHTML(dr.nationality) + '</td>' +  // <- use HTML version
+  '<td>' + dr.seasons + '</td>' +
+  '<td>' + dr.races + '</td>' +
         '<td>' + dr.totalPoints + '</td>' +
         '<td>' +
           (dr.avgPerMajor.toFixed ? dr.avgPerMajor.toFixed(1) : dr.avgPerMajor) +
