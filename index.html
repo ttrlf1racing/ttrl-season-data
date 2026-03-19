@@ -865,8 +865,8 @@ function buildPage(data) {
 
   const driverRowsAll = driversSrc.map(deriveDriverRow);
 
-  // Merge RichieChappe11 alias
- (function mergeRichieChappell() {
+// Merge RichieChappe11 alias
+(function mergeRichieChappell() {
   const MAIN_MATCH = name =>
     name.includes('richiechappe11') || name.includes('richie chappe11');
 
@@ -902,41 +902,42 @@ function buildPage(data) {
   );
   if (!aliasRows.length) return;
 
-  // rest of your merge logic...
-})();
+  // merge stats from alias rows into mainRow
+  aliasRows.forEach(ar => {
+    mainRow.seasons += Number(ar.seasons || 0);
+    mainRow.races += Number(ar.races || 0);
+    mainRow.totalPoints += Number(ar.totalPoints || 0);
+    mainRow.wins += Number(ar.wins || 0);
+    mainRow.podiums += Number(ar.podiums || 0);
+    mainRow.fastRaceLaps += Number(ar.fastRaceLaps || 0);
+    mainRow.fastPoleLaps += Number(ar.fastPoleLaps || 0);
 
-
-    aliasRows.forEach(ar => {
-      mainRow.seasons += Number(ar.seasons || 0);
-      mainRow.races += Number(ar.races || 0);
-      mainRow.totalPoints += Number(ar.totalPoints || 0);
-      mainRow.wins += Number(ar.wins || 0);
-      mainRow.podiums += Number(ar.podiums || 0);
-      mainRow.fastRaceLaps += Number(ar.fastRaceLaps || 0);
-      mainRow.fastPoleLaps += Number(ar.fastPoleLaps || 0);
-      if (ar.bestChampPos) {
-        if (!mainRow.bestChampPos) {
+    if (ar.bestChampPos) {
+      if (!mainRow.bestChampPos) {
+        mainRow.bestChampPos = ar.bestChampPos;
+      } else {
+        const m = Number(mainRow.bestChampPos);
+        const a = Number(ar.bestChampPos);
+        if (!Number.isNaN(a) && (Number.isNaN(m) || a < m)) {
           mainRow.bestChampPos = ar.bestChampPos;
-        } else {
-          const m = Number(mainRow.bestChampPos);
-          const a = Number(ar.bestChampPos);
-          if (!Number.isNaN(a) && (Number.isNaN(m) || a < m)) {
-            mainRow.bestChampPos = ar.bestChampPos;
-          }
         }
       }
-    });
-
-    if (mainRow.races > 0) {
-      mainRow.avgPerMajor = mainRow.totalPoints / mainRow.races;
     }
+  });
 
-    for (let i = driverRowsAll.length - 1; i >= 0; i--) {
-      if ((driverRowsAll[i].name || '').toLowerCase() === aliasLower) {
-        driverRowsAll.splice(i, 1);
-      }
+  if (mainRow.races > 0) {
+    mainRow.avgPerMajor = mainRow.totalPoints / mainRow.races;
+  }
+
+  // optionally, remove alias rows from driverRowsAll if you still want that
+  for (let i = driverRowsAll.length - 1; i >= 0; i--) {
+    const name = (driverRowsAll[i].name || '').toLowerCase();
+    if (ALIAS_MATCH(name)) {
+      driverRowsAll.splice(i, 1);
     }
-  })();
+  }
+})();
+
 
   function findCleanestDriver() {
     if (!driverRowsAll.length) return null;
