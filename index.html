@@ -866,41 +866,45 @@ function buildPage(data) {
   const driverRowsAll = driversSrc.map(deriveDriverRow);
 
   // Merge RichieChappe11 alias
-  (function mergeRichieChappell() {
-    const MAIN_NAME = 'RichieChappe11';
-    const ALIAS_NAME = 'richie chappell (dnu)';
+ (function mergeRichieChappell() {
+  const MAIN_MATCH = name =>
+    name.includes('richiechappe11') || name.includes('richie chappe11');
 
-    const mainLower = MAIN_NAME.toLowerCase();
-    const aliasLower = ALIAS_NAME.toLowerCase();
+  const ALIAS_MATCH = name =>
+    name.includes('richie chappell') && name.includes('(dnu)');
 
-    let mainRow = driverRowsAll.find(
-      d => (d.name || '').toLowerCase() === mainLower
-    );
+  let mainRow = driverRowsAll.find(d =>
+    MAIN_MATCH((d.name || '').toLowerCase())
+  );
 
-    if (!mainRow) {
-      mainRow = {
-        source: {},
-        name: MAIN_NAME,
-        nationality: '',
-        seasons: 0,
-        races: 0,
-        totalPoints: 0,
-        avgPerMajor: 0,
-        wins: 0,
-        podiums: 0,
-        fastRaceLaps: 0,
-        fastPoleLaps: 0,
-        bestChampPos: '',
-        cleanPct: '',
-        reliabPct: ''
-      };
-      driverRowsAll.push(mainRow);
-    }
+  if (!mainRow) {
+    mainRow = {
+      source: {},
+      name: 'RichieChappe11',
+      nationality: '',
+      seasons: 0,
+      races: 0,
+      totalPoints: 0,
+      avgPerMajor: 0,
+      wins: 0,
+      podiums: 0,
+      fastRaceLaps: 0,
+      fastPoleLaps: 0,
+      bestChampPos: '',
+      cleanPct: '',
+      reliabPct: ''
+    };
+    driverRowsAll.push(mainRow);
+  }
 
-    const aliasRows = driverRowsAll.filter(
-      d => (d.name || '').toLowerCase() === aliasLower
-    );
-    if (!aliasRows.length) return;
+  const aliasRows = driverRowsAll.filter(d =>
+    ALIAS_MATCH((d.name || '').toLowerCase())
+  );
+  if (!aliasRows.length) return;
+
+  // rest of your merge logic...
+})();
+
 
     aliasRows.forEach(ar => {
       mainRow.seasons += Number(ar.seasons || 0);
