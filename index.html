@@ -177,14 +177,6 @@
   border-top:3px solid #22c55e;
   margin-bottom:8px;
 }
-    .cleanest-card.second {
-      border-top-color:#e5e7eb;
-      box-shadow:0 0 14px rgba(148,163,184,0.45);
-    }
-    .cleanest-card.third {
-      border-top-color:#f97316;
-      box-shadow:0 0 14px rgba(248,113,22,0.45);
-    }
     .driver-card.primary-champ { border-left-color:#22c55e; }
     .driver-card::before {
       content:'';
@@ -554,41 +546,21 @@
         </div>
       </div>
 
-<div class="driver-layout-side" id="cleanestDriverPodium">
-  <div id="cleanestDriverP1" class="driver-card cleanest-card">
+   <div class="driver-layout-side">
+  <div id="cleanestDriverBox" class="driver-card cleanest-card">
     <div class="driver-card-header">
-      <img id="cleanestP1Avatar" src="Drivers Avatars/default.png" alt="Driver avatar" class="driver-card-logo">
+      <img id="cleanestDriverAvatar"
+           src="Drivers Avatars/default.png"
+           alt="Driver avatar"
+           class="driver-card-logo">
       <div>
         <div class="driver-handle">CLEANEST DRIVER</div>
-        <h3 id="cleanestP1Name">Not enough race data yet</h3>
+        <h3 id="cleanestDriverName">Not enough race data yet</h3>
       </div>
     </div>
-    <div class="driver-meta" id="cleanestP1Meta">This stat appears once at least 5 races have been completed.</div>
-    <div class="driver-statline" id="cleanestP1Desc"></div>
-  </div>
-
-  <div id="cleanestDriverP2" class="driver-card cleanest-card second" style="display:none; margin-top:12px;">
-    <div class="driver-card-header">
-      <img id="cleanestP2Avatar" src="Drivers Avatars/default.png" alt="Driver avatar" class="driver-card-logo">
-      <div>
-        <div class="driver-handle">2ND CLEANEST</div>
-        <h3 id="cleanestP2Name">–</h3>
-      </div>
+    <div class="driver-meta" id="cleanestDriverMeta">
+      This stat appears once at least 5 races have been completed.
     </div>
-    <div class="driver-meta" id="cleanestP2Meta"></div>
-    <div class="driver-statline" id="cleanestP2Desc"></div>
-  </div>
-
-  <div id="cleanestDriverP3" class="driver-card cleanest-card third" style="display:none; margin-top:12px;">
-    <div class="driver-card-header">
-      <img id="cleanestP3Avatar" src="Drivers Avatars/default.png" alt="Driver avatar" class="driver-card-logo">
-      <div>
-        <div class="driver-handle">3RD CLEANEST</div>
-        <h3 id="cleanestP3Name">–</h3>
-      </div>
-    </div>
-    <div class="driver-meta" id="cleanestP3Meta"></div>
-    <div class="driver-statline" id="cleanestP3Desc"></div>
   </div>
 </div>
 
@@ -973,86 +945,27 @@ candidates = candidates.filter(d => Number(d.races || 0) >= minRaces);
     }, candidates[0]);
   }
 
-   function findCleanestDriversPodium() {
-    if (!driverRowsAll.length) return [];
+  function renderCleanestDriver() {
+    const box = document.getElementById('cleanestDriverBox');
+    if (!box) return;
 
-    const maxRaces = driverRowsAll.reduce(
-      (max, d) => Math.max(max, Number(d.races || 0)),
-      0
-    );
-
-    let candidates = driverRowsAll.slice();
-
-    if (maxRaces >= 5) {
-      const minRaces = maxRaces * 0.8;
-      candidates = candidates.filter(d => Number(d.races || 0) >= minRaces);
+    const best = findCleanestDriver();
+    if (!best) {
+      box.textContent = 'Cleanest driver: –';
+      return;
     }
 
-    candidates = candidates.filter(d => d.cleanPct !== '' && d.cleanPct != null);
-    if (!candidates.length) return [];
+    const val = best.cleanPct;
+    const txt = (val !== '' && val != null && val.toFixed)
+      ? val.toFixed(1)
+      : val;
 
-    candidates.sort((a, b) => {
-      const cleanA = Number(a.cleanPct || 0);
-      const cleanB = Number(b.cleanPct || 0);
-      if (cleanB !== cleanA) return cleanB - cleanA;
-      return Number(b.races || 0) - Number(a.races || 0);
-    });
-
-    return candidates.slice(0, 3);
+    box.textContent = 'Cleanest driver: ' + best.name + ' – ' + txt + '%';
   }
 
-  function renderCleanestDriverPodium() {
-    const boxes = [
-      { root: 'cleanestDriverP1', avatar: 'cleanestP1Avatar', name: 'cleanestP1Name', meta: 'cleanestP1Meta', desc: 'cleanestP1Desc', label: 'Cleanest driver' },
-      { root: 'cleanestDriverP2', avatar: 'cleanestP2Avatar', name: 'cleanestP2Name', meta: 'cleanestP2Meta', desc: 'cleanestP2Desc', label: '2nd cleanest' },
-      { root: 'cleanestDriverP3', avatar: 'cleanestP3Avatar', name: 'cleanestP3Name', meta: 'cleanestP3Meta', desc: 'cleanestP3Desc', label: '3rd cleanest' }
-    ];
-
-    const podium = findCleanestDriversPodium();
-
-    boxes.forEach((cfg, idx) => {
-      const card = document.getElementById(cfg.root);
-      if (!card) return;
-
-      const d = podium[idx];
-      if (!d) {
-        if (idx === 0) {
-          const nameEl = document.getElementById(cfg.name);
-          const metaEl = document.getElementById(cfg.meta);
-          const descEl = document.getElementById(cfg.desc);
-          const avatarEl = document.getElementById(cfg.avatar);
-          if (nameEl) nameEl.textContent = 'Not enough race data yet';
-          if (metaEl) metaEl.textContent = 'This stat appears once at least 5 races have been completed.';
-          if (descEl) descEl.textContent = '';
-          if (avatarEl) avatarEl.src = 'Drivers Avatars/default.png';
-          card.style.display = '';
-        } else {
-          card.style.display = 'none';
-        }
-        return;
-      }
-
-      card.style.display = '';
-
-      const clean = Number(d.cleanPct || 0);
-      const races = Number(d.races || 0);
-      const incidents = Number(d.incidents || d.totalIncidents || 0);
-      const ipr = races > 0 ? incidents / races : 0;
-
-      const nameEl = document.getElementById(cfg.name);
-      const metaEl = document.getElementById(cfg.meta);
-      const descEl = document.getElementById(cfg.desc);
-      const avatarEl = document.getElementById(cfg.avatar);
-
-      if (nameEl) nameEl.textContent = d.name || '–';
-      if (metaEl) metaEl.textContent = `${cfg.label} across this export • ${clean.toFixed(1)}% clean over ${races} races`;
-      if (descEl) descEl.textContent = `${incidents} incidents total • ${ipr.toFixed(2)} incidents per race`;
-      if (avatarEl) {
-        avatarEl.src = getDriverAvatarSrc(d.name || 'default');
-        avatarEl.onerror = function() { this.onerror = null; this.src = 'Drivers Avatars/default.png'; };
-      }
-    });
-  }
+  let selectedDriverName = null;
+  let driverCurrentPage = 1;
+  let driverPageSize = 25;
 
   function getFilteredDriverRows() { return driverRowsAll; }
 
@@ -1562,7 +1475,7 @@ const eligible = rows.filter(d =>
   });
 
   renderDrivers();
-  renderCleanestDriverPodium();
+  renderCleanestDriverBox();
 
 
   // ----- TRACKS -----
