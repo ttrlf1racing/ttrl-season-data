@@ -173,10 +173,31 @@
       box-shadow:0 0 18px rgba(59,130,246,0.45);
       overflow:hidden;
     }
+
+    /* PODIUM CSS CHANGES START HERE */
     .cleanest-card {
-  border-top:3px solid #22c55e;
-  margin-bottom:8px;
-}
+      border-top: 4px solid #ffd700 !important; /* Gold */
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+      margin-bottom: 12px;
+      transition: transform 0.2s ease;
+    }
+    .cleanest-card:hover { transform: translateY(-2px); }
+
+    .cleanest-card.silver {
+      border-top-color: #c0c0c0 !important; /* Silver */
+      box-shadow: 0 0 15px rgba(192, 192, 192, 0.15);
+    }
+
+    .cleanest-card.bronze {
+      border-top-color: #cd7f32 !important; /* Bronze */
+      box-shadow: 0 0 15px rgba(205, 127, 50, 0.15);
+    }
+
+    .rank-gold { color: #ffd700; font-weight: bold; }
+    .rank-silver { color: #e5e7eb; font-weight: bold; }
+    .rank-bronze { color: #f97316; font-weight: bold; }
+    /* PODIUM CSS CHANGES END HERE */
+
     .driver-card.primary-champ { border-left-color:#22c55e; }
     .driver-card::before {
       content:'';
@@ -475,8 +496,7 @@
     </div>
   </section>
 
-   <!-- Drivers -->
-  <section id="driversSection" data-view="drivers" class="active">
+   <section id="driversSection" data-view="drivers" class="active">
     <h2>Drivers</h2>
     <p class="section-description">
       Stats cover all seasons contained in the currently selected export.
@@ -546,27 +566,43 @@
         </div>
       </div>
 
-   <div class="driver-layout-side">
-  <div id="cleanestDriverBox" class="driver-card cleanest-card">
+   <div class="driver-layout-side" id="cleanestDriverPodium">
+  <div id="cleanestP1Box" class="driver-card cleanest-card">
     <div class="driver-card-header">
-      <img id="cleanestDriverAvatar"
-           src="Drivers Avatars/default.png"
-           alt="Driver avatar"
-           class="driver-card-logo">
+      <img id="cleanestP1Avatar" src="Drivers Avatars/default.png" alt="Driver avatar" class="driver-card-logo">
       <div>
-        <div class="driver-handle">CLEANEST DRIVER</div>
-        <h3 id="cleanestDriverName">Not enough race data yet</h3>
+        <div class="driver-handle rank-gold">🏆 GOLD • CLEANEST</div>
+        <h3 id="cleanestP1Name">Awaiting data...</h3>
       </div>
     </div>
-    <div class="driver-meta" id="cleanestDriverMeta">
-      This stat appears once at least 5 races have been completed.
+    <div class="driver-meta" id="cleanestP1Meta"></div>
+  </div>
+
+  <div id="cleanestP2Box" class="driver-card cleanest-card silver">
+    <div class="driver-card-header">
+      <img id="cleanestP2Avatar" src="Drivers Avatars/default.png" alt="Driver avatar" class="driver-card-logo">
+      <div>
+        <div class="driver-handle rank-silver">🥈 SILVER • 2ND</div>
+        <h3 id="cleanestP2Name">–</h3>
+      </div>
     </div>
+    <div class="driver-meta" id="cleanestP2Meta"></div>
+  </div>
+
+  <div id="cleanestP3Box" class="driver-card cleanest-card bronze">
+    <div class="driver-card-header">
+      <img id="cleanestP3Avatar" src="Drivers Avatars/default.png" alt="Driver avatar" class="driver-card-logo">
+      <div>
+        <div class="driver-handle rank-bronze">🥉 BRONZE • 3RD</div>
+        <h3 id="cleanestP3Name">–</h3>
+      </div>
+    </div>
+    <div class="driver-meta" id="cleanestP3Meta"></div>
   </div>
 </div>
 
   </section>
 
-  <!-- Driver modal -->
   <div id="driverModal" class="driver-modal">
     <div class="driver-modal-backdrop"></div>
     <div class="driver-modal-card">
@@ -613,7 +649,6 @@
     </div>
   </div>
 
-  <!-- Tracks -->
   <section id="trackSection" data-view="tracks">
     <h2>Tracks</h2>
     <p class="section-description">
@@ -633,7 +668,6 @@
       <button class="tab-btn track-subtab-btn active" data-track-view="details">Track Details</button>
     </div>
 
-    <!-- Track details view -->
     <div id="trackDetailsView" data-track-view="details">
       <div class="scroll-body">
         <table id="trackTable">
@@ -903,7 +937,7 @@ function buildPage(data) {
     mainRow.avgPerMajor = mainRow.totalPoints / mainRow.races;
   }
 
-  // optionally, remove alias rows from driverRowsAll if you still want that
+  // remove alias rows from driverRowsAll
   for (let i = driverRowsAll.length - 1; i >= 0; i--) {
     const name = (driverRowsAll[i].name || '').toLowerCase();
     if (ALIAS_MATCH(name)) {
@@ -913,70 +947,18 @@ function buildPage(data) {
 })();
 
 
-  function findCleanestDriver() {
-    if (!driverRowsAll.length) return null;
-
-  const maxRaces = driverRowsAll.reduce(
-  (max, d) => Math.max(max, Number(d.races || 0)),
-  0
-);
-
-let candidates = driverRowsAll;
-
-// if maxRaces < 10, ...
-if (maxRaces < 10) {
-  // ...
-}
-
-const minRaces = maxRaces * 0.8;
-// ...
-candidates = candidates.filter(d => Number(d.races || 0) >= minRaces);
-
-
-    candidates = candidates.filter(d => d.cleanPct !== '' && d.cleanPct != null);
-    if (!candidates.length) return null;
-
-    return candidates.reduce((best, d) => {
-      const v = Number(d.cleanPct);
-      const b = Number(best.cleanPct);
-      if (Number.isNaN(v)) return best;
-      if (Number.isNaN(b)) return d;
-      return v > b ? d : best;
-    }, candidates[0]);
-  }
-
-  function renderCleanestDriver() {
-    const box = document.getElementById('cleanestDriverBox');
-    if (!box) return;
-
-    const best = findCleanestDriver();
-    if (!best) {
-      box.textContent = 'Cleanest driver: –';
-      return;
-    }
-
-    const val = best.cleanPct;
-    const txt = (val !== '' && val != null && val.toFixed)
-      ? val.toFixed(1)
-      : val;
-
-    box.textContent = 'Cleanest driver: ' + best.name + ' – ' + txt + '%';
-  }
-
   let selectedDriverName = null;
   let driverCurrentPage = 1;
   let driverPageSize = 25;
 
   function getFilteredDriverRows() { return driverRowsAll; }
 
-    function getFilteredDriverRows() { return driverRowsAll; }
-
 function countryToFlagHTML(nationality) {
   if (!nationality) return '';
 
   const n = nationality.trim();
 
-  // Home nations – use your PNGs in /Flags
+  // Home nations – use PNGs in /Flags
   if (n === 'England') {
     return '<img src="Flags/england-flag-icon.png" alt="England" style="height:14px;vertical-align:middle;">';
   }
@@ -1240,7 +1222,7 @@ function countryToFlagHTML(nationality) {
 
   tr.innerHTML =
   '<td>' + dr.name + '</td>' +
-  '<td>' + countryToFlagHTML(dr.nationality) + '</td>' +  // <- use HTML version
+  '<td>' + countryToFlagHTML(dr.nationality) + '</td>' +
   '<td>' + dr.seasons + '</td>' +
   '<td>' + dr.races + '</td>' +
         '<td>' + dr.totalPoints + '</td>' +
@@ -1275,73 +1257,84 @@ function countryToFlagHTML(nationality) {
     if (prevBtn) prevBtn.disabled = driverCurrentPage <= 1;
     if (nextBtn) nextBtn.disabled = driverCurrentPage >= totalPages;
 
-    // keep box in sync with current data/filters
-    renderCleanestDriverBox();
+    // keep podium in sync with current data/filters
+    renderCleanestDriverPodium();
   }
 
-  function renderCleanestDriverBox() {
-  const box = document.getElementById('cleanestDriverBox');
-  const nameEl = document.getElementById('cleanestDriverName');
-  const metaEl = document.getElementById('cleanestDriverMeta');
-  const avatarEl = document.getElementById('cleanestDriverAvatar');
-  if (!box || !nameEl || !metaEl) return;
+  // UPDATED PODIUM LOGIC
+  function renderCleanestDriverPodium() {
+    const positions = [
+      { name: 'cleanestP1Name', meta: 'cleanestP1Meta', avatar: 'cleanestP1Avatar', box: 'cleanestP1Box' },
+      { name: 'cleanestP2Name', meta: 'cleanestP2Meta', avatar: 'cleanestP2Avatar', box: 'cleanestP2Box' },
+      { name: 'cleanestP3Name', meta: 'cleanestP3Meta', avatar: 'cleanestP3Avatar', box: 'cleanestP3Box' }
+    ];
 
-  const rows = getFilteredDriverRows();
+    const rows = getFilteredDriverRows();
+    const maxRaces = rows.reduce((max, d) => Math.max(max, d.races || 0), 0);
 
-  // find max races in this export
-  const maxRaces = rows.reduce((max, d) => Math.max(max, d.races || 0), 0);
+    // Initial check: if no data
+    if (maxRaces < 5) {
+      positions.forEach((pos, idx) => {
+        const nameEl = document.getElementById(pos.name);
+        const metaEl = document.getElementById(pos.meta);
+        if (idx === 0) {
+          nameEl.textContent = "Not enough race data yet";
+          metaEl.textContent = "Requires at least 5 races total in the export.";
+        } else {
+          document.getElementById(pos.box).style.display = 'none';
+        }
+      });
+      return;
+    }
 
+    const minRaces = Math.max(5, Math.floor(maxRaces * 0.7));
+    const eligible = rows.filter(d => 
+      d.races >= minRaces && d.cleanPct !== '' && d.cleanPct != null
+    );
 
-// if nobody has 5 races yet, keep default message
-if (maxRaces < 5) {
-  nameEl.textContent = "Not enough race data yet";
-  metaEl.textContent = "This stat appears once at least 5 races have been completed.";
-  if (avatarEl) avatarEl.src = DRIVER_AVATAR_FOLDER + "default.png";
-  return;
-}
+    eligible.sort((a, b) => {
+      const byClean = (b.cleanPct || 0) - (a.cleanPct || 0);
+      if (byClean !== 0) return byClean;
+      return (b.races || 0) - (a.races || 0);
+    });
 
-// minimum races needed to be eligible for cleanest driver
-const minRaces = Math.max(5, Math.floor(maxRaces * 0.8));
-const eligible = rows.filter(d =>
-  d.races >= minRaces && d.cleanPct != null && d.cleanPct !== undefined
-);
+    const podium = eligible.slice(0, 3);
 
+    positions.forEach((pos, idx) => {
+      const card = document.getElementById(pos.box);
+      const nameEl = document.getElementById(pos.name);
+      const metaEl = document.getElementById(pos.meta);
+      const avatarEl = document.getElementById(pos.avatar);
+      const driver = podium[idx];
 
-  if (!eligible.length) {
-    nameEl.textContent = 'Not enough race data yet';
-    metaEl.textContent =
-      `This stat appears once a driver has at least ${minRaces} races in this export.`;
-    if (avatarEl) avatarEl.src = DRIVER_AVATAR_FOLDER + '/default.png';
-    return;
-  }
-
-  eligible.sort((a, b) => {
-    const byClean = (b.cleanPct || 0) - (a.cleanPct || 0);
-    if (byClean !== 0) return byClean;
-    const byRaces = (b.races || 0) - (a.races || 0);
-    if (byRaces !== 0) return byRaces;
-    return (b.totalPoints || 0) - (a.totalPoints || 0);
-  });
-
-  const best = eligible[0];
-  const pct = best.cleanPct.toFixed ? best.cleanPct.toFixed(1) : best.cleanPct;
-
-  nameEl.textContent = best.name;
-  metaEl.textContent =
-    `Cleanest driver across this export • ${pct}% clean over ${best.races} races (min ${minRaces} races)`;
-
-  if (avatarEl) {
-    const avatarSrc = getDriverAvatarSrc(best.name);
-    avatarEl.onerror = () => {
-      if (avatarEl.src.includes('.gif')) {
-        avatarEl.src = avatarEl.src.replace('.gif', '.png');
-      } else {
-        avatarEl.src = DRIVER_AVATAR_FOLDER + '/default.png';
+      if (!driver) {
+        if (idx === 0) {
+          nameEl.textContent = "Awaiting qualifying drivers...";
+          metaEl.textContent = `Need ${minRaces} races for eligibility.`;
+        } else {
+          card.style.display = 'none';
+        }
+        return;
       }
-    };
-    avatarEl.src = avatarSrc;
+
+      card.style.display = 'block';
+      nameEl.textContent = driver.name;
+      const pct = driver.cleanPct.toFixed ? driver.cleanPct.toFixed(1) : driver.cleanPct;
+      metaEl.textContent = `${pct}% Clean • ${driver.races} races`;
+
+      if (avatarEl) {
+        const avatarSrc = getDriverAvatarSrc(driver.name);
+        avatarEl.onerror = () => {
+          if (avatarEl.src.includes('.gif')) {
+            avatarEl.src = avatarEl.src.replace('.gif', '.png');
+          } else {
+            avatarEl.src = DRIVER_AVATAR_FOLDER + '/default.png';
+          }
+        };
+        avatarEl.src = avatarSrc;
+      }
+    });
   }
-}
 
 
   function renderDriverCard(driverName) {
@@ -1475,7 +1468,6 @@ const eligible = rows.filter(d =>
   });
 
   renderDrivers();
-  renderCleanestDriverBox();
 
 
   // ----- TRACKS -----
@@ -1557,50 +1549,6 @@ const eligible = rows.filter(d =>
       });
   }
 
-  function renderTrackSeasonCmp() {
-    const filterName = trackSelect.value;
-
-    cmpHeaderRow.innerHTML = '<th>Track</th>';
-    allSeasonNames.forEach(sn => {
-      const th = document.createElement('th');
-      th.textContent = sn;
-      cmpHeaderRow.appendChild(th);
-    });
-
-    cmpBody.innerHTML = '';
-    trackRows
-      .filter(r => !filterName || r.circuit === filterName)
-      .forEach(r => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = '<td>' + r.circuit + '</td>';
-
-        allSeasonNames.forEach(sn => {
-          const td = document.createElement('td');
-          const entry = r.seasonRaceMap[sn];
-
-          if (!entry) {
-            td.textContent = '';
-          } else {
-            td.classList.add('track-hover');
-            const span = document.createElement('span');
-            span.textContent = entry.time || '';
-            td.appendChild(span);
-
-            if (entry.driverName) {
-              const tip = document.createElement('div');
-              tip.className = 'track-hover-tooltip';
-              tip.textContent = entry.driverName;
-              td.appendChild(tip);
-            }
-          }
-
-          tr.appendChild(td);
-        });
-
-        cmpBody.appendChild(tr);
-      });
-  }
-
   renderTrackDetails();
 
   trackSelect.addEventListener('change', () => {
@@ -1633,7 +1581,7 @@ const eligible = rows.filter(d =>
     });
   });
 
-  // ensure initial state is consistent with existing markup
+  // initial state
   const initial =
     (document.querySelector('#viewSelector .tab-btn.active') || {}).dataset?.view
     || 'drivers';
@@ -1656,8 +1604,7 @@ document.getElementById('fileSelect').addEventListener('change', async e => {
     if (ct.includes('text/html')) {
       const text = await res.text();
       console.error('Expected JSON but got HTML. URL:', res.url);
-      console.error('First 200 chars:', text.slice(0, 200));
-      alert('Selected file is not a JSON export (HTML page returned).');
+      alert('Selected file is not a JSON export.');
       return;
     }
 
