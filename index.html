@@ -714,8 +714,40 @@ async function populateFileSelect(folder = 'current-season') {
   const select = document.getElementById('fileSelect');
   if (!select) return;
 
-  // keep the first "Select race day…" option
-select.innerHTML = '<option value=""></option>';
+  select.innerHTML = '<option value="">Loading...</option>';
+
+  try {
+    const apiUrl = `https://api.github.com/repos/ttrlf1racing/ttrl-season-data/contents/export_data/${folder}`;
+    const res = await fetch(apiUrl, {
+      headers: { 'Accept': 'application/vnd.github+json' }
+    });
+
+    if (!res.ok) throw new Error('GitHub API error: ' + res.status);
+
+    const items = await res.json();
+
+    const jsonFiles = items
+      .filter(item => item.type === 'file' && item.name.toLowerCase().endsWith('.json'))
+      .sort((a, b) => a.name.localeCompare(b.name));
+
+    select.innerHTML = '';
+
+    if (!jsonFiles.length) {
+      select.innerHTML = '<option value="">No files found</option>';
+      return;
+    }
+
+    jsonFiles.forEach(file => {
+      const opt = document.createElement('option');
+      opt.value = file.path;
+      opt.textContent = file.name.replace(/\.json$/i, '');
+      select.appendChild(opt);
+    });
+  } catch (err) {
+    console.error('populateFileSelect error', err);
+    select.innerHTML = '<option value="">Failed to load files</option>';
+  }
+}
 
   try {
     const apiUrl =
