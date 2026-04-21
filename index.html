@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
+Select race day<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title>TTRL Multi-Season Stats</title>
@@ -459,6 +458,10 @@
         <h1 id="leagueTitle">TTRL Multi-Season Statistics</h1>
         <p id="raceDayLine">Choose race day to view:</p>
         <div>
+                  <select id="seasonFolderSelect">
+                              <option value="current-season">Current Season</option>
+                              <option value="previous-seasons">Previous Seasons</option>
+                            </select>
           <select id="fileSelect">
             <option value="">Select race day…</option>
           </select>
@@ -706,7 +709,7 @@ function getDriverAvatarSrc(driverName) {
 }
 
 // ---- DROPDOWN: GitHub API ----
-async function populateFileSelect() {
+async function populateFileSelect(folder = 'current-season') {
   const select = document.getElementById('fileSelect');
   if (!select) return;
 
@@ -715,9 +718,7 @@ async function populateFileSelect() {
 
   try {
     const apiUrl =
-      'https://api.github.com/repos/ttrlf1racing/ttrl-season-data/contents/export_data';
-
-    const res = await fetch(apiUrl);
+      `https://api.github.com/repos/ttrlf1racing/ttrl-season-data/contents/export_data/${folder}`;    const res = await fetch(apiUrl);
     if (!res.ok) throw new Error('GitHub API error: ' + res.status);
 
     const items = await res.json();   // array from GitHub
@@ -1590,11 +1591,18 @@ function countryToFlagHTML(nationality) {
 
 
 // file loading
-populateFileSelect();
+populateFileSelect('current-season');
 document.getElementById('fileSelect').addEventListener('change', async e => {
   const path = e.target.value;
   if (!path) return;
-
+  const seasonFolderSelect = document.getElementById('seasonFolderSelect');
+    if (seasonFolderSelect) {
+          seasonFolderSelect.addEventListener('change', e => {
+                  populateFileSelect(e.target.value);
+                  document.getElementById('fileSelect').value = '';
+                });
+        }
+  
   window.currentExportFilename = path.split('/').pop();
 
   try {
