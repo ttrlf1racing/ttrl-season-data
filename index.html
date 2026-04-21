@@ -1637,17 +1637,15 @@ function countryToFlagHTML(nationality) {
 
 
 // file loading
+// ---- FILE LOADING ----
 const seasonFolderSelect = document.getElementById('seasonFolderSelect');
 const fileSelect = document.getElementById('fileSelect');
 
 if (seasonFolderSelect) {
   seasonFolderSelect.addEventListener('change', e => {
     populateFileSelect(e.target.value);
-    fileSelect.value = '';
   });
 }
-
-populateFileSelect('current-season');
 
 if (fileSelect) {
   fileSelect.addEventListener('change', async e => {
@@ -1675,6 +1673,9 @@ if (fileSelect) {
     }
   });
 }
+
+// initial load
+populateFileSelect('current-season');
 
 // open full summary page
 function openDriverSummaryView() {
