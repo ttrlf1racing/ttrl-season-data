@@ -709,20 +709,24 @@ function getDriverAvatarSrc(driverName) {
   return DRIVER_AVATAR_FOLDER + '/' + driverName + '.gif';
 }
 
-// ---- DROPDOWN: GitHub API ----
+/// ---- DROPDOWN: GitHub API ----
 async function populateFileSelect(folder = 'current-season') {
   const select = document.getElementById('fileSelect');
   if (!select) return;
 
-  select.innerHTML = '<option value="">Loading...</option>';
+  select.innerHTML = '<option value="">Loading race days...</option>';
 
   try {
     const apiUrl = `https://api.github.com/repos/ttrlf1racing/ttrl-season-data/contents/export_data/${folder}`;
     const res = await fetch(apiUrl, {
-      headers: { 'Accept': 'application/vnd.github+json' }
+      headers: {
+        Accept: 'application/vnd.github+json'
+      }
     });
 
-    if (!res.ok) throw new Error('GitHub API error: ' + res.status);
+    if (!res.ok) {
+      throw new Error(`GitHub API error: ${res.status}`);
+    }
 
     const items = await res.json();
 
@@ -730,7 +734,7 @@ async function populateFileSelect(folder = 'current-season') {
       .filter(item => item.type === 'file' && item.name.toLowerCase().endsWith('.json'))
       .sort((a, b) => a.name.localeCompare(b.name));
 
-    select.innerHTML = '';
+    select.innerHTML = '<option value="">Select race day...</option>';
 
     if (!jsonFiles.length) {
       select.innerHTML = '<option value="">No files found</option>';
@@ -744,41 +748,50 @@ async function populateFileSelect(folder = 'current-season') {
       select.appendChild(opt);
     });
   } catch (err) {
-    console.error('populateFileSelect error', err);
+    console.error('populateFileSelect error:', err);
     select.innerHTML = '<option value="">Failed to load files</option>';
   }
 }
 
-  try {
-    const apiUrl =
-      `https://api.github.com/repos/ttrlf1racing/ttrl-season-data/contents/export_data/${folder}`;    const res = await fetch(apiUrl);
-    if (!res.ok) throw new Error('GitHub API error: ' + res.status);
+// ---- FILE LOADING ----
+const seasonFolderSelect = document.getElementById('seasonFolderSelect');
+const fileSelect = document.getElementById('fileSelect');
 
-    const items = await res.json();   // array from GitHub
-
-    const jsonFiles = items.filter(
-      item =>
-        item.type === 'file' &&
-        item.name.toLowerCase().endsWith('.json')
-    );
-
-jsonFiles.forEach(file => {
-  const opt = document.createElement('option');
-  opt.value = file.path;      // keep full path for loading
-
-  // strip .json from the visible text
-  const baseName = file.name.endsWith('.json')
-    ? file.name.slice(0, -5)
-    : file.name;
-  opt.textContent = baseName;
-
-  select.appendChild(opt);
-});
-
-  } catch (err) {
-    console.error('populateFileSelect error', err);
-  }
+if (seasonFolderSelect) {
+  seasonFolderSelect.addEventListener('change', e => {
+    populateFileSelect(e.target.value);
+  });
 }
+
+if (fileSelect) {
+  fileSelect.addEventListener('change', async e => {
+    const path = e.target.value;
+    if (!path) return;
+
+    window.currentExportFilename = path.split('/').pop();
+
+    try {
+      const res = await fetch(`./${path}`);
+      if (!res.ok) throw new Error('File fetch failed: ' + res.status);
+
+      const ct = res.headers.get('content-type') || '';
+      if (ct.includes('text/html')) {
+        console.error('Expected JSON but got HTML. URL:', res.url);
+        alert('Selected file is not a JSON export.');
+        return;
+      }
+
+      const json = await res.json();
+      buildPage(json);
+    } catch (err) {
+      console.error(err);
+      alert('Failed to load JSON: ' + err.message);
+    }
+  });
+}
+
+// initial load
+populateFileSelect('current-season');
 
 // ---- EXISTING META + PAGE BUILD ----
 function formatLoadedMeta(meta) {
