@@ -1635,44 +1635,45 @@ function countryToFlagHTML(nationality) {
 
 // file loading
 // ---- FILE LOADING ----
-let seasonFolderSelect = document.getElementById('seasonFolderSelect');
-let fileSelect = document.getElementById('fileSelect');
+document.addEventListener('DOMContentLoaded', () => {
+  const seasonFolderSelect = document.getElementById('seasonFolderSelect');
+  const fileSelect = document.getElementById('fileSelect');
 
-if (seasonFolderSelect) {
-  seasonFolderSelect.addEventListener('change', e => {
-    populateFileSelect(e.target.value);
-  });
-}
+  if (seasonFolderSelect) {
+    seasonFolderSelect.addEventListener('change', e => {
+      populateFileSelect(e.target.value);
+    });
+  }
 
-if (fileSelect) {
-  fileSelect.addEventListener('change', async e => {
-    const path = e.target.value;
-    if (!path) return;
+  if (fileSelect) {
+    fileSelect.addEventListener('change', async e => {
+      const path = e.target.value;
+      if (!path) return;
 
-    window.currentExportFilename = path.split('/').pop();
+      window.currentExportFilename = path.split('/').pop();
 
-    try {
-      const res = await fetch(`./${path}`);
-      if (!res.ok) throw new Error('File fetch failed: ' + res.status);
+      try {
+        const res = await fetch(`./${path}`);
+        if (!res.ok) throw new Error('File fetch failed: ' + res.status);
 
-      const ct = res.headers.get('content-type') || '';
-      if (ct.includes('text/html')) {
-        console.error('Expected JSON but got HTML. URL:', res.url);
-        alert('Selected file is not a JSON export.');
-        return;
+        const ct = res.headers.get('content-type') || '';
+        if (ct.includes('text/html')) {
+          console.error('Expected JSON but got HTML. URL:', res.url);
+          alert('Selected file is not a JSON export.');
+          return;
+        }
+
+        const json = await res.json();
+        buildPage(json);
+      } catch (err) {
+        console.error(err);
+        alert('Failed to load JSON: ' + err.message);
       }
+    });
+  }
 
-      const json = await res.json();
-      buildPage(json);
-    } catch (err) {
-      console.error(err);
-      alert('Failed to load JSON: ' + err.message);
-    }
-  });
-}
-
-// initial load
-populateFileSelect('current-season');
+  populateFileSelect('current-season');
+});
 
 // open full summary page
 function openDriverSummaryView() {
