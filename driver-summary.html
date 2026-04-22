@@ -786,10 +786,21 @@ function setupSeasonDropdown(driverName, seasons) {
 
 function loadJsonFromStored(initialDriverName) {
   const storedJson = localStorage.getItem('ttrl_selected_json');
-  if (!storedJson) return;
+  if (!storedJson) {
+    alert('No stored JSON path found');
+    return;
+  }
 
-  fetch(storedJson)
-    .then(r => r.json())
+  const jsonPath = storedJson.replace(/^\.?\//, '');
+
+  console.log('storedJson =', storedJson);
+  console.log('jsonPath =', jsonPath);
+
+  fetch(jsonPath)
+    .then(r => {
+      if (!r.ok) throw new Error('HTTP ' + r.status + ' for ' + jsonPath);
+      return r.json();
+    })
     .then(data => {
       const multi = data.multiSeasonStatistics || {};
 
@@ -807,6 +818,7 @@ function loadJsonFromStored(initialDriverName) {
       driversSrc = multi.drivers || multi.driverStatistics || data.drivers || [];
       driverRowsAll = driversSrc.map(deriveDriverRow);
       renderDriverList('');
+
       const driverSearchEl = document.getElementById('driverSearch');
       if (driverSearchEl) driverSearchEl.disabled = driverRowsAll.length === 0;
 
@@ -815,7 +827,10 @@ function loadJsonFromStored(initialDriverName) {
         renderDriverSummary(initialDriverName);
       }
     })
-    .catch(err => alert('Failed to load JSON: ' + err.message));
+    .catch(err => {
+      console.error('Failed to load JSON', err);
+      alert('Failed to load JSON: ' + err.message);
+    });
 }
 
 // ---------- event wiring with safety checks ----------
