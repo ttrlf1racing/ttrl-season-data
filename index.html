@@ -765,7 +765,7 @@ if (fileSelect) {
     const path = e.target.value;
     if (!path) return;
 
-    window.currentExportFilename = path.split('/').pop();
+   window.currentExportFilename = path;
 
     try {
       const res = await fetch(`./${path}`);
