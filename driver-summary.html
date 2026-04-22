@@ -791,9 +791,9 @@ function loadJsonFromStored(initialDriverName) {
     return;
   }
 
- const jsonPath = storedJson.includes('/')
-  ? storedJson.replace(/^\.?\//, '')
-  : 'export_data/current-season/' + storedJson;
+  const jsonPath = storedJson.includes('/')
+    ? storedJson.replace(/^\.?\//, '')
+    : 'export_data/current-season/' + storedJson;
 
   console.log('storedJson =', storedJson);
   console.log('jsonPath =', jsonPath);
