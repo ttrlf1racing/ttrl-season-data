@@ -788,7 +788,7 @@ function loadJsonFromStored(initialDriverName) {
   const storedJson = localStorage.getItem('ttrl_selected_json');
   if (!storedJson) return;
 
-  fetch('export_data/' + storedJson)
+  fetch(storedJson)
     .then(r => r.json())
     .then(data => {
       const multi = data.multiSeasonStatistics || {};
@@ -816,6 +816,7 @@ function loadJsonFromStored(initialDriverName) {
       }
     })
     .catch(err => alert('Failed to load JSON: ' + err.message));
+}
 }
 
 // ---------- event wiring with safety checks ----------
