@@ -1685,8 +1685,9 @@ function openDriverSummaryView() {
     return;
   }
 
-  localStorage.setItem('ttrl_selected_json', jsonFilename);
-  localStorage.setItem('ttrl_selected_driver', driverName);
+localStorage.setItem('ttrl_selected_json', jsonFilename);
+localStorage.setItem('ttrl_selected_driver', driverName);
+localStorage.setItem('ttrl_selected_folder', document.getElementById('seasonFolderSelect')?.value || 'current-season');
 
   window.location.href = 'driver-summary.html?from=index';
 }
