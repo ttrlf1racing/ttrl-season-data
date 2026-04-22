@@ -754,9 +754,6 @@ async function populateFileSelect(folder = 'current-season') {
 }
 
 // ---- FILE LOADING ----
-const seasonFolderSelect = document.getElementById('seasonFolderSelect');
-const fileSelect = document.getElementById('fileSelect');
-
 if (seasonFolderSelect) {
   seasonFolderSelect.addEventListener('change', e => {
     populateFileSelect(e.target.value);
