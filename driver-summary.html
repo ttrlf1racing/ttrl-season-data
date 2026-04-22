@@ -791,11 +791,13 @@ function loadJsonFromStored(initialDriverName) {
     return;
   }
 
+  const storedFolder = localStorage.getItem('ttrl_selected_folder') || 'current-season';
   const jsonPath = storedJson.includes('/')
     ? storedJson.replace(/^\.?\//, '')
-    : 'export_data/current-season/' + storedJson;
+    : `export_data/${storedFolder}/${storedJson}`;
 
   console.log('storedJson =', storedJson);
+  console.log('storedFolder =', storedFolder);
   console.log('jsonPath =', jsonPath);
 
   fetch(jsonPath)
