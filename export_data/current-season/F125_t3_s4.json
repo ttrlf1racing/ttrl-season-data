@@ -2,7 +2,7 @@
   "metadata": {
     "formatVersion": 1,
     "exportType": "MultiSeason",
-    "exportedAt": "2026-05-11T14:10:03Z",
+    "exportedAt": "2026-05-15T11:44:00Z",
     "sourceApplication": "Racing League Tools",
     "leagueName": "TTRL "
   },
@@ -12,7 +12,7 @@
       "seasonsCount": 1,
       "completedSeasonsCount": 0,
       "isClassSpecific": false,
-      "totalDrivers": 58,
+      "totalDrivers": 56,
       "totalTeams": 10,
       "totalTracks": 12
     },
@@ -785,13 +785,13 @@
         },
         "qualPositions": {
           "bestPosition": 3,
-          "averagePosition": 8.75,
+          "averagePosition": 9.8,
           "poles": 0,
           "frontRows": 0,
           "top3": 1,
           "top5": 1,
           "top10": 3,
-          "totalQualifications": 4
+          "totalQualifications": 5
         },
         "standings": {
           "championshipsWon": 0,
@@ -3040,14 +3040,14 @@
           "averagePositionChange": 0
         },
         "qualPositions": {
-          "bestPosition": 0,
+          "bestPosition": 16,
           "averagePosition": 0,
           "poles": 0,
           "frontRows": 0,
           "top3": 0,
           "top5": 0,
           "top10": 0,
-          "totalQualifications": 0
+          "totalQualifications": 1
         },
         "standings": {
           "championshipsWon": 0,
@@ -3380,164 +3380,6 @@
           "dsqCount": 0,
           "totalPenaltySeconds": 3,
           "racesWithPenalties": 1,
-          "cleanRacesCount": 0,
-          "cleanRacePercent": 0,
-          "reliabilityPercent": 0
-        }
-      },
-      {
-        "driverId": 578,
-        "driverName": "Cutters1982",
-        "driverInfo": {
-          "nationality": "England",
-          "raceNumber": 82,
-          "realName": "Cutters1982",
-          "categories": [
-            "TTRL T1"
-          ]
-        },
-        "participation": {
-          "seasonsParticipated": 1,
-          "totalEvents": 0,
-          "totalRaces": 0,
-          "totalMajorRaces": 0,
-          "totalQualifications": 0,
-          "totalRacesFinished": 0,
-          "eventCompletionRatePercent": 0,
-          "raceCompletionRatePercent": 0
-        },
-        "points": {
-          "totalPoints": "0",
-          "averagePerSeason": "0",
-          "averagePerMajorRace": "0",
-          "averagePerEvent": "0",
-          "bestSeasonPoints": "0",
-          "bestSeasonName": "TTRL F125 SEASON 4 - T3",
-          "scoringRacesCount": 0,
-          "scoringRatePercent": 0
-        },
-        "racePositions": {
-          "bestPosition": 0,
-          "averagePosition": 0,
-          "wins": 0,
-          "podiums": 0,
-          "top5": 0,
-          "top10": 0,
-          "totalFinishes": 0,
-          "averageGridPosition": 0,
-          "averagePositionChange": 0
-        },
-        "qualPositions": {
-          "bestPosition": 16,
-          "averagePosition": 0,
-          "poles": 0,
-          "frontRows": 0,
-          "top3": 0,
-          "top5": 0,
-          "top10": 0,
-          "totalQualifications": 1
-        },
-        "standings": {
-          "championshipsWon": 0,
-          "bestPosition": 0,
-          "averagePosition": 0,
-          "runnerUps": 0,
-          "top3Finishes": 0,
-          "top5Finishes": 0,
-          "seasonResults": [
-            {
-              "seasonName": "TTRL F125 SEASON 4 - T3",
-              "position": 0,
-              "points": "0",
-              "racesCount": 0,
-              "wins": 0,
-              "podiums": 0
-            }
-          ]
-        },
-        "discipline": {
-          "dnfCount": 0,
-          "dsqCount": 0,
-          "totalPenaltySeconds": 0,
-          "racesWithPenalties": 0,
-          "cleanRacesCount": 0,
-          "cleanRacePercent": 0,
-          "reliabilityPercent": 0
-        }
-      },
-      {
-        "driverId": 744,
-        "driverName": "Dave",
-        "driverInfo": {
-          "nationality": "United Kingdom",
-          "raceNumber": 19,
-          "realName": "Dave",
-          "platform": "Pc"
-        },
-        "participation": {
-          "seasonsParticipated": 1,
-          "totalEvents": 0,
-          "totalRaces": 0,
-          "totalMajorRaces": 0,
-          "totalQualifications": 0,
-          "totalRacesFinished": 0,
-          "eventCompletionRatePercent": 0,
-          "raceCompletionRatePercent": 0
-        },
-        "points": {
-          "totalPoints": "0",
-          "averagePerSeason": "0",
-          "averagePerMajorRace": "0",
-          "averagePerEvent": "0",
-          "bestSeasonPoints": "0",
-          "bestSeasonName": "TTRL F125 SEASON 4 - T3",
-          "scoringRacesCount": 0,
-          "scoringRatePercent": 0
-        },
-        "racePositions": {
-          "bestPosition": 0,
-          "averagePosition": 0,
-          "wins": 0,
-          "podiums": 0,
-          "top5": 0,
-          "top10": 0,
-          "totalFinishes": 0,
-          "averageGridPosition": 0,
-          "averagePositionChange": 0
-        },
-        "qualPositions": {
-          "bestPosition": 14,
-          "averagePosition": 0,
-          "poles": 0,
-          "frontRows": 0,
-          "top3": 0,
-          "top5": 0,
-          "top10": 0,
-          "totalQualifications": 1
-        },
-        "standings": {
-          "championshipsWon": 0,
-          "bestPosition": 0,
-          "averagePosition": 0,
-          "runnerUps": 0,
-          "top3Finishes": 0,
-          "top5Finishes": 0,
-          "seasonResults": [
-            {
-              "seasonName": "TTRL F125 SEASON 4 - T3",
-              "position": 0,
-              "points": "0",
-              "racesCount": 0,
-              "wins": 0,
-              "podiums": 0
-            }
-          ]
-        },
-        "discipline": {
-          "dnfCount": 0,
-          "dsqCount": 0,
-          "totalPenaltySeconds": 0,
-          "racesWithPenalties": 0,
           "cleanRacesCount": 0,
           "cleanRacePercent": 0,
           "reliabilityPercent": 0

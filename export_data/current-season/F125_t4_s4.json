@@ -2,7 +2,7 @@
   "metadata": {
     "formatVersion": 1,
     "exportType": "MultiSeason",
-    "exportedAt": "2026-05-11T14:10:33Z",
+    "exportedAt": "2026-05-15T11:44:12Z",
     "sourceApplication": "Racing League Tools",
     "leagueName": "TTRL "
   },
@@ -985,7 +985,7 @@
         "discipline": {
           "dnfCount": 2,
           "dsqCount": 0,
-          "totalPenaltySeconds": 36,
+          "totalPenaltySeconds": 41,
           "racesWithPenalties": 6,
           "cleanRacesCount": 2,
           "cleanRacePercent": 22.2,
