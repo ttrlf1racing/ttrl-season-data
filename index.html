@@ -174,9 +174,8 @@
       overflow:hidden;
     }
 
-    /* PODIUM CSS CHANGES START HERE */
     .cleanest-card {
-      border-top: 4px solid #ffd700 !important; /* Gold */
+      border-top: 4px solid #ffd700 !important;
       box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
       margin-bottom: 12px;
       transition: transform 0.2s ease;
@@ -184,19 +183,18 @@
     .cleanest-card:hover { transform: translateY(-2px); }
 
     .cleanest-card.silver {
-      border-top-color: #c0c0c0 !important; /* Silver */
+      border-top-color: #c0c0c0 !important;
       box-shadow: 0 0 15px rgba(192, 192, 192, 0.15);
     }
 
     .cleanest-card.bronze {
-      border-top-color: #cd7f32 !important; /* Bronze */
+      border-top-color: #cd7f32 !important;
       box-shadow: 0 0 15px rgba(205, 127, 50, 0.15);
     }
 
     .rank-gold { color: #ffd700; font-weight: bold; }
     .rank-silver { color: #e5e7eb; font-weight: bold; }
     .rank-bronze { color: #f97316; font-weight: bold; }
-    /* PODIUM CSS CHANGES END HERE */
 
     .driver-card.primary-champ { border-left-color:#22c55e; }
     .driver-card::before {
@@ -391,7 +389,6 @@
       .header-title-row { font-size:15px; }
     }
 
-    /* Shrink driver profile card on narrow screens */
     @media (max-width:600px) {
       .driver-modal .driver-card {
         padding:16px 16px 12px;
@@ -417,7 +414,6 @@
       }
     }
 
-    /* Compact modal for short (landscape) screens */
     @media (max-height:600px) {
       .driver-modal-card {
         max-height:90vh;
@@ -459,10 +455,10 @@
         <h1 id="leagueTitle">TTRL Multi-Season Statistics</h1>
         <p id="raceDayLine">Choose race day to view:</p>
         <div>
-                  <select id="seasonFolderSelect">
-                              <option value="current-season">Current Season</option>
-                              <option value="previous-seasons">Previous Seasons</option>
-                            </select>
+          <select id="seasonFolderSelect">
+            <option value="current-season">Current Season</option>
+            <option value="previous-seasons">Previous Seasons</option>
+          </select>
           <select id="fileSelect">
             <option value="">Select race day…</option>
           </select>
@@ -496,11 +492,10 @@
       <label style="margin-right:8px;">View:</label>
       <button class="tab-btn active" data-view="drivers">Drivers</button>
       <button class="tab-btn" data-view="tracks">Tracks</button>
-
     </div>
   </section>
 
-   <section id="driversSection" data-view="drivers" class="active">
+  <section id="driversSection" data-view="drivers" class="active">
     <h2>Drivers</h2>
     <p class="section-description">
       Stats cover all seasons contained in the currently selected export.
@@ -570,41 +565,41 @@
         </div>
       </div>
 
-   <div class="driver-layout-side" id="cleanestDriverPodium">
-  <div id="cleanestP1Box" class="driver-card cleanest-card">
-    <div class="driver-card-header">
-      <img id="cleanestP1Avatar" src="Drivers Avatars/default.png" alt="Driver avatar" class="driver-card-logo">
-      <div>
-        <div class="driver-handle rank-gold">🏆 GOLD • CLEANEST</div>
-        <h3 id="cleanestP1Name">Awaiting data...</h3>
+      <div class="driver-layout-side" id="cleanestDriverPodium">
+        <div id="cleanestP1Box" class="driver-card cleanest-card">
+          <div class="driver-card-header">
+            <img id="cleanestP1Avatar" src="Drivers Avatars/default.png" alt="Driver avatar" class="driver-card-logo">
+            <div>
+              <div class="driver-handle rank-gold">🏆 GOLD • CLEANEST</div>
+              <h3 id="cleanestP1Name">Awaiting data...</h3>
+            </div>
+          </div>
+          <div class="driver-meta" id="cleanestP1Meta"></div>
+        </div>
+
+        <div id="cleanestP2Box" class="driver-card cleanest-card silver">
+          <div class="driver-card-header">
+            <img id="cleanestP2Avatar" src="Drivers Avatars/default.png" alt="Driver avatar" class="driver-card-logo">
+            <div>
+              <div class="driver-handle rank-silver">🥈 SILVER • 2ND</div>
+              <h3 id="cleanestP2Name">–</h3>
+            </div>
+          </div>
+          <div class="driver-meta" id="cleanestP2Meta"></div>
+        </div>
+
+        <div id="cleanestP3Box" class="driver-card cleanest-card bronze">
+          <div class="driver-card-header">
+            <img id="cleanestP3Avatar" src="Drivers Avatars/default.png" alt="Driver avatar" class="driver-card-logo">
+            <div>
+              <div class="driver-handle rank-bronze">🥉 BRONZE • 3RD</div>
+              <h3 id="cleanestP3Name">–</h3>
+            </div>
+          </div>
+          <div class="driver-meta" id="cleanestP3Meta"></div>
+        </div>
       </div>
     </div>
-    <div class="driver-meta" id="cleanestP1Meta"></div>
-  </div>
-
-  <div id="cleanestP2Box" class="driver-card cleanest-card silver">
-    <div class="driver-card-header">
-      <img id="cleanestP2Avatar" src="Drivers Avatars/default.png" alt="Driver avatar" class="driver-card-logo">
-      <div>
-        <div class="driver-handle rank-silver">🥈 SILVER • 2ND</div>
-        <h3 id="cleanestP2Name">–</h3>
-      </div>
-    </div>
-    <div class="driver-meta" id="cleanestP2Meta"></div>
-  </div>
-
-  <div id="cleanestP3Box" class="driver-card cleanest-card bronze">
-    <div class="driver-card-header">
-      <img id="cleanestP3Avatar" src="Drivers Avatars/default.png" alt="Driver avatar" class="driver-card-logo">
-      <div>
-        <div class="driver-handle rank-bronze">🥉 BRONZE • 3RD</div>
-        <h3 id="cleanestP3Name">–</h3>
-      </div>
-    </div>
-    <div class="driver-meta" id="cleanestP3Meta"></div>
-  </div>
-</div>
-
   </section>
 
   <div id="driverModal" class="driver-modal">
@@ -692,24 +687,20 @@
         </table>
       </div>
     </div>
-
-
   </section>
+</main>
 
 <script>
 let globalBaseData = null;
 const DRIVER_AVATAR_FOLDER = 'Drivers Avatars';
 
-// state for driver-summary.html
 window.currentExportFilename = '';
 window.currentDriverName = '';
 
-// avatar helper
 function getDriverAvatarSrc(driverName) {
   return DRIVER_AVATAR_FOLDER + '/' + driverName + '.gif';
 }
 
-/// ---- DROPDOWN: GitHub API ----
 async function populateFileSelect(folder = 'current-season') {
   const select = document.getElementById('fileSelect');
   if (!select) return;
@@ -753,44 +744,6 @@ async function populateFileSelect(folder = 'current-season') {
   }
 }
 
-// ---- FILE LOADING ----
-if (seasonFolderSelect) {
-  seasonFolderSelect.addEventListener('change', e => {
-    populateFileSelect(e.target.value);
-  });
-}
-
-if (fileSelect) {
-  fileSelect.addEventListener('change', async e => {
-    const path = e.target.value;
-    if (!path) return;
-
-   window.currentExportFilename = path;
-
-    try {
-      const res = await fetch(`./${path}`);
-      if (!res.ok) throw new Error('File fetch failed: ' + res.status);
-
-      const ct = res.headers.get('content-type') || '';
-      if (ct.includes('text/html')) {
-        console.error('Expected JSON but got HTML. URL:', res.url);
-        alert('Selected file is not a JSON export.');
-        return;
-      }
-
-      const json = await res.json();
-      buildPage(json);
-    } catch (err) {
-      console.error(err);
-      alert('Failed to load JSON: ' + err.message);
-    }
-  });
-}
-
-// initial load
-populateFileSelect('current-season');
-
-// ---- EXISTING META + PAGE BUILD ----
 function formatLoadedMeta(meta) {
   const fileMetaEl = document.getElementById('fileMeta');
   if (!fileMetaEl) return;
@@ -815,14 +768,12 @@ function buildPage(data) {
   const driversSrc = multi.drivers || multi.driverStatistics || data.drivers || [];
   const tracksSrc = multi.tracks || multi.trackStatistics || data.tracks || [];
 
-  // Create season metadata lookup
   const seasonMetaByName = {};
   (multi.seasons || []).forEach(s => {
     seasonMetaByName[s.name] = {
       startDate: s.startDate || '',
       endDate: s.endDate || '',
-      status: s.isCompleted ? 'Completed'
-        : (s.isStarted ? 'In Progress' : 'Not Started')
+      status: s.isCompleted ? 'Completed' : (s.isStarted ? 'In Progress' : 'Not Started')
     };
   });
   window.seasonMetaByName = seasonMetaByName;
@@ -831,8 +782,7 @@ function buildPage(data) {
 
   const leagueName = (meta.leagueName || '').trim() || 'TTRL';
   const msName = info.name || 'All Seasons';
-  document.getElementById('leagueTitle').textContent =
-    leagueName + ' – ' + msName;
+  document.getElementById('leagueTitle').textContent = leagueName + ' – ' + msName;
 
   const cardsEl = document.getElementById('overviewCards');
   cardsEl.innerHTML = '';
@@ -852,7 +802,6 @@ function buildPage(data) {
     cardsEl.appendChild(div);
   });
 
-  // ----- DRIVERS -----
   const driversTableBody = document.querySelector('#driversTable tbody');
   const dcName = document.getElementById('dcName');
   const dcMeta = document.getElementById('dcMeta');
@@ -893,7 +842,6 @@ function buildPage(data) {
     const reliabPct = discipline.reliabilityPercent != null ? discipline.reliabilityPercent : '';
     const seasonsPart = participation.seasonsParticipated || 0;
     const totalRaces = participation.totalRaces || participation.totalMajorRaces || 0;
-
     const fastRaceLaps = Number(racePositions.fastestRaceLaps || 0);
     const fastPoleLaps = Number(qualPositions.poles || 0);
 
@@ -917,314 +865,299 @@ function buildPage(data) {
 
   const driverRowsAll = driversSrc.map(deriveDriverRow);
 
-// Merge RichieChappe11 alias
-(function mergeRichieChappell() {
-  const MAIN_MATCH = name =>
-    name.includes('richiechappe11') || name.includes('richie chappe11');
+  (function mergeRichieChappell() {
+    const MAIN_MATCH = name =>
+      name.includes('richiechappe11') || name.includes('richie chappe11');
 
-  const ALIAS_MATCH = name =>
-    name.includes('richie chappell') && name.includes('(dnu)');
+    const ALIAS_MATCH = name =>
+      name.includes('richie chappell') && name.includes('(dnu)');
 
-  let mainRow = driverRowsAll.find(d =>
-    MAIN_MATCH((d.name || '').toLowerCase())
-  );
+    let mainRow = driverRowsAll.find(d =>
+      MAIN_MATCH((d.name || '').toLowerCase())
+    );
 
-  if (!mainRow) {
-    mainRow = {
-      source: {},
-      name: 'RichieChappe11',
-      nationality: '',
-      seasons: 0,
-      races: 0,
-      totalPoints: 0,
-      avgPerMajor: 0,
-      wins: 0,
-      podiums: 0,
-      fastRaceLaps: 0,
-      fastPoleLaps: 0,
-      bestChampPos: '',
-      cleanPct: '',
-      reliabPct: ''
-    };
-    driverRowsAll.push(mainRow);
-  }
+    if (!mainRow) {
+      mainRow = {
+        source: {},
+        name: 'RichieChappe11',
+        nationality: '',
+        seasons: 0,
+        races: 0,
+        totalPoints: 0,
+        avgPerMajor: 0,
+        wins: 0,
+        podiums: 0,
+        fastRaceLaps: 0,
+        fastPoleLaps: 0,
+        bestChampPos: '',
+        cleanPct: '',
+        reliabPct: ''
+      };
+      driverRowsAll.push(mainRow);
+    }
 
-  const aliasRows = driverRowsAll.filter(d =>
-    ALIAS_MATCH((d.name || '').toLowerCase())
-  );
-  if (!aliasRows.length) return;
+    const aliasRows = driverRowsAll.filter(d =>
+      ALIAS_MATCH((d.name || '').toLowerCase())
+    );
+    if (!aliasRows.length) return;
 
-  // merge stats from alias rows into mainRow
-  aliasRows.forEach(ar => {
-    mainRow.seasons += Number(ar.seasons || 0);
-    mainRow.races += Number(ar.races || 0);
-    mainRow.totalPoints += Number(ar.totalPoints || 0);
-    mainRow.wins += Number(ar.wins || 0);
-    mainRow.podiums += Number(ar.podiums || 0);
-    mainRow.fastRaceLaps += Number(ar.fastRaceLaps || 0);
-    mainRow.fastPoleLaps += Number(ar.fastPoleLaps || 0);
+    aliasRows.forEach(ar => {
+      mainRow.seasons += Number(ar.seasons || 0);
+      mainRow.races += Number(ar.races || 0);
+      mainRow.totalPoints += Number(ar.totalPoints || 0);
+      mainRow.wins += Number(ar.wins || 0);
+      mainRow.podiums += Number(ar.podiums || 0);
+      mainRow.fastRaceLaps += Number(ar.fastRaceLaps || 0);
+      mainRow.fastPoleLaps += Number(ar.fastPoleLaps || 0);
 
-    if (ar.bestChampPos) {
-      if (!mainRow.bestChampPos) {
-        mainRow.bestChampPos = ar.bestChampPos;
-      } else {
-        const m = Number(mainRow.bestChampPos);
-        const a = Number(ar.bestChampPos);
-        if (!Number.isNaN(a) && (Number.isNaN(m) || a < m)) {
+      if (ar.bestChampPos) {
+        if (!mainRow.bestChampPos) {
           mainRow.bestChampPos = ar.bestChampPos;
+        } else {
+          const m = Number(mainRow.bestChampPos);
+          const a = Number(ar.bestChampPos);
+          if (!Number.isNaN(a) && (Number.isNaN(m) || a < m)) {
+            mainRow.bestChampPos = ar.bestChampPos;
+          }
         }
       }
+    });
+
+    if (mainRow.races > 0) {
+      mainRow.avgPerMajor = mainRow.totalPoints / mainRow.races;
     }
-  });
 
-  if (mainRow.races > 0) {
-    mainRow.avgPerMajor = mainRow.totalPoints / mainRow.races;
-  }
-
-  // remove alias rows from driverRowsAll
-  for (let i = driverRowsAll.length - 1; i >= 0; i--) {
-    const name = (driverRowsAll[i].name || '').toLowerCase();
-    if (ALIAS_MATCH(name)) {
-      driverRowsAll.splice(i, 1);
+    for (let i = driverRowsAll.length - 1; i >= 0; i--) {
+      const name = (driverRowsAll[i].name || '').toLowerCase();
+      if (ALIAS_MATCH(name)) {
+        driverRowsAll.splice(i, 1);
+      }
     }
-  }
-})();
-
+  })();
 
   let selectedDriverName = null;
   let driverCurrentPage = 1;
   let driverPageSize = 25;
 
-  function getFilteredDriverRows() { return driverRowsAll; }
-
-function countryToFlagHTML(nationality) {
-  if (!nationality) return '';
-
-  const n = nationality.trim();
-
-  // Home nations – use PNGs in /Flags
-  if (n === 'England') {
-    return '<img src="Flags/england-flag-icon.png" alt="England" style="height:14px;vertical-align:middle;">';
-  }
-  if (n === 'Scotland') {
-    return '<img src="Flags/scotland-flag-icon.png" alt="Scotland" style="height:14px;vertical-align:middle;">';
-  }
-  if (n === 'Wales') {
-    return '<img src="Flags/wales-flag-icon.png" alt="Wales" style="height:14px;vertical-align:middle;">';
-  }
-  if (n === 'United Nations') {
-    return '<img src="Flags/united_nations.png" alt="United Nations" style="height:14px;vertical-align:middle;">';
-  }
-  if (n === 'Northern Ireland') {
-    return '<img src="Flags/northern_ireland.png" alt="Northern Ireland" style="height:14px;vertical-align:middle;">';
+  function getFilteredDriverRows() {
+    return driverRowsAll;
   }
 
-  // Full-name → ISO alpha‑2
-  const map = {
-    'Afghanistan': 'AF',
-    'Albania': 'AL',
-    'Algeria': 'DZ',
-    'Andorra': 'AD',
-    'Angola': 'AO',
-    'Antigua and Barbuda': 'AG',
-    'Argentina': 'AR',
-    'Armenia': 'AM',
-    'Australia': 'AU',
-    'Austria': 'AT',
-    'Azerbaijan': 'AZ',
-    'Bahamas': 'BS',
-    'Bahrain': 'BH',
-    'Bangladesh': 'BD',
-    'Barbados': 'BB',
-    'Belarus': 'BY',
-    'Belgium': 'BE',
-    'Belize': 'BZ',
-    'Benin': 'BJ',
-    'Bhutan': 'BT',
-    'Bolivia': 'BO',
-    'Bosnia and Herzegovina': 'BA',
-    'Botswana': 'BW',
-    'Brazil': 'BR',
-    'Brunei': 'BN',
-    'Bulgaria': 'BG',
-    'Burkina Faso': 'BF',
-    'Burundi': 'BI',
-    'Cabo Verde': 'CV',
-    'Cambodia': 'KH',
-    'Cameroon': 'CM',
-    'Canada': 'CA',
-    'Central African Republic': 'CF',
-    'Chad': 'TD',
-    'Chile': 'CL',
-    'China': 'CN',
-    'Colombia': 'CO',
-    'Comoros': 'KM',
-    'Congo': 'CG',
-    'Congo, Democratic Republic of the': 'CD',
-    'Costa Rica': 'CR',
-    'Croatia': 'HR',
-    'Cuba': 'CU',
-    'Cyprus': 'CY',
-    'Czech Republic': 'CZ',
-    'Côte d\'Ivoire': 'CI',
-    'Denmark': 'DK',
-    'Djibouti': 'DJ',
-    'Dominica': 'DM',
-    'Dominican Republic': 'DO',
-    'Ecuador': 'EC',
-    'Egypt': 'EG',
-    'El Salvador': 'SV',
-    'Equatorial Guinea': 'GQ',
-    'Eritrea': 'ER',
-    'Estonia': 'EE',
-    'Eswatini': 'SZ',
-    'Ethiopia': 'ET',
-    'Fiji': 'FJ',
-    'Finland': 'FI',
-    'France': 'FR',
-    'Gabon': 'GA',
-    'Gambia': 'GM',
-    'Georgia': 'GE',
-    'Germany': 'DE',
-    'Ghana': 'GH',
-    'Greece': 'GR',
-    'Grenada': 'GD',
-    'Guatemala': 'GT',
-    'Guinea': 'GN',
-    'Guinea-Bissau': 'GW',
-    'Guyana': 'GY',
-    'Haiti': 'HT',
-    'Honduras': 'HN',
-    'Hungary': 'HU',
-    'Iceland': 'IS',
-    'India': 'IN',
-    'Indonesia': 'ID',
-    'Iran': 'IR',
-    'Iraq': 'IQ',
-    'Ireland': 'IE',
-    'Israel': 'IL',
-    'Italy': 'IT',
-    'Jamaica': 'JM',
-    'Japan': 'JP',
-    'Jordan': 'JO',
-    'Kazakhstan': 'KZ',
-    'Kenya': 'KE',
-    'Kiribati': 'KI',
-    'Kuwait': 'KW',
-    'Kyrgyzstan': 'KG',
-    'Laos': 'LA',
-    'Latvia': 'LV',
-    'Lebanon': 'LB',
-    'Lesotho': 'LS',
-    'Liberia': 'LR',
-    'Libya': 'LY',
-    'Liechtenstein': 'LI',
-    'Lithuania': 'LT',
-    'Luxembourg': 'LU',
-    'Madagascar': 'MG',
-    'Malawi': 'MW',
-    'Malaysia': 'MY',
-    'Maldives': 'MV',
-    'Mali': 'ML',
-    'Malta': 'MT',
-    'Marshall Islands': 'MH',
-    'Mauritania': 'MR',
-    'Mauritius': 'MU',
-    'Mexico': 'MX',
-    'Micronesia': 'FM',
-    'Moldova': 'MD',
-    'Monaco': 'MC',
-    'Mongolia': 'MN',
-    'Montenegro': 'ME',
-    'Morocco': 'MA',
-    'Mozambique': 'MZ',
-    'Myanmar': 'MM',
-    'Namibia': 'NA',
-    'Nauru': 'NR',
-    'Nepal': 'NP',
-    'Netherlands': 'NL',
-    'New Zealand': 'NZ',
-    'Nicaragua': 'NI',
-    'Niger': 'NE',
-    'Nigeria': 'NG',
-    'North Korea': 'KP',
-    'North Macedonia': 'MK',
-    'Norway': 'NO',
-    'Oman': 'OM',
-    'Pakistan': 'PK',
-    'Palau': 'PW',
-    'Panama': 'PA',
-    'Papua New Guinea': 'PG',
-    'Paraguay': 'PY',
-    'Peru': 'PE',
-    'Philippines': 'PH',
-    'Poland': 'PL',
-    'Portugal': 'PT',
-    'Qatar': 'QA',
-    'Romania': 'RO',
-    'Russia': 'RU',
-    'Rwanda': 'RW',
-    'Saint Kitts and Nevis': 'KN',
-    'Saint Lucia': 'LC',
-    'Saint Vincent and the Grenadines': 'VC',
-    'Samoa': 'WS',
-    'San Marino': 'SM',
-    'Sao Tome and Principe': 'ST',
-    'Saudi Arabia': 'SA',
-    'Senegal': 'SN',
-    'Serbia': 'RS',
-    'Seychelles': 'SC',
-    'Sierra Leone': 'SL',
-    'Singapore': 'SG',
-    'Slovakia': 'SK',
-    'Slovenia': 'SI',
-    'Solomon Islands': 'SB',
-    'Somalia': 'SO',
-    'South Africa': 'ZA',
-    'South Korea': 'KR',
-    'South Sudan': 'SS',
-    'Spain': 'ES',
-    'Sri Lanka': 'LK',
-    'Sudan': 'SD',
-    'Suriname': 'SR',
-    'Sweden': 'SE',
-    'Switzerland': 'CH',
-    'Syria': 'SY',
-    'Taiwan': 'TW',
-    'Tajikistan': 'TJ',
-    'Tanzania': 'TZ',
-    'Thailand': 'TH',
-    'Timor-Leste': 'TL',
-    'Togo': 'TG',
-    'Tonga': 'TO',
-    'Trinidad and Tobago': 'TT',
-    'Tunisia': 'TN',
-    'Turkey': 'TR',
-    'Turkmenistan': 'TM',
-    'Tuvalu': 'TV',
-    'Uganda': 'UG',
-    'Ukraine': 'UA',
-    'United Arab Emirates': 'AE',
-    'United Kingdom': 'GB',
-    'United States Of America': 'US',
-    'Uruguay': 'UY',
-    'Uzbekistan': 'UZ',
-    'Vanuatu': 'VU',
-    'Venezuela': 'VE',
-    'Vietnam': 'VN',
-    'Yemen': 'YE',
-    'Zambia': 'ZM',
-    'Zimbabwe': 'ZW'
-  };
+  function countryToFlagHTML(nationality) {
+    if (!nationality) return '';
 
-  const code = map[n];
-  if (!code) return '';
+    const n = nationality.trim();
 
-  return code.replace(/./g, c =>
-    String.fromCodePoint(127397 + c.charCodeAt(0))
-  );
-}
+    if (n === 'England') return '<img src="Flags/england-flag-icon.png" alt="England" style="height:14px;vertical-align:middle;">';
+    if (n === 'Scotland') return '<img src="Flags/scotland-flag-icon.png" alt="Scotland" style="height:14px;vertical-align:middle;">';
+    if (n === 'Wales') return '<img src="Flags/wales-flag-icon.png" alt="Wales" style="height:14px;vertical-align:middle;">';
+    if (n === 'United Nations') return '<img src="Flags/united_nations.png" alt="United Nations" style="height:14px;vertical-align:middle;">';
+    if (n === 'Northern Ireland') return '<img src="Flags/northern_ireland.png" alt="Northern Ireland" style="height:14px;vertical-align:middle;">';
 
+    const map = {
+      'Afghanistan': 'AF',
+      'Albania': 'AL',
+      'Algeria': 'DZ',
+      'Andorra': 'AD',
+      'Angola': 'AO',
+      'Antigua and Barbuda': 'AG',
+      'Argentina': 'AR',
+      'Armenia': 'AM',
+      'Australia': 'AU',
+      'Austria': 'AT',
+      'Azerbaijan': 'AZ',
+      'Bahamas': 'BS',
+      'Bahrain': 'BH',
+      'Bangladesh': 'BD',
+      'Barbados': 'BB',
+      'Belarus': 'BY',
+      'Belgium': 'BE',
+      'Belize': 'BZ',
+      'Benin': 'BJ',
+      'Bhutan': 'BT',
+      'Bolivia': 'BO',
+      'Bosnia and Herzegovina': 'BA',
+      'Botswana': 'BW',
+      'Brazil': 'BR',
+      'Brunei': 'BN',
+      'Bulgaria': 'BG',
+      'Burkina Faso': 'BF',
+      'Burundi': 'BI',
+      'Cabo Verde': 'CV',
+      'Cambodia': 'KH',
+      'Cameroon': 'CM',
+      'Canada': 'CA',
+      'Central African Republic': 'CF',
+      'Chad': 'TD',
+      'Chile': 'CL',
+      'China': 'CN',
+      'Colombia': 'CO',
+      'Comoros': 'KM',
+      'Congo': 'CG',
+      'Congo, Democratic Republic of the': 'CD',
+      'Costa Rica': 'CR',
+      'Croatia': 'HR',
+      'Cuba': 'CU',
+      'Cyprus': 'CY',
+      'Czech Republic': 'CZ',
+      'Côte d\'Ivoire': 'CI',
+      'Denmark': 'DK',
+      'Djibouti': 'DJ',
+      'Dominica': 'DM',
+      'Dominican Republic': 'DO',
+      'Ecuador': 'EC',
+      'Egypt': 'EG',
+      'El Salvador': 'SV',
+      'Equatorial Guinea': 'GQ',
+      'Eritrea': 'ER',
+      'Estonia': 'EE',
+      'Eswatini': 'SZ',
+      'Ethiopia': 'ET',
+      'Fiji': 'FJ',
+      'Finland': 'FI',
+      'France': 'FR',
+      'Gabon': 'GA',
+      'Gambia': 'GM',
+      'Georgia': 'GE',
+      'Germany': 'DE',
+      'Ghana': 'GH',
+      'Greece': 'GR',
+      'Grenada': 'GD',
+      'Guatemala': 'GT',
+      'Guinea': 'GN',
+      'Guinea-Bissau': 'GW',
+      'Guyana': 'GY',
+      'Haiti': 'HT',
+      'Honduras': 'HN',
+      'Hungary': 'HU',
+      'Iceland': 'IS',
+      'India': 'IN',
+      'Indonesia': 'ID',
+      'Iran': 'IR',
+      'Iraq': 'IQ',
+      'Ireland': 'IE',
+      'Israel': 'IL',
+      'Italy': 'IT',
+      'Jamaica': 'JM',
+      'Japan': 'JP',
+      'Jordan': 'JO',
+      'Kazakhstan': 'KZ',
+      'Kenya': 'KE',
+      'Kiribati': 'KI',
+      'Kuwait': 'KW',
+      'Kyrgyzstan': 'KG',
+      'Laos': 'LA',
+      'Latvia': 'LV',
+      'Lebanon': 'LB',
+      'Lesotho': 'LS',
+      'Liberia': 'LR',
+      'Libya': 'LY',
+      'Liechtenstein': 'LI',
+      'Lithuania': 'LT',
+      'Luxembourg': 'LU',
+      'Madagascar': 'MG',
+      'Malawi': 'MW',
+      'Malaysia': 'MY',
+      'Maldives': 'MV',
+      'Mali': 'ML',
+      'Malta': 'MT',
+      'Marshall Islands': 'MH',
+      'Mauritania': 'MR',
+      'Mauritius': 'MU',
+      'Mexico': 'MX',
+      'Micronesia': 'FM',
+      'Moldova': 'MD',
+      'Monaco': 'MC',
+      'Mongolia': 'MN',
+      'Montenegro': 'ME',
+      'Morocco': 'MA',
+      'Mozambique': 'MZ',
+      'Myanmar': 'MM',
+      'Namibia': 'NA',
+      'Nauru': 'NR',
+      'Nepal': 'NP',
+      'Netherlands': 'NL',
+      'New Zealand': 'NZ',
+      'Nicaragua': 'NI',
+      'Niger': 'NE',
+      'Nigeria': 'NG',
+      'North Korea': 'KP',
+      'North Macedonia': 'MK',
+      'Norway': 'NO',
+      'Oman': 'OM',
+      'Pakistan': 'PK',
+      'Palau': 'PW',
+      'Panama': 'PA',
+      'Papua New Guinea': 'PG',
+      'Paraguay': 'PY',
+      'Peru': 'PE',
+      'Philippines': 'PH',
+      'Poland': 'PL',
+      'Portugal': 'PT',
+      'Qatar': 'QA',
+      'Romania': 'RO',
+      'Russia': 'RU',
+      'Rwanda': 'RW',
+      'Saint Kitts and Nevis': 'KN',
+      'Saint Lucia': 'LC',
+      'Saint Vincent and the Grenadines': 'VC',
+      'Samoa': 'WS',
+      'San Marino': 'SM',
+      'Sao Tome and Principe': 'ST',
+      'Saudi Arabia': 'SA',
+      'Senegal': 'SN',
+      'Serbia': 'RS',
+      'Seychelles': 'SC',
+      'Sierra Leone': 'SL',
+      'Singapore': 'SG',
+      'Slovakia': 'SK',
+      'Slovenia': 'SI',
+      'Solomon Islands': 'SB',
+      'Somalia': 'SO',
+      'South Africa': 'ZA',
+      'South Korea': 'KR',
+      'South Sudan': 'SS',
+      'Spain': 'ES',
+      'Sri Lanka': 'LK',
+      'Sudan': 'SD',
+      'Suriname': 'SR',
+      'Sweden': 'SE',
+      'Switzerland': 'CH',
+      'Syria': 'SY',
+      'Taiwan': 'TW',
+      'Tajikistan': 'TJ',
+      'Tanzania': 'TZ',
+      'Thailand': 'TH',
+      'Timor-Leste': 'TL',
+      'Togo': 'TG',
+      'Tonga': 'TO',
+      'Trinidad and Tobago': 'TT',
+      'Tunisia': 'TN',
+      'Turkey': 'TR',
+      'Turkmenistan': 'TM',
+      'Tuvalu': 'TV',
+      'Uganda': 'UG',
+      'Ukraine': 'UA',
+      'United Arab Emirates': 'AE',
+      'United Kingdom': 'GB',
+      'United States Of America': 'US',
+      'Uruguay': 'UY',
+      'Uzbekistan': 'UZ',
+      'Vanuatu': 'VU',
+      'Venezuela': 'VE',
+      'Vietnam': 'VN',
+      'Yemen': 'YE',
+      'Zambia': 'ZM',
+      'Zimbabwe': 'ZW'
+    };
+
+    const code = map[n];
+    if (!code) return '';
+
+    return code.replace(/./g, c =>
+      String.fromCodePoint(127397 + c.charCodeAt(0))
+    );
+  }
 
   function renderDrivers() {
     const search = document.getElementById('driverSearch').value.toLowerCase();
@@ -1258,38 +1191,29 @@ function countryToFlagHTML(nationality) {
     const start = (driverCurrentPage - 1) * driverPageSize;
     const pageRows = filtered.slice(start, start + driverPageSize);
 
-      driversTableBody.innerHTML = '';
+    driversTableBody.innerHTML = '';
     pageRows.forEach(dr => {
       const tr = document.createElement('tr');
       tr.dataset.driverName = dr.name;
       if (dr.name === selectedDriverName) tr.classList.add('driver-row-selected');
 
-  tr.innerHTML =
-  '<td>' + dr.name + '</td>' +
-  '<td>' + countryToFlagHTML(dr.nationality) + '</td>' +
-  '<td>' + dr.seasons + '</td>' +
-  '<td>' + dr.races + '</td>' +
+      tr.innerHTML =
+        '<td>' + dr.name + '</td>' +
+        '<td>' + countryToFlagHTML(dr.nationality) + '</td>' +
+        '<td>' + dr.seasons + '</td>' +
+        '<td>' + dr.races + '</td>' +
         '<td>' + dr.totalPoints + '</td>' +
-        '<td>' +
-          (dr.avgPerMajor.toFixed ? dr.avgPerMajor.toFixed(1) : dr.avgPerMajor) +
-        '</td>' +
+        '<td>' + (dr.avgPerMajor.toFixed ? dr.avgPerMajor.toFixed(1) : dr.avgPerMajor) + '</td>' +
         '<td>' + dr.wins + '</td>' +
         '<td>' + dr.podiums + '</td>' +
         '<td>' + dr.fastRaceLaps + '</td>' +
         '<td>' + dr.fastPoleLaps + '</td>' +
         '<td>' + dr.bestChampPos + '</td>' +
-        '<td>' +
-          (dr.cleanPct !== '' ?
-            (dr.cleanPct.toFixed ? dr.cleanPct.toFixed(1) : dr.cleanPct) : '') +
-        '</td>' +
-        '<td>' +
-          (dr.reliabPct !== '' ?
-            (dr.reliabPct.toFixed ? dr.reliabPct.toFixed(1) : dr.reliabPct) : '') +
-        '</td>';
+        '<td>' + (dr.cleanPct !== '' ? (dr.cleanPct.toFixed ? dr.cleanPct.toFixed(1) : dr.cleanPct) : '') + '</td>' +
+        '<td>' + (dr.reliabPct !== '' ? (dr.reliabPct.toFixed ? dr.reliabPct.toFixed(1) : dr.reliabPct) : '') + '</td>';
 
       driversTableBody.appendChild(tr);
     });
-
 
     const infoEl = document.getElementById('driverPageInfo');
     if (infoEl) {
@@ -1301,11 +1225,9 @@ function countryToFlagHTML(nationality) {
     if (prevBtn) prevBtn.disabled = driverCurrentPage <= 1;
     if (nextBtn) nextBtn.disabled = driverCurrentPage >= totalPages;
 
-    // keep podium in sync with current data/filters
     renderCleanestDriverPodium();
   }
 
-  // UPDATED PODIUM LOGIC
   function renderCleanestDriverPodium() {
     const positions = [
       { name: 'cleanestP1Name', meta: 'cleanestP1Meta', avatar: 'cleanestP1Avatar', box: 'cleanestP1Box' },
@@ -1316,7 +1238,6 @@ function countryToFlagHTML(nationality) {
     const rows = getFilteredDriverRows();
     const maxRaces = rows.reduce((max, d) => Math.max(max, d.races || 0), 0);
 
-    // Initial check: if no data
     if (maxRaces < 5) {
       positions.forEach((pos, idx) => {
         const nameEl = document.getElementById(pos.name);
@@ -1331,8 +1252,8 @@ function countryToFlagHTML(nationality) {
       return;
     }
 
-    const minRaces = Math.max(5, Math.floor(maxRaces * 0.7));
-    const eligible = rows.filter(d => 
+    const minRaces = Math.max(5, Math.ceil(maxRaces * 0.8));
+    const eligible = rows.filter(d =>
       d.races >= minRaces && d.cleanPct !== '' && d.cleanPct != null
     );
 
@@ -1354,7 +1275,7 @@ function countryToFlagHTML(nationality) {
       if (!driver) {
         if (idx === 0) {
           nameEl.textContent = "Awaiting qualifying drivers...";
-          metaEl.textContent = `Need ${minRaces} races for eligibility.`;
+          metaEl.textContent = `Must complete at least 80% of the season (${minRaces}+ races) to qualify.`;
         } else {
           card.style.display = 'none';
         }
@@ -1380,14 +1301,13 @@ function countryToFlagHTML(nationality) {
     });
   }
 
-
   function renderDriverCard(driverName) {
     const rows = getFilteredDriverRows();
     const row = rows.find(d => d.name === driverName);
     if (!row) return;
 
     selectedDriverName = row.name;
-    window.currentDriverName = row.name; // used by driver-summary.html
+    window.currentDriverName = row.name;
 
     Array.from(driversTableBody.querySelectorAll('tr')).forEach(tr => {
       tr.classList.toggle('driver-row-selected', tr.dataset.driverName === selectedDriverName);
@@ -1406,8 +1326,7 @@ function countryToFlagHTML(nationality) {
     dcName.textContent = row.name;
     dcMeta.textContent =
       (infoD.nationality || 'Nationality unknown') +
-      (participation.seasonsParticipated ?
-        ' • ' + participation.seasonsParticipated + ' seasons' : '');
+      (participation.seasonsParticipated ? ' • ' + participation.seasonsParticipated + ' seasons' : '');
 
     if (driverAvatar) {
       const avatarSrc = getDriverAvatarSrc(row.name);
@@ -1455,8 +1374,7 @@ function countryToFlagHTML(nationality) {
     makePill('Pts / race', avgPtsPerRace);
     makePill(
       'Clean %',
-      row.cleanPct !== '' ?
-        (row.cleanPct.toFixed ? row.cleanPct.toFixed(1) : row.cleanPct) : '–'
+      row.cleanPct !== '' ? (row.cleanPct.toFixed ? row.cleanPct.toFixed(1) : row.cleanPct) : '–'
     );
 
     dcSeasonsTable.innerHTML = '';
@@ -1464,9 +1382,9 @@ function countryToFlagHTML(nationality) {
       const tr = document.createElement('tr');
       tr.innerHTML =
         '<td>' + (sr.seasonName || '') + '</td>' +
-        '<td>' + ((window.seasonMetaByName || {})[sr.seasonName] || {}).startDate + '</td>' +
-        '<td>' + ((window.seasonMetaByName || {})[sr.seasonName] || {}).endDate + '</td>' +
-        '<td>' + ((window.seasonMetaByName || {})[sr.seasonName] || {}).status + '</td>' +
+        '<td>' + (((window.seasonMetaByName || {})[sr.seasonName] || {}).startDate || '') + '</td>' +
+        '<td>' + (((window.seasonMetaByName || {})[sr.seasonName] || {}).endDate || '') + '</td>' +
+        '<td>' + (((window.seasonMetaByName || {})[sr.seasonName] || {}).status || '') + '</td>' +
         '<td>' + (sr.position || '') + '</td>' +
         '<td>' + (sr.points || 0) + '</td>' +
         '<td>' + (sr.racesCount || 0) + '</td>' +
@@ -1483,6 +1401,7 @@ function countryToFlagHTML(nationality) {
     if (!tr || !tr.dataset.driverName) return;
     renderDriverCard(tr.dataset.driverName);
   });
+
   if (driverModal && driverModalClose) {
     driverModalClose.addEventListener('click', () => driverModal.classList.remove('open'));
     driverModal.addEventListener('click', e => {
@@ -1491,19 +1410,24 @@ function countryToFlagHTML(nationality) {
   }
 
   document.getElementById('driverSearch').addEventListener('input', () => {
-    driverCurrentPage = 1; renderDrivers();
+    driverCurrentPage = 1;
+    renderDrivers();
   });
   document.getElementById('minSeasons').addEventListener('change', () => {
-    driverCurrentPage = 1; renderDrivers();
+    driverCurrentPage = 1;
+    renderDrivers();
   });
   document.getElementById('driverSort').addEventListener('change', () => {
-    driverCurrentPage = 1; renderDrivers();
+    driverCurrentPage = 1;
+    renderDrivers();
   });
   document.getElementById('driverPrevPage').addEventListener('click', () => {
-    driverCurrentPage--; renderDrivers();
+    driverCurrentPage--;
+    renderDrivers();
   });
   document.getElementById('driverNextPage').addEventListener('click', () => {
-    driverCurrentPage++; renderDrivers();
+    driverCurrentPage++;
+    renderDrivers();
   });
   document.getElementById('driverPageSize').addEventListener('change', e => {
     driverPageSize = Number(e.target.value || 25);
@@ -1513,12 +1437,8 @@ function countryToFlagHTML(nationality) {
 
   renderDrivers();
 
-
-  // ----- TRACKS -----
   const trackSelect = document.getElementById('trackSelect');
   const trackTableBody = document.querySelector('#trackTable tbody');
-
-  const allSeasonNames = (multi.seasons || []).map(s => s.name);
 
   const trackRows = tracksSrc.map(t => {
     const circuit = t.circuitName || t.trackName || '';
@@ -1599,7 +1519,7 @@ function countryToFlagHTML(nationality) {
     renderTrackDetails();
   });
 }
-// top-level view tabs: Drivers / Tracks / Driver Times
+
 (function setupMainViewTabs() {
   const tabButtons = Array.from(document.querySelectorAll('#viewSelector .tab-btn'))
     .filter(btn => !btn.classList.contains('disabled'));
@@ -1607,11 +1527,9 @@ function countryToFlagHTML(nationality) {
   const sections = Array.from(document.querySelectorAll('section[data-view]'));
 
   function activateView(viewName) {
-    // buttons
     tabButtons.forEach(btn => {
       btn.classList.toggle('active', btn.dataset.view === viewName);
     });
-    // sections
     sections.forEach(sec => {
       sec.classList.toggle('active', sec.dataset.view === viewName);
     });
@@ -1625,16 +1543,11 @@ function countryToFlagHTML(nationality) {
     });
   });
 
-  // initial state
   const initial =
-    (document.querySelector('#viewSelector .tab-btn.active') || {}).dataset?.view
-    || 'drivers';
+    (document.querySelector('#viewSelector .tab-btn.active') || {}).dataset?.view || 'drivers';
   activateView(initial);
 })();
 
-
-// file loading
-// ---- FILE LOADING ----
 document.addEventListener('DOMContentLoaded', () => {
   const seasonFolderSelect = document.getElementById('seasonFolderSelect');
   const fileSelect = document.getElementById('fileSelect');
@@ -1675,19 +1588,18 @@ document.addEventListener('DOMContentLoaded', () => {
   populateFileSelect('current-season');
 });
 
-// open full summary page
 function openDriverSummaryView() {
   const jsonFilename = window.currentExportFilename || '';
-  const driverName   = window.currentDriverName || '';
+  const driverName = window.currentDriverName || '';
 
   if (!jsonFilename || !driverName) {
     alert('Pick a race date and select a driver first.');
     return;
   }
 
-localStorage.setItem('ttrl_selected_json', jsonFilename);
-localStorage.setItem('ttrl_selected_driver', driverName);
-localStorage.setItem('ttrl_selected_folder', document.getElementById('seasonFolderSelect')?.value || 'current-season');
+  localStorage.setItem('ttrl_selected_json', jsonFilename);
+  localStorage.setItem('ttrl_selected_driver', driverName);
+  localStorage.setItem('ttrl_selected_folder', document.getElementById('seasonFolderSelect')?.value || 'current-season');
 
   window.location.href = 'driver-summary.html?from=index';
 }
