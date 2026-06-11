@@ -708,15 +708,19 @@ async function populateFileSelect(folder = 'current-season') {
   select.innerHTML = '<option value="">Loading race days...</option>';
 
   try {
-    const apiUrl = `https://api.github.com/repos/ttrlf1racing/ttrl-season-data/contents/export_data/${folder}`;
-    const res = await fetch(apiUrl, {
-      headers: {
-        Accept: 'application/vnd.github+json'
-      }
-    });
+    let res = await fetch(`/api/files?folder=${encodeURIComponent(folder)}`);
+
+    if (!res.ok && (res.status === 404 || res.status === 405)) {
+      const apiUrl = `https://api.github.com/repos/ttrlf1racing/ttrl-season-data/contents/export_data/${folder}`;
+      res = await fetch(apiUrl, {
+        headers: {
+          Accept: 'application/vnd.github+json'
+        }
+      });
+    }
 
     if (!res.ok) {
-      throw new Error(`GitHub API error: ${res.status}`);
+      throw new Error(`File list error: ${res.status}`);
     }
 
     const items = await res.json();
